@@ -1,0 +1,64 @@
+SUKOAA PLATFORM 0.2.0 — 31 October 2026
+
+AI: disabled in the interface and backend. No provider SDK, key or API calls.
+
+PASS: clean npm ci of the portable project (57 packages).
+PASS: portable TypeScript check.
+PASS: 23 automated platform/security tests with mocked external services.
+PASS: standard Next.js 16.3.4 production build.
+PASS: Vinext/Cloudflare preview production build.
+PASS: browser JavaScript output and infinite-loop termination after 3 seconds.
+PASS: TypeScript transpilation and execution (not full type checking).
+PASS: interactive React counter changed from 0 to 1.
+PASS: HTML/CSS preview and inline button interaction.
+PASS: local draft save and restoration after reload.
+PASS: Python reports an explicit missing-runner requirement.
+
+NOT CONFIGURED / NOT LIVE-VERIFIED:
+Supabase Auth/SMTP/database migration/RLS and real cloud project CRUD;
+Upstash Redis connectivity and multi-instance behavior;
+Judge0 Python and Go execution/provider isolation;
+external GitHub/Vercel deployment; Docker startup; physical mobile devices.
+Next.js workspace is a downloadable local starter, not a hosted full IDE.
+Browser installers, APKs and extension binaries are not bundled.
+
+All compiler options are therefore NOT live-working out of the box.
+Working browser tools: JavaScript, TypeScript, HTML/CSS, single-file React.
+Needs separate runner: Python, Go. Next.js: Project Studio Node integration; see requirements below.
+
+Start with README.md, then docs/02-LOCAL-SETUP.md and docs/03-DEPLOYMENT.md.
+
+INLINE DIAGNOSTICS UPDATE
+PASS: JavaScript runtime error at line 3 and clickable jump to that position.
+PASS: TypeScript runtime line 4 mapped through erased interface declarations.
+PASS: React runtime error mapped to original TSX line 3, column 15.
+PASS: syntax diagnostics preserve source positions (JS, TS, JSX).
+PASS: Python and Go diagnostic parsers (fixture tests only; runner still unconfigured).
+PASS: HTML inline JavaScript error reported at original line 4, column 3.
+PASS: click-to-error in an 81-line file scrolls the editor and gutter together.
+
+SUKOAA 0.3.0 — PROJECT STUDIO UPDATE
+PASS: 39 automated checks; TypeScript checking.
+PASS: exact Next.js Studio starter production build, including /api/hello.
+PASS: browser multi-file React rendering and imported component interaction.
+PASS: browser folder/file creation and importing a newly created module.
+PASS: browser mock API capture (GET /api/hello, HTTP 200, duration, labeled mock).
+PASS: browser console capture and imported-file error locations (src/ui/Badge.tsx:4:16).
+INTEGRATED BUT NOT LIVE-VERIFIED: WebContainer Node runtime in the browser.
+The HTTP QA preview cannot satisfy its secure-context requirement.
+Use HTTPS/localhost plus supplied isolation headers, supported browser, internet,
+and appropriate commercial licensing. No database migration for this update.
+Python/Go and Supabase/Redis live configuration remain separate prerequisites.
+
+PASS: platform Next.js production build and published-site production build.
+PASS: browser Monaco autocomplete after complete editor service registration.
+
+SUKOAA 0.3.1 — RUNTIME RECOVERY AND SIDE INSPECTOR
+PASS: 44 automated checks; TypeScript checking.
+PASS: React browser worker and compatibility fallback compilation.
+PASS: browser API request/status/timing displayed in right inspector.
+PASS: desktop preview and inspector use full available height with no page horizontal overflow.
+PASS: Next.js Pages Router starter production build with /api/hello.
+App Router request-context errors have an explicit Pages starter/backup path.
+No claim that arbitrary App Router projects run inside WebContainer.
+Native platform build and publication validation are recorded in delivery.

@@ -1,0 +1,30 @@
+import type {WebContainer,WebContainerProcess} from '@webcontainer/api';import type {StudioProject} from './project';import {observerScript,type ObserverConfig} from './observer';
+export type NodeCallbacks={log:(text:string)=>void;ready:(url:string)=>void;issue:(message:string,stack?:string)=>void;failed?:(message:string)=>void};
+export function nodePreflight(){
+ if(!window.isSecureContext)return 'Node runtime needs HTTPS or http://localhost. This preview host is not a secure browser context.';
+ if(!window.crossOriginIsolated||typeof SharedArrayBuffer==='undefined')return 'Node runtime needs cross-origin isolation. Serve /studio with COOP: same-origin and COEP: credentialless, then reload.';
+ if(process.env.NEXT_PUBLIC_WEBCONTAINER_MODE==='disabled')return 'Node runtime is disabled by the site owner.';
+ if(process.env.NEXT_PUBLIC_WEBCONTAINER_MODE==='licensed'&&!process.env.NEXT_PUBLIC_WEBCONTAINER_API_KEY)return 'The site owner needs to configure the WebContainer commercial API key.';
+}
+let bootPromise:Promise<WebContainer>|undefined;let owner:NodeRuntime|undefined;
+export class NodeRuntime{
+ private container?:WebContainer;private processes=new Set<WebContainerProcess>();private listeners:(()=>void)[]=[];private mounted=new Set<string>();private installed='';private session=0;private startupTimer:ReturnType<typeof setTimeout>|undefined;
+ constructor(private callbacks:NodeCallbacks){}
+ updateCallbacks(callbacks:NodeCallbacks){this.callbacks=callbacks}
+ async start(project:StudioProject,observer:ObserverConfig){
+  const blocked=nodePreflight();if(blocked)throw new Error(blocked);if(owner&&owner!==this)owner.stop();this.stop();owner=this;const current=++this.session;
+  const api=await import('@webcontainer/api');if(!bootPromise){if(process.env.NEXT_PUBLIC_WEBCONTAINER_API_KEY)api.configureAPIKey(process.env.NEXT_PUBLIC_WEBCONTAINER_API_KEY);bootPromise=api.WebContainer.boot({coep:'credentialless',workdirName:'sukoaa',forwardPreviewErrors:'exceptions-only'}).catch(error=>{bootPromise=undefined;throw error})}
+  const container=await Promise.race([bootPromise,new Promise<never>((_resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('The browser Node runtime did not respond. Check runtime/provider access and try again.')),30000);bootPromise!.finally(()=>clearTimeout(timer)).catch(()=>{})})]);if(current!==this.session)return;this.container=container;
+  this.listeners.forEach(fn=>fn());this.listeners=[];
+  this.listeners.push(container.on('server-ready',(_port,url)=>{if(current===this.session){if(this.startupTimer)clearTimeout(this.startupTimer);this.callbacks.ready(url)}}));this.listeners.push(container.on('preview-message',message=>{if('message'in message)this.callbacks.issue(message.message,message.stack)}));
+  await container.setPreviewScript(observerScript({...observer,mode:'node',mocks:{}}));
+  await this.sync(project);if(current!==this.session)return;await container.fs.rm('.next',{recursive:true,force:true});
+  const packageJson=project.files['package.json']||'';if(this.installed!==packageJson){this.callbacks.log('Installing project dependencies…\n');const process=await container.spawn('npm',['install','--no-audit','--no-fund','--ignore-scripts']);this.track(process,current);const installTimer=setTimeout(()=>process.kill(),180000);const code=await process.exit;clearTimeout(installTimer);this.processes.delete(process);if(current!==this.session)return;if(code!==0)throw new Error('npm install failed. Read the terminal output and check package.json.');this.installed=packageJson}
+  if(current!==this.session)return;this.callbacks.log('\nStarting development server…\n');const server=await container.spawn('npm',['run','dev']);this.track(server,current);this.startupTimer=setTimeout(()=>{if(current===this.session){server.kill();this.callbacks.failed?.('Development server did not expose a preview port within 90 seconds. Check the terminal.')}},90000);server.exit.then(code=>{this.processes.delete(server);if(this.startupTimer)clearTimeout(this.startupTimer);if(current===this.session&&code!==0){const message='Development server exited with code '+code;this.callbacks.failed?this.callbacks.failed(message):this.callbacks.issue(message)}});
+ }
+ private track(process:WebContainerProcess,current:number){this.processes.add(process);process.output.pipeTo(new WritableStream({write:text=>{if(current===this.session)this.callbacks.log(text)}})).catch(()=>{})}
+ async sync(project:StudioProject){if(!this.container)return;const fs=this.container.fs;const next=new Set(Object.keys(project.files));const parents=(paths:Iterable<string>)=>new Set([...paths].flatMap(path=>path.split('/').slice(0,-1).map((_part,index)=>path.split('/').slice(0,index+1).join('/'))));const keepDirs=new Set([...parents(next),...project.folders]);const oldDirs=[...parents(this.mounted)].sort((a,b)=>b.length-a.length);for(const path of this.mounted)if(!next.has(path))await fs.rm(path,{force:true});for(const dir of oldDirs)if(!keepDirs.has(dir)){try{if(!(await fs.readdir(dir)).length)await fs.rm(dir,{recursive:true,force:true})}catch{}}for(const path of project.folders)await fs.mkdir(path,{recursive:true});for(const [path,source]of Object.entries(project.files)){const parent=path.slice(0,path.lastIndexOf('/'));if(path.includes('/'))await fs.mkdir(parent,{recursive:true});await fs.writeFile(path,source)}this.mounted=next}
+ async command(command:string){if(!this.container)throw new Error('Start Node runtime before using the terminal.');const process=await this.container.spawn('jsh',['-c',command]);this.track(process,this.session);const code=await process.exit;this.processes.delete(process);return code}
+ stop(){this.session++;if(this.startupTimer)clearTimeout(this.startupTimer);for(const process of this.processes)process.kill();this.processes.clear();this.listeners.forEach(fn=>fn());this.listeners=[];if(owner===this)owner=undefined}
+ dispose(){this.stop();if(this.container){this.container.teardown();this.container=undefined;bootPromise=undefined}}
+}

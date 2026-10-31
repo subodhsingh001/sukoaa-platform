@@ -1,0 +1,3 @@
+import {body,route,json,sameOrigin} from '@/lib/platform/http';import {requireUser,db} from '@/lib/platform/auth';import {projectInput} from '@/lib/platform/validation';
+export async function GET(){return route(async()=>{const {user,token}=await requireUser('projects-read');return json({projects:await db(`projects?owner_id=eq.${user.id}&select=id,name,language,source,stdin,updated_at&order=updated_at.desc&limit=50`,token)})})}
+export async function POST(req:Request){return route(async()=>{sameOrigin(req);const {user,token}=await requireUser('projects-write',20);const input=projectInput(await body(req));const rows=await db('projects',token,{method:'POST',body:JSON.stringify({...input,owner_id:user.id})});return json({project:rows[0]},201)})}

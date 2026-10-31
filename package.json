@@ -1,0 +1,38 @@
+{
+  "name": "sukoaa-platform",
+  "version": "0.3.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "node scripts/prepare-runtimes.mjs",
+    "prepare:runtimes": "node scripts/prepare-runtimes.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/test-platform.mjs",
+    "predev": "node scripts/prepare-runtimes.mjs",
+    "prebuild": "node scripts/prepare-runtimes.mjs"
+  },
+  "dependencies": {
+    "@webcontainer/api": "1.6.4",
+    "esbuild-wasm": "0.28.2",
+    "fflate": "0.8.3",
+    "lucide-react": "1.31.0",
+    "monaco-editor": "0.57.0",
+    "next": "16.3.4",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "esbuild": "0.28.0",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3"
+  }
+}

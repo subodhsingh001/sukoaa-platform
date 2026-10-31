@@ -1,0 +1,1 @@
+Generated from the installed, lockfile-pinned TypeScript and React packages. Run npm run prepare:runtimes after installation. React MIT and TypeScript Apache-2.0 terms apply; see THIRD-PARTY-NOTICES.md.
