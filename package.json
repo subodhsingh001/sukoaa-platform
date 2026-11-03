@@ -14,7 +14,8 @@
     "prebuild": "node scripts/prepare-runtimes.mjs",
     "prepare:runtimes": "node scripts/prepare-runtimes.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/test-platform.mjs"
+    "test": "node scripts/test-platform.mjs",
+    "test:python:browser": "node scripts/test-python-browser.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
