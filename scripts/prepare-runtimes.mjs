@@ -47,5 +47,5 @@ console.log('Prepared Studio bundler, Monaco editor and local language workers.'
 const pythonRoot=dirname(require.resolve('pyodide/package.json'));
 await mkdir('public/runtime/python',{recursive:true});
 for(const file of ['pyodide.mjs','pyodide.asm.mjs','pyodide.asm.wasm','python_stdlib.zip','pyodide-lock.json'])await copyFile(join(pythonRoot,file),join('public/runtime/python',file));
-await copyFile('lib/platform/python-worker.mjs','public/runtime/python/runner.mjs');
+await build({entryPoints:['lib/platform/python-entry.mjs'],bundle:true,format:'iife',platform:'browser',target:'es2022',outfile:'public/runtime/python/runner.js',minify:true,legalComments:'eof',banner:{js:'/* Sukoaa Python bundled worker v3 */\nself.importScripts = () => { throw new Error("Script imports are disabled in this self-contained worker."); };'},define:{'import.meta.url':JSON.stringify('https://runtime.invalid/pyodide.asm.mjs')},external:['node:*']});
 console.log('Prepared local Pyodide 314.0.7 runtime.');

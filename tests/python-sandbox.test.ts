@@ -3,11 +3,11 @@ import {pythonFrame} from '../lib/platform/sandbox';
 function fixture(){
  const html=pythonFrame('print(1)','Sukoaa','channel','https://sukoaa.example');
  const code=html.match(/<script>([\s\S]*)<\/script>/)![1];const messages:Record<string,unknown>[]=[];const timers=new Map<number,{callback:()=>void;ms:number}>();let id=0;
- class Worker{static instance:Worker;onmessage!:(e:{data:Record<string,unknown>})=>void;onerror!:()=>void;terminated=false;constructor(){Worker.instance=this}postMessage(){}terminate(){this.terminated=true}}
+ class Worker{static instance:Worker;static options:unknown;onmessage!:(e:{data:Record<string,unknown>})=>void;onerror!:(event:{message?:string;preventDefault?:()=>void})=>void;terminated=false;constructor(_url:string,options?:unknown){Worker.instance=this;Worker.options=options}postMessage(){}terminate(){this.terminated=true}}
  const parent={postMessage:(data:Record<string,unknown>)=>messages.push(data)};const window:{onmessage?:(e:unknown)=>void}={};
  vm.runInNewContext(code,{window,Worker,Blob,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},parent,setTimeout:(callback:()=>void,ms:number)=>{timers.set(++id,{callback,ms});return id},clearTimeout:(key:number)=>timers.delete(key)});
  window.onmessage!({source:parent,data:{channel:'channel',payload:{source:'print(1)',stdin:'',assets:{runner:'',wasm:new ArrayBuffer(0),stdlib:new ArrayBuffer(0)}}}});
- return {messages,timers,worker:Worker.instance};
+ return {messages,timers,worker:Worker.instance,workerOptions:Worker.options};
 }
 test('Python frame blocks network access and escapes source markup',()=>{
  const frame=pythonFrame('print("</script><script>alert(1)</script>")','','token','https://sukoaa.example');
@@ -27,4 +27,12 @@ test('user code cannot extend execution time by repeating ready events',()=>{
 });
 test('the frame enforces output bounds even when worker messages bypass Python logging',()=>{
  const f=fixture();for(let i=0;i<201;i++)f.worker.onmessage({data:{line:'output'}});assert.equal(f.worker.terminated,true);assert.ok(f.messages.some(m=>String(m.line).includes('Output exceeded')));
+});
+
+test('Python startup reports the underlying worker error',()=>{
+ const f=fixture();f.worker.onerror({message:'SyntaxError: worker asset failed'});assert.equal(f.worker.terminated,true);assert.ok(f.messages.some(m=>String(m.line).includes('SyntaxError: worker asset failed')));
+});
+
+test('self-contained Python runner starts with the same classic worker mode as JavaScript',()=>{
+ const f=fixture();assert.equal(f.workerOptions,undefined);
 });

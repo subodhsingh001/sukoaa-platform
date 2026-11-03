@@ -34,3 +34,17 @@ JavaScript syntax/runtime errors now carry source locations, TS/TSX runtime erro
 - The preview daemon returned its URL but that URL was unreachable from the test browser (connection refused; HTTP probe returned 503). Browser preview QA is unverified; no success is inferred from the Node runtime checks.
 - The deployed site remained behind its existing ChatGPT sign-in gate. Automated approval review blocked entering the authentication origin, so signed-in browser execution was not verified.
 - No live Judge0 service was provisioned; Go remains configuration dependent. AI stays disabled.
+
+## Python startup fix — 3 November 2026
+
+The runtime JavaScript is now bundled into a self-contained module worker. It no longer imports separate blob ES modules while initializing inside the opaque sandbox. Asset checks reject missing/stale worker responses. Worker startup failures preserve the underlying browser message rather than always suggesting a local preparation command.
+
+The generated worker is tested with its real WASM and standard-library payload in worker threads using browser-style globals and no Node process or network access, in addition to the existing native Pyodide and sandbox tests. These are runtime integration checks, not a substitute for real-browser certification. The managed preview URL again returned connection refused to the test browser; real browser QA remains unavailable.
+
+For an existing Vercel deployment, copy the updated source, commit/push it, confirm the Git-integrated production deployment succeeds, then hard-reload. Run `npm ci` and `npm run prepare:runtimes` for local setup; a successful build includes preparation automatically. A change to the ChatGPT-hosted preview does not update a separate GitHub/Vercel deployment.
+
+## Opaque sandbox worker compatibility update
+
+The user reported another startup failure before the Python handler ran. The previous bootstrap used a module worker; the exact browser rejection could not be inspected here. The revised bootstrap uses the same classic blob-worker mode as the JavaScript snippet runner. The already self-contained bundle disables importScripts before initializing the supplied Pyodide loader/factory; no module or external-script loading is needed. This is an adapted bundled runtime, rather than the upstream standalone loader. Opaque-origin isolation, network denial, bounded output, hard termination and per-run state are retained.
+
+65 automated checks pass, including generated-worker WASM execution and an explicit startup-mode regression check. Real browser verification remains unavailable because the managed preview route is unreachable; this update must still be checked on the actual deployment. Runtime asset requests include revision=3 and reject an older worker bundle.

@@ -1,6 +1,6 @@
 {
   "name": "sukoaa-platform",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "private": true,
   "engines": {
     "node": "24.x"
@@ -14,8 +14,7 @@
     "prebuild": "node scripts/prepare-runtimes.mjs",
     "prepare:runtimes": "node scripts/prepare-runtimes.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/test-platform.mjs",
-    "test:python:browser": "node scripts/test-python-browser.mjs"
+    "test": "node scripts/test-platform.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
