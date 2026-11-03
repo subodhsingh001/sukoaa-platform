@@ -25,3 +25,12 @@ JavaScript syntax/runtime errors now carry source locations, TS/TSX runtime erro
 44 automated tests cover multi-file builds, original-source mappings, missing imports, file/folder rename, import rewriting, path/secret rejection, ZIP size checks, response bootstrap isolation and existing platform guards. Browser tests confirm the imported React counter, mock fetch status/timing/source labels, console capture, folder/file creation, rendering a newly imported component, and editor/runtime error positions in that imported file. The exact Next.js Studio starter passes a real local Next.js webpack production build with its API route. WebContainer boot and browser-hosted npm/dev-server were not verified because the managed browser's HTTP preview is not a secure context. External npm CDN packages and real third-party API CORS behavior are not claimed as live verified.
 
 0.3.1 adds worker URL/cancellation, static asset validation, Pages/App starter selection, error deduplication and stale directory cleanup tests. React worker and fallback were browser-tested. The Pages Router starter builds on native Node. Native Next.js browser preview QA is limited by the managed preview adapter; WebContainer execution is also unverified because its QA host is HTTP.
+
+## Browser Python update — 3 November 2026
+
+- 61 automated checks passed, including real Pyodide/CPython execution, Unicode and multiline input, SyntaxError line/column, nested runtime tracebacks, EOFError, fresh user globals, SystemExit, sandbox markup escaping, separate load/execution deadlines, output limits and late-message handling.
+- TypeScript `tsc --noEmit` passed.
+- Production Sites build passed.
+- The preview daemon returned its URL but that URL was unreachable from the test browser (connection refused; HTTP probe returned 503). Browser preview QA is unverified; no success is inferred from the Node runtime checks.
+- The deployed site remained behind its existing ChatGPT sign-in gate. Automated approval review blocked entering the authentication origin, so signed-in browser execution was not verified.
+- No live Judge0 service was provisioned; Go remains configuration dependent. AI stays disabled.

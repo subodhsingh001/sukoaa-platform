@@ -42,3 +42,10 @@ const reactRequire=createRequire(require.resolve('@types/react/package.json'));
 types['file:///node_modules/csstype/index.d.ts']=await readFile(reactRequire.resolve('csstype/index.d.ts'),'utf8');
 await writeFile('public/runtime/monaco/react-types.json',JSON.stringify(types));
 console.log('Prepared Studio bundler, Monaco editor and local language workers.');
+
+// Pinned browser Python runtime. No CDN, remote execution key or account needed.
+const pythonRoot=dirname(require.resolve('pyodide/package.json'));
+await mkdir('public/runtime/python',{recursive:true});
+for(const file of ['pyodide.mjs','pyodide.asm.mjs','pyodide.asm.wasm','python_stdlib.zip','pyodide-lock.json'])await copyFile(join(pythonRoot,file),join('public/runtime/python',file));
+await copyFile('lib/platform/python-worker.mjs','public/runtime/python/runner.mjs');
+console.log('Prepared local Pyodide 314.0.7 runtime.');

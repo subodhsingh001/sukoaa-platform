@@ -44,9 +44,9 @@ Production protected writes require Redis. Missing/unavailable Redis produces a 
 
 `TRUSTED_CLIENT_IP_HEADER` must identify a header your hosting proxy overwrites. Leave it blank until you verify that guarantee. Blank means one shared anonymous auth bucket, so it is safe but restrictive for multiple simultaneous signup users. Rate limits are not a substitute for Supabase's auth protections and monitoring.
 
-## 4. Optional Python/Go runner
+## 4. Browser Python and optional Go runner
 
-Follow `docs/05-CODE-RUNTIMES.md`. Do not fill a random public endpoint or assume free shared execution access. This is a separate service you must choose and operate or subscribe to.
+Python works locally after runtime assets are prepared; open `/workspace?language=python`. For Go remote execution, follow `docs/05-CODE-RUNTIMES.md`. Do not fill a random public endpoint or assume free shared execution access. This is a separate service you must choose and operate or subscribe to.
 
 ## 5. Commands before deployment
 

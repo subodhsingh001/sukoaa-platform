@@ -1,7 +1,7 @@
 import type {NextConfig} from 'next';
 const nextConfig:NextConfig={
  poweredByHeader:false,
- output: process.env.VERCEL ? undefined : 'standalone',
+ output:process.env.VERCEL?undefined:'standalone',
  turbopack:{root:process.cwd()},
  outputFileTracingRoot:process.cwd(),
  async headers(){return [{source:'/studio',headers:[{key:'Cross-Origin-Embedder-Policy',value:'credentialless'},{key:'Cross-Origin-Opener-Policy',value:'same-origin'}]},{source:'/runtime/:path*',headers:[{key:'Cross-Origin-Resource-Policy',value:'same-origin'}]},{source:'/(.*)',headers:[

@@ -31,3 +31,5 @@
 .diagnostic-item:disabled strong{text-decoration:none;color:#ab8277}
 .workspace-result>pre.console-error{color:#ae4d48}
 @media(max-width:620px){.code-editor{--editor-line-height:20.9px}.line-number-viewport{min-width:31px}.diagnostics-panel{padding:12px}.diagnostics-heading{font-size:11px;flex-wrap:wrap}.diagnostics-heading>span:last-child{width:100%;margin:0 0 0 23px;font-size:8px}.diagnostic-item{flex-direction:column;gap:3px;font-size:10px}.diagnostic-item strong{font-size:10px}}
+
+.card-bottom>a{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#edf2e6;color:#536e43}.card-title{text-decoration:none}

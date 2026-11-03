@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
-import './globals.css';
-export const metadata: Metadata = {title:'Sukoaa — A little less friction. A lot more possibility.',description:'Discover a thoughtful home for everyday tools, the Sukoaa browser, extensions, and coding playgrounds.',icons:{icon:'/favicon.svg'}};
-export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="en"><body>{children}</body></html>}
+import type {Metadata} from 'next';import './globals.css';import {canonicalOrigin,indexingEnabled} from '@/lib/marketing/site';import {StructuredData} from '@/components/marketing/StructuredData';
+const origin=canonicalOrigin();const verification=process.env.GOOGLE_SITE_VERIFICATION;
+export const metadata:Metadata={metadataBase:new URL(origin||'http://localhost:3000'),title:{default:'Sukoaa — Browser, Chrome Extensions & Developer Tools',template:'%s | Sukoaa'},description:'Thoughtful browser tools, Chrome extensions, and online developer workspaces from Sukoaa.',icons:{icon:'/favicon.svg'},robots:{index:indexingEnabled(),follow:true},...(verification?{verification:{google:verification}}:{})};
+export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="en"><body>{origin&&<StructuredData data={{'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':origin+'/#organization',name:'Sukoaa',url:origin,logo:origin+'/favicon.svg'},{'@type':'WebSite','@id':origin+'/#website',name:'Sukoaa',url:origin,publisher:{'@id':origin+'/#organization'}}]}}/>}{children}</body></html>}

@@ -1,4 +1,4 @@
-# Sukoaa Platform — v0.3.1
+# Sukoaa Platform — v0.4.0
 
 A professional home for Sukoaa's browser, extensions and developer tools. This source release includes the frontend, Next.js backend routes, Supabase database migration, optional Redis integration, a code workspace, release distribution metadata and setup guides. **AI agents are disabled.**
 
@@ -26,7 +26,8 @@ Open **/studio** for multi-file React/Next.js projects. It includes folders/file
 | TypeScript | Single-file transpilation + JavaScript execution; syntax diagnostics, **not full type checking** |
 | HTML + CSS | Restricted iframe preview; inline JavaScript supported |
 | React / TSX | Multi-file Studio with relative/CSS/JSON imports, browser package resolution, local preview and Monaco editor; old quick examples remain available |
-| Python + Go | Judge0 adapter included; requires a real isolated runner, login and Redis; **not live-configured** |
+| Python | Local Pyodide runtime, standard input, console and source error positions; no login required |
+| Go | Judge0 adapter included; requires a real isolated runner, login and Redis; **not live-configured** |
 | Next.js coding environment | Multi-file Studio + integrated WebContainer Node runner. Requires supported browser, HTTPS/localhost, isolation headers and runtime/provider access; live browser Node execution needs verification on your deployment |
 | Sign up/sign in/sign out/email confirmation | Backend/UI implemented; requires Supabase project and email settings |
 | Cloud project create/open/update/delete | Backend/UI + RLS implemented; requires Supabase migration and production Redis |
@@ -75,10 +76,18 @@ Never commit `.env.local`, real tokens, `node_modules` or `.next`. Run `npm run 
 
 The portable ZIP is a standard Next.js App Router application. Deploy it to a Next.js host or run its Docker container. The ChatGPT Site preview is a separate Vinext/Cloudflare adaptation of the same app sources; its hosting configuration is intentionally absent from the portable ZIP. You do not need a ChatGPT Sites account to deploy the portable project.
 
-Free tiers can support evaluation and small usage, not an unlimited compiler platform. Vercel Hobby is restricted to personal/non-commercial use; a commercial Sukoaa launch needs an eligible plan or another suitable host. Python/Go compute and future AI usage have separate resource costs. Details and official sources are in the deployment guide.
+Free tiers can support evaluation and small usage, not an unlimited compiler platform. Vercel Hobby is restricted to personal/non-commercial use; a commercial Sukoaa launch needs an eligible plan or another suitable host. Remote execution and future AI usage have separate resource costs. Details and official sources are in the deployment guide.
 
 ## Verification and remaining work
 
 See [docs/07-VALIDATION.md](docs/07-VALIDATION.md). No live user databases, Redis databases or compiler subscriptions were created for you. Live account flows, database policies and external execution need end-to-end verification after you connect your accounts. This is a tested starter implementation, not a production certification.
 
 Self-service password reset, social sign-in, organizations, billing, an npm package sandbox, a full Next.js browser IDE, admin editing/deletion of releases, and active AI agents are not part of this release. See the staged growth plan.
+
+## Distribution and SEO
+
+Dedicated browser, extension and developer-tool pages are available. Use docs/09-PUBLISHING-AND-SEO.md to connect real store/installer links, set the canonical domain and enable indexing only on the public production site. Store submissions, binaries and Search Console verification remain separate account actions.
+
+### Browser Python
+
+Open `/workspace?language=python`. Pyodide 314.0.7 runs locally with standard-library imports, prefilled standard input, console output, red error lines, Stop and a 10-second execution limit. No login, Supabase, Redis or Judge0 is needed. Run `npm run prepare:runtimes` after installing dependencies. Python is a single-file snippet tool; arbitrary pip installs, network calls and server projects are not supported. See docs/05-CODE-RUNTIMES.md.

@@ -24,3 +24,7 @@ test('remote run never starts without required Redis',async()=>{let calls=0;glob
 
 import './diagnostics.test';
 import './studio.test';
+
+import './marketing.test';
+
+import './python-sandbox.test';
