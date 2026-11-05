@@ -28,3 +28,8 @@ import './studio.test';
 import './marketing.test';
 
 import './python-sandbox.test';
+
+import './accounts.test';
+import './data-tools.test';
+
+import "./editor-keys.test";

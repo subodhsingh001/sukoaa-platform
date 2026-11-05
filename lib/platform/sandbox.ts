@@ -1,3 +1,4 @@
+import {sqlProgram} from './sql-program.mjs';
 // Untrusted code executes only inside an opaque-origin iframe (no allow-same-origin).
 // A sourceURL and a calibrated Function wrapper offset preserve user-code locations.
 const errorHelpers=String.raw`
@@ -36,5 +37,17 @@ export function reactFrame(source:string,runtime:string,channel:string){
 // opaque sandbox. Python itself has no network or application-origin access.
 export function pythonFrame(source:string,stdin:string,channel:string,_origin:string){
  const script=`const channel=${JSON.stringify(channel)};const report=data=>parent.postMessage({channel,...data},'*');let w,workerURL,finished=false,executionStarted=false,started=false,lines=0,characters=0;const finish=()=>{finished=true;clearTimeout(timer);if(w)w.terminate();if(workerURL)URL.revokeObjectURL(workerURL)};const timeout=(message)=>{if(finished)return;finish();report({line:message,diagnostic:{message},done:true})};let timer=setTimeout(()=>timeout('Python runtime could not initialize within 45 seconds. Try again.'),45000);window.onmessage=e=>{if(e.source!==parent||e.data?.channel!==channel||started||finished)return;started=true;const payload=e.data.payload;try{workerURL=URL.createObjectURL(new Blob([payload.assets.runner],{type:'text/javascript'}));w=new Worker(workerURL);w.onmessage=e=>{if(finished)return;const data=e.data;if(data.ready){if(executionStarted)return;executionStarted=true;clearTimeout(timer);timer=setTimeout(()=>timeout('Execution exceeded the 10-second limit. Check for an infinite loop.'),10000);report({progress:'Running Python…'});return}if(typeof data.line==='string'){lines++;characters+=data.line.length;if(lines>200||characters>30000){timeout('Output exceeded 200 lines or 30,000 characters. Execution stopped.');return}}report(data);if(data.done){if(!lines)report({line:'Completed. No console output.'});finish()}};w.onerror=e=>{if(e.preventDefault)e.preventDefault();const detail=typeof e.message==='string'&&e.message?e.message.slice(0,500):'The browser could not start the Python worker.';timeout('Python could not start: '+detail)};w.postMessage(payload,[payload.assets.wasm,payload.assets.stdlib])}catch(error){timeout('Python sandbox startup failed: '+String(error?.message||error))}};report({pythonReady:true});`;
+ return frame(script,"default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:; worker-src blob:; connect-src 'none'; form-action 'none'; base-uri 'none';");
+}
+
+export function sqlFrame(source:string,runtime:string,channel:string){
+ const worker=runtime+String.raw`
+const send=postMessage.bind(self);let count=0,size=0;
+const emit=line=>{const text=String(line).slice(0,2000);if(++count>200||(size+=text.length)>30000)throw new Error('Console output limit reached.');send({line:text})};
+onmessage=async e=>{const source=e.data;let statementLine=1;try{
+`+sqlProgram+String.raw`
+send({done:true});}catch(error){const message='SQL statement starting at line '+statementLine+': '+(error?.message||String(error));send({line:message,diagnostic:{message,line:statementLine,source:'main.sql'},done:true})}};
+`;
+ const script=`const channel=${JSON.stringify(channel)};const report=data=>parent.postMessage({channel,...data},'*');const url=URL.createObjectURL(new Blob([${JSON.stringify(worker)}],{type:'text/javascript'}));const w=new Worker(url);let finished=false;const end=()=>{finished=true;clearTimeout(timer);w.terminate();URL.revokeObjectURL(url)};const timer=setTimeout(()=>{if(finished)return;end();report({line:'SQL execution exceeded 10 seconds.',diagnostic:{message:'SQL execution exceeded 10 seconds.'},done:true})},10000);w.onmessage=e=>{if(finished)return;report(e.data);if(e.data.done)end()};w.onerror=e=>{if(finished)return;end();const message='SQL runtime could not start: '+(e.message||'Please reload.');report({line:message,diagnostic:{message},done:true})};w.postMessage(${JSON.stringify(source)});`;
  return frame(script,"default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:; worker-src blob:; connect-src 'none'; form-action 'none'; base-uri 'none';");
 }

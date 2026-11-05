@@ -91,3 +91,12 @@ Dedicated browser, extension and developer-tool pages are available. Use docs/09
 ### Browser Python
 
 Open `/workspace?language=python`. Pyodide 314.0.7 runs locally with standard-library imports, prefilled standard input, console output, red error lines, Stop and a 10-second execution limit. No login, Supabase, Redis or Judge0 is needed. Run `npm run prepare:runtimes` after installing dependencies. Python is a single-file snippet tool; arbitrary pip installs, network calls and server projects are not supported. See docs/05-CODE-RUNTIMES.md.
+
+### Account email and data tools update
+
+SQL/SQLite and JSON validation run locally without accounts. Editors start at 16px with persistent A−/A+ controls. For SQL/JSON cloud saves, apply supabase/migrations/002_sql_json_projects.sql after migration 001.
+
+Registration and confirmation resend require a configured APP_ORIGIN, Supabase and production Redis. Actual mail delivery is configured in Supabase (verified custom SMTP sender, email confirmation and callback URL allow list). See docs/02-LOCAL-SETUP.md and /setup#email. No live delivery is claimed from code tests.
+
+### Editor and navigation update (0.5.1)
+Tool cards open their editor directly. Quick editors pair brackets and quotes, indent blocks on Enter, and expand `for` with Tab. Tool filters use larger text. Platform setup is available only to server-verified administrators at `/admin/setup`; `/setup` redirects there.

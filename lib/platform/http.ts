@@ -1,3 +1,4 @@
+import {appOrigin} from './config';
 export class HttpError extends Error {
   constructor(public status:number, message:string, public code='REQUEST_FAILED',public retryAfter?:number){super(message)}
 }
@@ -11,7 +12,7 @@ export function fail(error:unknown){
 export async function route(fn:()=>Promise<Response>){try{return await fn()}catch(e){return fail(e)}}
 export function sameOrigin(request:Request){
   const origin=request.headers.get('origin');
-  const expected=process.env.APP_ORIGIN || (process.env.NODE_ENV!=='production'?new URL(request.url).origin:'');
+  const expected=appOrigin() || (process.env.NODE_ENV!=='production'?new URL(request.url).origin:'');
   if(!expected)throw new HttpError(503,'Set APP_ORIGIN before enabling account or remote-runner actions.','SETUP_REQUIRED');
   if(!origin || origin!==expected)throw new HttpError(403,'This request must come from the Sukoaa website.','ORIGIN_REJECTED');
   if(request.headers.get('sec-fetch-site')==='cross-site')throw new HttpError(403,'Cross-site request rejected.','ORIGIN_REJECTED');

@@ -44,3 +44,11 @@ Official API reference: https://ce.judge0.com/
 The new /studio supports multi-file React and Next.js source projects. React Fast bundles local modules, CSS and JSON and resolves declared exact-version browser dependencies via esm.sh. Next.js uses the integrated WebContainer Node runner, with actual package installation, dev-server output and preview. The optional runtime requires HTTPS/localhost, COOP/COEP, a supported browser, internet, compatible packages and appropriate provider licensing for commercial production. It was not live-tested through WebContainer in this HTTP preview environment; its exact Next.js starter passed a local production build. See docs/08-PROJECT-STUDIO.md for complete behavior and setup.
 
 The old /workspace remains a quick snippet tool. Python runs locally with Pyodide; Go still requires a separate Judge0 service. A browser Node runtime does not make those remote backends active.
+
+## SQL and JSON tools
+
+SQL uses sql.js 1.15.2 with embedded SQLite WASM, prepared locally. It executes in an opaque-origin classic worker with network denied, a 10-second watchdog, a fresh in-memory database per run, a 100-statement limit and 100 result-row limit. Results appear in Console. Errors identify the start of the failing SQL statement; this is not a claim of an exact SQLite token offset. No Supabase login or server database is needed.
+
+JSON uses native strict JSON parsing and jsonc-parser only to locate syntax errors when browser messages omit positions. Comments/trailing commas are rejected. Validate displays pretty JSON; input is never evaluated as JavaScript. Local drafts/export work for both tools. Cloud saves need migration 002.
+
+Both editors now start at 16px and provide A− / A+ controls (12–24px), saved on the device. Project Studio uses the same preference. Console and input text are enlarged too.

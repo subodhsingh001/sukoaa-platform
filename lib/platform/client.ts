@@ -11,3 +11,6 @@ export function transpile(source:string,react=false,javascript=false){return new
  worker.onerror=()=>{clearTimeout(timer);worker.terminate();reject(new Error('TypeScript runtime could not load. Run npm run prepare:runtimes.'))};worker.postMessage({source,react,javascript});
 })}
 export function download(name:string,source:string,type='text/plain'){const url=URL.createObjectURL(new Blob([source],{type}));const anchor=document.createElement('a');anchor.href=url;anchor.download=name;anchor.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+
+let sqlRuntime:string|undefined;
+export async function loadSqlRuntime(signal?:AbortSignal){if(sqlRuntime)return sqlRuntime;const response=await fetch('/runtime/sql/sql-wasm-inline.js',{signal});if(!response.ok)throw new Error('SQL runtime files are unavailable. Please reload or contact support.');const text=await response.text();if(!text.includes('initSqlJs')||text.trimStart().startsWith('<'))throw new Error('SQL runtime could not load. Please reload.');return sqlRuntime=text}

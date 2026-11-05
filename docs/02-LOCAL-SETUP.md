@@ -17,7 +17,7 @@ No environment file is needed for browser-only tools. Stop the development serve
 
 1. Open https://supabase.com/dashboard and create your own account.
 2. Create a new project. Choose the available region nearest your initial users; for an India-focused launch, use a nearby India/Asia region if offered. Save the database password in a password manager.
-3. Open SQL Editor → New query. Paste the complete `supabase/migrations/001_platform.sql` and run it once in a new project. It creates four public tables with RLS, indexes and triggers. It backfills profiles/roles for users who already exist.
+3. Open SQL Editor → New query. Paste the complete `supabase/migrations/001_platform.sql` and run it once in a new project. Then run `002_sql_json_projects.sql` to allow SQL and JSON cloud project saves. It creates four public tables with RLS, indexes and triggers. It backfills profiles/roles for users who already exist.
 4. Under project settings/API or the Connect dialog, copy the project URL and **publishable** API key. Do not use the service-role/secret key for this app.
 5. Copy `.env.example` to `.env.local` in the project root. Fill `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `APP_ORIGIN=http://localhost:3000`. Do not include a trailing slash on APP_ORIGIN.
 6. In Authentication settings enable Email/password and email confirmation. Set Site URL to `http://localhost:3000`. Add the local and future production URLs to the redirect allow list as required by your settings.
@@ -60,3 +60,13 @@ npm start
 `npm start` runs production mode. On localhost set APP_ORIGIN correctly, but browser Secure cookies require HTTPS for normal production-host use. Use development mode for ordinary local account testing; test production accounts on an HTTPS staging deployment.
 
 If generated runtime assets are missing, run `npm run prepare:runtimes`. If installing from a registry fails, check your own network access; the ZIP does not include node_modules.
+
+## Confirmation email troubleshooting
+
+A missing APP_ORIGIN rejects the request before contacting Supabase; it does not queue an email. Set APP_ORIGIN to the exact deployment origin and restart/redeploy. Also configure Supabase, Redis (in production), Email/password, Confirm email, Site URL and the /account redirect allow-list entry.
+
+For real recipients configure a verified custom SMTP sender in Supabase. The built-in sender is limited to project-team addresses and currently a very small email allowance. Inspect Supabase Auth logs and the provider delivery log for rejection/rate-limit details; a successful API request is not proof an email reached the inbox.
+
+The account page supports both the default Supabase confirmation redirect (the fragment refresh token is exchanged server-side and immediately removed from the address bar) and the custom token-hash link shown above. Resend confirmation does not require a password; server and browser cooldowns apply. No SMTP password is stored in this website source. Configure SMTP inside Supabase, never in a browser environment variable.
+
+Official references: https://supabase.com/docs/guides/auth/auth-smtp and https://supabase.com/docs/guides/auth/rate-limits .

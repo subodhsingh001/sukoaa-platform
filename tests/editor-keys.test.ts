@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {editorKeyEdit as edit} from '../lib/platform/editor-keys';
+test('brackets pair and closing characters are skipped',()=>{assert.deepEqual(edit('for',3,3,'('),{source:'for()',start:4,end:4});assert.deepEqual(edit('for()',4,4,')'),{source:'for()',start:5,end:5});assert.equal(edit('',0,0,'{')?.source,'{}')});
+test('selection wraps and paired deletion preserves surrounding code',()=>{assert.deepEqual(edit('hello',0,5,'['),{source:'[hello]',start:1,end:6});assert.deepEqual(edit('a()b',2,2,'Backspace'),{source:'ab',start:1,end:1})});
+test('Enter creates an indented block with the caret inside',()=>{assert.deepEqual(edit('  {}',3,3,'Enter'),{source:'  {\n    \n  }',start:8,end:8});assert.equal(edit('if True:',8,8,'Enter','python')?.source,'if True:\n    ')});
+test('for Tab inserts a usable loop body',()=>{const next=edit('for',3,3,'Tab');assert.equal(next?.source,'for (let i = 0; i < 10; i++) {\n  \n}');assert.equal(next?.source.slice(next.start,next.start+2),'\n}')});
+test('quotes avoid escaped and word-internal insertion',()=>{assert.equal(edit('don',3,3,"'"),null);assert.equal(edit('\\',1,1,'"'),null);assert.equal(edit('',0,0,'"')?.source,'""')});
