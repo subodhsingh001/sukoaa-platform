@@ -53,3 +53,10 @@
 
 /* Comfortable, wrapping toolkit filters. */
 .tool-toolbar .tabs{gap:6px;flex-wrap:wrap}.tool-toolbar .tabs button{font-size:16px;min-height:44px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px}.tool-toolbar .tabs button span{font-size:12px;min-width:22px;line-height:22px}.tool-toolbar .search-tools input{font-size:16px}@media(max-width:680px){.tool-toolbar{flex-wrap:wrap}.tool-toolbar .tabs{width:100%}.tool-toolbar .tabs button{padding:10px 12px}}
+
+/* Shared geometric S branding. No external image or font requests. */
+.brand .sukoaa-logo{max-width:160px;object-fit:contain}
+.mini-body>.sukoaa-logo{display:block!important;margin:0 auto 8px}
+.final-cta>.sukoaa-logo{width:48px!important;height:48px!important}
+.intro-strip>.sukoaa-logo{opacity:.6}
+@media(max-width:600px){.workspace-header .brand .sukoaa-logo{height:28px!important;max-width:124px}.brand .sukoaa-logo{max-width:142px}}

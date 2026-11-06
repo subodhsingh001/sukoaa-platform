@@ -59,3 +59,6 @@
 .studio-shell .console-line pre,.studio-shell .studio-terminal>pre,.studio-shell .studio-terminal input{font-size:max(14px,calc(var(--code-font-size,16px) - 1px));line-height:1.65}
 .studio-shell .tree-row{font-size:13px}.studio-shell .debugger-tabs>button{font-size:12px}.studio-shell .studio-issues strong{font-size:13px}.studio-shell .network-list summary{font-size:12px}.studio-toolbar-actions .editor-font-control{margin-left:auto}
 @media(max-width:760px){.studio-toolbar-actions .editor-font-control{margin-left:0}.studio-shell .console-line pre,.studio-shell .studio-terminal>pre{font-size:14px}}
+
+.studio-brand>.sukoaa-logo{height:30px!important;max-width:133px}.preview-welcome>.sukoaa-logo{display:block!important;margin:0 auto 22px}.studio-loading>.sukoaa-logo{height:34px!important;width:auto!important}
+@media(max-width:600px){.studio-brand>.sukoaa-logo{height:26px!important;max-width:115px}}
