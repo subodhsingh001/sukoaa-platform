@@ -33,3 +33,7 @@ import './accounts.test';
 import './data-tools.test';
 
 import "./editor-keys.test";
+
+import "./console-values.test";
+
+import "./python-http.test";

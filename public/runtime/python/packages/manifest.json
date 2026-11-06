@@ -1,0 +1,32 @@
+[
+  {
+    "name": "requests",
+    "filename": "requests-2.33.1-py3-none-any.whl",
+    "version": "2.33.1",
+    "sha256": "6d62c51c4e7707386bfc2ef54845c16cdaeb99606c064357cccfe4d621285175"
+  },
+  {
+    "name": "urllib3",
+    "filename": "urllib3-2.6.3-py3-none-any.whl",
+    "version": "2.6.3",
+    "sha256": "86b7c1af060597b115bcde5e36798039ca50b221afe14aa03d3437ac09b02a75"
+  },
+  {
+    "name": "certifi",
+    "filename": "certifi-2026.4.22-py3-none-any.whl",
+    "version": "2026.4.22",
+    "sha256": "c2c0091986db798df5fd84582d289496f31244a898ec032b7015278c2d82c80c"
+  },
+  {
+    "name": "idna",
+    "filename": "idna-3.11-py3-none-any.whl",
+    "version": "3.11",
+    "sha256": "1619419bc899f07c7a608a12e8238e5e0bc15bb25fec90cfe20a86bb849ba0d8"
+  },
+  {
+    "name": "charset-normalizer",
+    "filename": "charset_normalizer-3.4.7-py3-none-any.whl",
+    "version": "3.4.7",
+    "sha256": "9e437ef92fa51f06eedeb1ef092c0a887bd24fe0d40b1e900191117ce1653121"
+  }
+]

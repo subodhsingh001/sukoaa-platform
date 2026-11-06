@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useState,type CSSProperties} from 'react';
 export function useEditorFont(){
- const [fontSize,setFontSize]=useState(16);
+ const [fontSize,setFontSize]=useState(18);
  useEffect(()=>{try{const value=Number(localStorage.getItem('sukoaa-editor-font'));if(Number.isFinite(value)&&value>=12&&value<=24)setFontSize(value)}catch{}},[]);
  function changeFont(next:number){const value=Math.max(12,Math.min(24,next));setFontSize(value);try{localStorage.setItem('sukoaa-editor-font',String(value))}catch{}}
  const fontStyle={'--code-font-size':fontSize+'px','--code-line-height':Math.round(fontSize*1.6)+'px'} as CSSProperties;

@@ -100,3 +100,20 @@ Registration and confirmation resend require a configured APP_ORIGIN, Supabase a
 
 ### Editor and navigation update (0.5.1)
 Tool cards open their editor directly. Quick editors pair brackets and quotes, indent blocks on Enter, and expand `for` with Tab. Tool filters use larger text. Platform setup is available only to server-verified administrators at `/admin/setup`; `/setup` redirects there.
+
+### Spacious workspace (0.6.0)
+The quick playground uses side-by-side code and output panels on desktop. Choose Code + output, Code only, or Output only; Full-page view hides surrounding navigation and Escape returns to the regular page. On small screens panels stack.
+
+The editor provides syntax highlighting, bracket pairing, indentation, folding chevrons, Fold all / Expand all, and adjustable text size (18px default). Folding hides code visually without changing saved or exported source. If editor assets are unavailable, a basic textarea remains usable; folding is unavailable in that fallback.
+
+Complete JSON arrays or objects printed as a single JavaScript/TypeScript console argument can be expanded in the console. Other messages remain plain text. Existing runtime output limits still apply; truncated output cannot be expanded. Python is available directly from the homepage toolkit.
+
+### Python async execution fix (0.6.1)
+Python code now enters through an awaited PyProxy call on runtimes with WebAssembly JavaScript Promise Integration (JSPI). This fixes `asyncio.run()` / `asyncio.gather()` reporting a synchronous-entrypoint stack-switch error and ensures output and async exceptions arrive before completion. The original source is executed unchanged; error line mapping and the 10-second execution deadline remain in place. Existing synchronous programs retain their previous execution path when JSPI is unavailable; blocking async entrypoints such as `asyncio.run()` require a JSPI-capable runtime. Python runtime assets use revision 4 to avoid the previous runner being reused from cache.
+
+### Python API mode (0.7.0)
+The Python playground bundles real Requests 2.33.1, urllib3 2.6.3, certifi 2026.4.22, idna 3.11 and charset-normalizer 3.4.7 from the pinned Pyodide distribution. Dependencies are hash-verified at preparation and browser loading; no user pip command is needed. To try it, select Python, click **Load API example + enable access**, then Run. The example uses `/users/1`; its output is visible in Console and the request/status/body preview in API / Network.
+
+API access starts OFF. This release allows only HTTPS GET/HEAD to `jsonplaceholder.typicode.com`, up to 5 requests per run, a 10-second request timeout and 256 KB responses. API-enabled execution lasts at most 20 seconds (offline mode: 10 seconds). Browser CORS applies. Cookies, authorization headers, request bodies, redirects, streaming, custom TLS certificates and proxies are not supported. Other hosts/methods are blocked. The adapter uses the real Requests response and exception types but is not a full server Python networking environment. Arbitrary pip installation is not supported.
+
+The opaque-origin Python frame and worker retain `connect-src 'none'`; a channel-scoped parent bridge validates every API request and performs credential-free browser fetches. Stopping/editing a run or disabling access cancels pending fetches. No server-side HTTP proxy or Python execution service is introduced; there are no additional service credentials or database migrations. The curated API origin policy lives in `lib/platform/python-http.ts`. Do not add authenticated or private-network services to that list.

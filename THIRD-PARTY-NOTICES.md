@@ -9,3 +9,14 @@ Project Studio adds esbuild-wasm (MIT), Monaco Editor (MIT), fflate (MIT), and @
 Browser Python adds **Pyodide 314.0.7 (MPL-2.0)** and its bundled CPython/WebAssembly standard library. The upstream files are copied unmodified; source: https://github.com/pyodide/pyodide/tree/314.0.7. Retain MPL-2.0 and the CPython/PSF and bundled component notices. Copies of the Pyodide license and the runtime Python license information are served under public/runtime/python. No optional PyPI packages are included or automatically installed.
 
 SQL adds sql.js 1.15.2 (MIT) and SQLite (public domain). The inline WASM runtime retains its embedded notices; the sql.js license is copied alongside it in public/runtime/sql. Source: https://github.com/sql-js/sql.js . JSON diagnostic positions use Microsoft jsonc-parser 3.3.1 (MIT); its license applies to its bundled code. Source: https://github.com/microsoft/node-jsonc-parser .
+
+## Bundled Python HTTP dependencies (0.7.0)
+Unmodified pure-Python wheels from the pinned Pyodide 314.0.7 distribution are distributed in `public/runtime/python/packages`. Each wheel contains its upstream license and metadata. `manifest.json` records the exact version and SHA-256, verified by `scripts/prepare-python-packages.mjs`.
+
+- Requests 2.33.1 — Apache-2.0.
+- urllib3 2.6.3 — MIT.
+- certifi 2026.4.22 — MPL-2.0.
+- idna 3.11 — BSD-3-Clause.
+- charset-normalizer 3.4.7 — MIT.
+
+The Python source files, certificate bundle and license notices remain included in those wheels. Preserve them in source and deployment distributions.
