@@ -24,7 +24,7 @@ export async function POST(req:Request,ctx:Context){return route(async()=>{
  }
  if(action==='confirm'){
   const token_hash=text(input.token_hash,'Confirmation token',500,1);const response=await authFetch('verify',{method:'POST',body:JSON.stringify({token_hash,type:'email'})});
-  if(!response.ok)throw new HttpError(400,'Confirmation link is invalid or expired.');const data=await response.json() as Session;if(data.access_token)await setSession(data);return json({ok:true,user:data.user});
+  if(!response.ok)throw new HttpError(400,'Confirmation link is invalid or expired.');const data=await response.json() as Session;if(!data.access_token||!data.user?.id)throw new HttpError(502,'The confirmation did not create a session. Please sign in again.');await setSession(data);return json({ok:true,authenticated:true,user:data.user});
  }
  const email=text(input.email,'Email',254,3).trim();
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new HttpError(400,'Enter a valid email.');
@@ -39,6 +39,8 @@ export async function POST(req:Request,ctx:Context){return route(async()=>{
  const endpoint=action==='login'?'token?grant_type=password':'signup?redirect_to='+encodeURIComponent(redirect);
  const response=await authFetch(endpoint,{method:'POST',body:JSON.stringify({email,password})});
  if(!response.ok)return authError(response,action==='login'?'Unable to sign in. Check your credentials and email confirmation.':'Unable to create account. Check your details or try signing in.');
- const data=await response.json() as Session;if(data.access_token)await setSession(data);
- return json({user:data.user||null,confirmationRequired:!data.access_token,message:data.access_token?'Signed in.':'If confirmation is required, check your inbox and spam folder. You can request another email below.'});
+ const data=await response.json() as Session;
+ if(action==='login'&&(!data.access_token||!data.user?.id))throw new HttpError(502,'Sign-in did not establish a session. Please try again.');
+ if(data.access_token){if(!data.user?.id)throw new HttpError(502,'Invalid authentication response.');await setSession(data)}
+ return json({user:data.access_token?data.user||null:null,authenticated:Boolean(data.access_token&&data.user?.id),confirmationRequired:!data.access_token,message:data.access_token?'Signed in successfully.':'Check your email to finish signing up. If this address is eligible, a confirmation email has been requested. Check your inbox and spam folder. You are not signed in yet.'});
 })}

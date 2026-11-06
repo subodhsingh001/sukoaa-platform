@@ -1,7 +1,12 @@
 import {DiagnosticError,type Compilation} from './diagnostics';
+export class ApiError extends Error {constructor(message:string,public status:number,public code='REQUEST_FAILED'){super(message);this.name='ApiError'}}
 export async function api<T=Record<string,unknown>>(path:string,method='GET',data?:unknown):Promise<T>{
- const response=await fetch(path,{method,headers:data?{'Content-Type':'application/json'}:undefined,body:data?JSON.stringify(data):undefined,cache:'no-store'});
- const value=await response.json() as T & {error?:string};if(!response.ok)throw new Error(value.error||'Request failed.');return value;
+ let response:Response;
+ try{response=await fetch(path,{method,credentials:'same-origin',headers:data?{'Content-Type':'application/json'}:undefined,body:data?JSON.stringify(data):undefined,cache:'no-store',signal:AbortSignal.timeout(20000)})}catch(error){throw new ApiError(error instanceof Error&&(error.name==='TimeoutError'||error.name==='AbortError')?'The request took too long. Please try again.':'Unable to connect. Check your connection and try again.',0,'NETWORK_ERROR')}
+ const raw=await response.text();let value:T&{error?:string;code?:string};
+ try{value=JSON.parse(raw)}catch{throw new ApiError(response.status===403?'This request was blocked. Reload the website and try again. If it continues, contact support.':`The server returned an unexpected response (${response.status}). Please try again.`,response.status,'INVALID_RESPONSE')}
+ if(!response.ok)throw new ApiError(value?.error||`The request failed (${response.status}). Please try again.`,response.status,value?.code);
+ if(!value||typeof value!=='object')throw new ApiError('The server returned an incomplete response. Please try again.',response.status,'INVALID_RESPONSE');return value;
 }
 let reactRuntime:string|undefined;
 export async function loadReactRuntime(){if(!reactRuntime){const response=await fetch('/runtime/react.js');if(!response.ok)throw new Error('React runtime is missing. Run npm run prepare:runtimes.');reactRuntime=await response.text()}return reactRuntime}
