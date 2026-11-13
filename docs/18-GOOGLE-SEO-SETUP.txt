@@ -1,0 +1,94 @@
+SUKOAA: GOOGLE CRAWLING AND SEARCH SETUP
+
+The public site was checked during this update:
+- https://www.sukoaa.com/robots.txt returned Disallow: /
+- sitemap.xml was empty
+- the homepage and JavaScript guide included noindex
+This is an indexing configuration blocker, not evidence of a Google penalty.
+
+1. DEPLOY THE UPDATED PROJECT
+Copy the files from this update into the same Sukoaa Platform checkout. Preserve
+.env.local and your production secrets. Do not overwrite the separate Code Lab
+project at code.sukoaa.com. Run npm run typecheck, npm test and npm run build.
+Commit and push the updated files to the branch connected to Vercel.
+
+2. ENABLE INDEXING IN VERCEL PRODUCTION
+Project > Settings > Environment Variables. Set Production values:
+
+APP_ORIGIN=https://www.sukoaa.com
+SITE_URL=https://www.sukoaa.com
+SITE_INDEXING_ENABLED=true
+
+Keep APP_ORIGIN aligned with the address used for signup/login. Preview and local
+builds should stay excluded from indexing. The code keeps Vercel Preview noindex.
+Redeploy after changing environment variables; existing deployments do not change.
+
+In Vercel Domains, make www.sukoaa.com the production address and redirect the
+non-www version to it. Keep one canonical public origin. Do not point the whole
+code.sukoaa.com subdomain at this project; it is a separate application.
+
+3. CHECK THE LIVE RESULT
+Open https://www.sukoaa.com/robots.txt. It must allow the public website, include
+the sitemap URL, and must not have Disallow: / for all crawlers.
+Open https://www.sukoaa.com/sitemap.xml. It should contain public coding guides,
+/tools and /practice; it should not list admin, account, workspace or API URLs.
+
+Run this command from your updated project:
+
+npm run seo:check -- https://www.sukoaa.com
+
+The read-only check fetches eight public pages, robots.txt and the sitemap. It
+flags noindex, empty sitemaps, missing descriptions/headings and wrong canonicals.
+A passing check does not guarantee indexing, ranking or rich results.
+
+4. VERIFY GOOGLE SEARCH CONSOLE (OWNER ACCOUNT REQUIRED)
+Open https://search.google.com/search-console/
+Add property > Domain > sukoaa.com (no https:// and no path).
+Copy Google's unique DNS TXT verification value. In Spaceship > Advanced DNS >
+sukoaa.com > DNS records > Custom records, add:
+
+Type: TXT
+Host: @
+Value: paste the exact google-site-verification=... value provided by Google
+TTL: Default
+
+Preserve other DNS and email records. Return to Google and select Verify after
+the record propagates. Do not remove the verification record afterward.
+A Domain property covers www and other subdomains; each application's sitemap
+should still list its own canonical URLs.
+
+5. SUBMIT THE SITEMAP AND IMPORTANT URLS
+In Search Console > Sitemaps, submit:
+https://www.sukoaa.com/sitemap.xml
+
+In URL Inspection, inspect the homepage, /tools, /practice and /tools/python.
+Use Test live URL and Request indexing if available. Check Page indexing for
+reported blockers. Indexing requests require an owner or full user's access.
+Google chooses what and when to crawl/index; repeated requests do not force it.
+There is no special public ping or Indexing API workaround for ordinary tool pages.
+
+Optional URL-prefix verification alternative:
+Add https://www.sukoaa.com/ as a URL-prefix property, choose HTML tag verification,
+copy ONLY the content token into GOOGLE_SITE_VERIFICATION in Vercel, redeploy,
+then Verify in Search Console. Do not invent a token or commit account secrets.
+
+6. WHAT CHANGED IN THIS RELEASE
+- Python, TypeScript, SQL and JSON have their own public tool guides.
+- /tools is a directory linking every coding guide and workspace.
+- /practice has six self-guided exercises, expected results and explanations.
+- Exercise links load the correct starter into the adjustable workspace.
+- Home and tool pages link to the guides and practice exercises using real links.
+- Sitemap includes the new public URLs; editor and account routes remain noindex.
+- Metadata, canonical URLs and WebApplication/ItemList/CollectionPage structured
+  data describe visible content. No fabricated ratings or ranking promises.
+
+7. AFTER LAUNCH
+Use Search Console Performance to see actual queries, impressions and clicks.
+Improve examples where users need more help. Add genuinely useful exercises and
+publish changes only after testing them. Obtain links through useful tutorials,
+project documentation and relevant community contributions. Do not buy links or
+create near-duplicate pages solely to target keyword variations.
+
+This update does not sign into your Google, Vercel or Spaceship accounts. Google
+ownership verification and sitemap submission have NOT been performed on your
+behalf. Website source changes alone cannot alter existing Vercel env values.

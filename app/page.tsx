@@ -1,4 +1,4 @@
 import Home from '@/components/Home';import {pageMetadata} from '@/lib/marketing/site';
-const baseMetadata=pageMetadata('Sukoaa — Browser, Chrome Extensions & Developer Tools','Explore Sukoaa browser releases, Chrome extension projects, and online JavaScript, Python, HTML/CSS, React and Next.js developer workspaces.','/');
-export const metadata={...baseMetadata,title:{absolute:'Sukoaa — Browser, Chrome Extensions & Developer Tools'}};
+const baseMetadata=pageMetadata('Sukoaa — Online Coding Practice, Playgrounds & Browser Tools','Practise JavaScript, Python, TypeScript and SQL online. Try coding exercises, console playgrounds, React projects and HTML/CSS previews with Sukoaa.','/');
+export const metadata={...baseMetadata,title:{absolute:'Sukoaa — Online Coding Practice, Playgrounds & Browser Tools'}};
 export default function Page(){return <Home/>}

@@ -1,0 +1,30 @@
+SUKOAA WORKSPACE LAYOUT UPDATE
+
+Changes:
+- Removed the YOUR BROWSER WORKSPACE introduction, heading and paragraph.
+- Compact runtime status with expandable Runtime details and a visible character count.
+- Drag the divider between code and console to change their widths.
+- Drag the divider beside Toolbox to change sidebar width.
+- Hide/Show toolbox and Reset widths buttons.
+- Widths are remembered on this browser. Double-click either divider to reset it.
+- Focus a divider and use Left/Right arrows to resize; Enter resets it.
+- Small screens use stacked code/output and a wrapping toolbox instead of narrow columns.
+
+Files to copy into your CURRENT Sukoaa Platform project:
+  app/workspace/page.tsx
+  app/workspace/workspace.css
+  hooks/use-workspace-widths.ts  (new file)
+
+Copy all three. No database migration, environment changes or new package is required.
+The full attached project is included with these edits; other supplied source files
+were preserved. For an existing project with newer changes, copy only these three files.
+
+Verify and deploy from your project directory:
+  npm run typecheck
+  npm run build
+  git add app/workspace/page.tsx app/workspace/workspace.css hooks/use-workspace-widths.ts
+  git commit -m "Make workspace panels resizable and remove intro"
+  git push
+
+Vercel rebuilds when connected to that branch. This ZIP does not itself update your
+external GitHub/Vercel deployment.
