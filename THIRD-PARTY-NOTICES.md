@@ -20,3 +20,5 @@ Unmodified pure-Python wheels from the pinned Pyodide 314.0.7 distribution are d
 - charset-normalizer 3.4.7 — MIT.
 
 The Python source files, certificate bundle and license notices remain included in those wheels. Preserve them in source and deployment distributions.
+
+React Native Web 0.21.2 — MIT — https://github.com/necolas/react-native-web. License copied to public/runtime/react-native-web-LICENSE.txt.

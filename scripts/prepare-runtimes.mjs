@@ -9,6 +9,9 @@ let esbuild;
 try { esbuild=require('esbuild'); } catch { esbuild=createRequire(require.resolve('vite/package.json'))('esbuild'); }
 const {build}=esbuild;
 await build({stdin:{contents:'import * as React from "react"; import {createRoot} from "react-dom/client"; import * as ReactDom from "react-dom"; window.React=React; window.ReactDOM={...ReactDom,createRoot};',resolveDir:process.cwd(),sourcefile:'react-runtime-entry.js',loader:'js'},bundle:true,format:'iife',platform:'browser',minify:true,define:{'process.env.NODE_ENV':'"production"'},outfile:'public/runtime/react.js',legalComments:'eof'});
+// Bundle React Native Web with the same React instance as its renderer.
+await build({stdin:{contents:'import * as React from "react"; import {createRoot} from "react-dom/client"; import * as ReactDom from "react-dom"; import * as Native from "react-native-web"; window.React=React; window.ReactDOM={...ReactDom,createRoot}; window.ReactNativeWeb=Native;',resolveDir:process.cwd(),sourcefile:'native-runtime-entry.js',loader:'js'},bundle:true,format:'iife',platform:'browser',minify:true,define:{'process.env.NODE_ENV':'"production"'},outfile:'public/runtime/react-native.js',legalComments:'eof'});
+await copyFile(require.resolve('react-native-web/package.json').replace('package.json','LICENSE'),'public/runtime/react-native-web-LICENSE.txt');
 await writeFile('public/runtime/README.txt','Generated from the installed, lockfile-pinned TypeScript and React packages. Run npm run prepare:runtimes after installation. React MIT and TypeScript Apache-2.0 terms apply; see THIRD-PARTY-NOTICES.md.\n');
 console.log('Prepared local TypeScript and React runtime assets.');
 

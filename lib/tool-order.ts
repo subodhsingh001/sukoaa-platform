@@ -5,7 +5,7 @@ export const toolLinks=[
  {id:'html',name:'HTML & CSS',icon:'<>',href:'/workspace?language=html',info:'HTML and CSS · live browser preview'},
  {id:'react',name:'React',icon:'⚛',href:'/studio?framework=react',info:'Multi-file React · imports, preview and console'},
  {id:'nextjs',name:'Next.js',icon:'N',href:'/studio?framework=nextjs',info:'Next.js project · browser Node runtime requirements apply'},
- {id:'react-native',name:'React Native',icon:'RN',href:'/native',info:'Expo Snack · web preview and phone testing'},
+ {id:'react-native',name:'React Native',icon:'RN',href:'/native',info:'React Native Web · local preview · optional Expo phone testing'},
  {id:'typescript',name:'TypeScript',icon:'TS',href:'/workspace?language=typescript',info:'Browser TypeScript · transpilation and console'},
  {id:'sql',name:'SQL / SQLite',icon:'SQL',href:'/workspace?language=sql',info:'SQLite queries · local browser database'},
  {id:'json',name:'JSON validator',icon:'{}',href:'/workspace?language=json',info:'Validate and format JSON'},

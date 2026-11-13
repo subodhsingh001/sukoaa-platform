@@ -1,3 +1,8 @@
+SUKOAA v0.12.0
+React Native Web preview and draggable code/display divider added. Native-only APIs and APK/iOS builds still require Expo/native tools.
+TypeScript and bundle tests pass. Local UI verification was blocked by browser policy.
+See REACT-NATIVE-AND-GOOGLE-SETUP.txt for deployment and Google indexing instructions.
+
 SUKOAA 0.11.0 - SELF-HOSTED JUDGE0 DEPLOYMENT KIT
 
 Prepared deploy/judge0 with digest-pinned containers, authenticated HTTPS

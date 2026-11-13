@@ -77,6 +77,6 @@ export function template(kind:ProjectKind,router:'pages'|'app'='pages'):StudioPr
  return validateProject({version:1,id:projectId(),name:kind==='react'?'My React project':'My Next.js project',kind,files,folders:[],entry:kind==='react'?'src/main.tsx':router==='pages'?'pages/index.tsx':'app/page.tsx'});
 }
 
-export function projectMainFile(project:StudioProject){return ['src/App.tsx','app/page.tsx','src/app/page.tsx','pages/index.tsx','pages/index.jsx','pages/index.js','src/pages/index.tsx',project.entry].find(path=>project.files[path]!==undefined)||Object.keys(project.files)[0]}
+export function projectMainFile(project:StudioProject){return ['App.tsx','App.js','src/App.tsx','app/page.tsx','src/app/page.tsx','pages/index.tsx','pages/index.jsx','pages/index.js','src/pages/index.tsx',project.entry].find(path=>project.files[path]!==undefined)||Object.keys(project.files)[0]}
 export function isAppRouter(project:StudioProject){return project.kind==='nextjs'&&Object.keys(project.files).some(path=>/^(?:src\/)?app\/(?:.*\/)?page\.[jt]sx?$/.test(path))}
 export function issueKey(issue:StudioIssue){return issue.file&&issue.line?[issue.file,issue.line,issue.column||1].join(':'):issue.message.replace(/^(?:Uncaught(?: \(in promise\))?\s+)?(?:[A-Za-z]*Error:\s*)+/,'')}

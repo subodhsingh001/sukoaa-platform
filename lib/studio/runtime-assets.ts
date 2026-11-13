@@ -1,5 +1,5 @@
 // A release suffix prevents an older worker from using a newer WASM binary.
-export const RUNTIME_VERSION='0.3.1';
+export const RUNTIME_VERSION='0.12.0';
 export function runtimeAsset(path:string){return path+'?v='+RUNTIME_VERSION}
 export async function checkedRuntimeAsset(path:string,kind:'script'|'wasm',signal?:AbortSignal){
  const response=await fetch(runtimeAsset(path),{cache:'no-store',signal});

@@ -1,3 +1,4 @@
+import {RUNTIME_VERSION} from '../lib/studio/runtime-assets';
 import test from 'node:test';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
 import {filePath,validateProject,template,renameProjectPath,deleteProjectPath,resolveFile,redactUrl} from '../lib/studio/project';import {projectPlugin,buildOptions} from '../lib/studio/bundler';import {sourcePosition,mapProjectIssue} from '../lib/studio/client';import {projectPreview} from '../lib/studio/preview';
 const require=createRequire(process.cwd()+'/package.json');let build:any;try{build=require('esbuild').build}catch{build=createRequire(require.resolve('vite/package.json'))('esbuild').build}
@@ -35,7 +36,7 @@ test('runtime loader reports missing and incorrectly routed assets accurately',a
 test('public bundler worker uses a runtime URL and is terminated on success or cancellation',async()=>{
  const savedWorker=globalThis.Worker,savedWindow=globalThis.window;const workers:any[]=[];
  class FakeWorker{onmessage:any;onerror:any;terminated=false;constructor(public url:string,public options:any){workers.push(this)}postMessage(){queueMicrotask(()=>this.onmessage?.({data:{code:'ok',css:''}}))}terminate(){this.terminated=true}}
- try{globalThis.window={location:{href:'https://sukoaa.test/studio'}} as any;globalThis.Worker=FakeWorker as any;const result=await workerBundle(template('react'));assert.equal(result.code,'ok');assert.equal(workers[0].url,'https://sukoaa.test/runtime/studio/bundle-worker.js?v=0.3.1');assert.ok(workers[0].terminated);const abort=new AbortController();abort.abort();await assert.rejects(()=>workerBundle(template('react'),abort.signal),{name:'AbortError'});assert.ok(workers[1].terminated)}finally{globalThis.Worker=savedWorker;globalThis.window=savedWindow}
+ try{globalThis.window={location:{href:'https://sukoaa.test/studio'}} as any;globalThis.Worker=FakeWorker as any;const result=await workerBundle(template('react'));assert.equal(result.code,'ok');assert.equal(workers[0].url,'https://sukoaa.test/runtime/studio/bundle-worker.js?v='+RUNTIME_VERSION);assert.ok(workers[0].terminated);const abort=new AbortController();abort.abort();await assert.rejects(()=>workerBundle(template('react'),abort.signal),{name:'AbortError'});assert.ok(workers[1].terminated)}finally{globalThis.Worker=savedWorker;globalThis.window=savedWindow}
 });
 test('Next browser starter uses Pages Router and keeps App Router available explicitly',()=>{
  const pages=template('nextjs');assert.ok(pages.files['pages/api/hello.ts']);assert.equal(projectMainFile(pages),'pages/index.tsx');assert.equal(isAppRouter(pages),false);assert.equal(pages.files['app/page.tsx'],undefined);

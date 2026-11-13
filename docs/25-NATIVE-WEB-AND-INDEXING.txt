@@ -1,0 +1,31 @@
+SUKOAA 0.12.0 - REACT NATIVE WEB STUDIO AND GOOGLE INDEXING
+
+REACT NATIVE
+Open /native. The default editor and preview now belong to Sukoaa.
+Use App.tsx and components/Counter.tsx; click Run project.
+React Native Web renders supported React Native components in a sandboxed browser frame.
+No Judge0, VPS or extra API key is required for these web previews.
+Drag the visible divider left/right on desktop, up/down in stacked layouts.
+Use keyboard arrow keys on the focused divider; double-click or Reset widths restores it.
+Split mode remains visible after running and when opening files.
+Save local, cloud saving (sign-in required), source export and existing file imports are available.
+Phone / Expo opens the previous Expo integration for phone testing.
+The Expo external link starts from its original starter; Sukoaa edits are not synced there.
+Native-only APIs, a native terminal, Android/iOS emulation and APK/IPA builds are not provided.
+Extra npm packages use the existing exact-version esm.sh integration and need web compatibility.
+
+DEPLOY ON YOUR VERCEL SITE
+Replace matching project files, including package.json AND package-lock.json.
+Run npm ci --include=dev; runtime preparation runs during installation/build.
+Run npm run build, commit and push, then let Vercel redeploy.
+Do not overwrite your .env.local or production environment variables.
+
+GOOGLE INDEXING
+/workspace?language=javascript is an editor URL and intentionally has noindex.
+The public search page is https://www.sukoaa.com/tools/javascript.
+Live checks on 13 November 2026 found HTTP 200, index/follow and its own canonical there.
+Use Search Console -> URL Inspection -> Test live URL -> Request indexing on that public URL.
+Do the same for /tools/python, /tools/react-native and the other /tools pages.
+Production settings: SITE_URL=https://www.sukoaa.com and SITE_INDEXING_ENABLED=true.
+Submit https://www.sukoaa.com/sitemap.xml in Search Console.
+Indexability does not guarantee indexing or ranking. Private preview deployments remain noindex.
