@@ -1,5 +1,6 @@
 'use client';
 import {AccountNav,useAccount} from '@/components/AccountSession';
+import {isPubliclyReady} from '@/lib/marketing/availability';
 import {toolLandingHref} from '@/lib/marketing/tool-links';
 import {SukoaaLogo} from '@/components/SukoaaLogo';
 import {useState,useEffect,useRef} from 'react';
@@ -23,7 +24,7 @@ const tools=[
  {href:'/studio?framework=react',name:'React Project Studio',category:'Code',desc:'Build React projects with files, folders, imports, preview and console.',icon:'⚛',color:'blue',status:'Available',tags:['React','TSX','Files']},
  {href:'/studio?framework=nextjs',name:'Next.js Project Studio',category:'Code',desc:'Try a Next.js project with a browser Node runtime and terminal. Runtime requirements apply.',icon:'N',color:'green',status:'Available',tags:['Next.js','Node','Files']},
  {href:'/workspace?language=typescript',name:'TypeScript Playground',category:'Code',desc:'Transpile TypeScript and inspect console output with source error locations.',icon:'TS',color:'blue',status:'Available',tags:['TypeScript','Console']}
-];
+].filter(tool=>isPubliclyReady(toolLandingHref(tool.href)));
 const displayOrder=['JavaScript Playground','Python Playground','HTML & CSS Studio','React Project Studio','Next.js Project Studio','React Native Playground','TypeScript Playground','SQL Playground','JSON Validator','C Compiler','C++ Compiler','Rust Compiler','C# Compiler','Java Compiler'];
 tools.sort((a,b)=>(displayOrder.includes(a.name)?displayOrder.indexOf(a.name):99)-(displayOrder.includes(b.name)?displayOrder.indexOf(b.name):99));
 const initialJS=`// A little idea starts here.\nconst greeting = "Hello, Sukoaa!";\nconsole.log(greeting);\n\nconst tools = ["Browse", "Build", "Create"];\ntools.forEach((tool, i) => {\n  console.log((i + 1) + ". " + tool);\n});`;

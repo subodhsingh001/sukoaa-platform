@@ -1,0 +1,18 @@
+SUKOAA — SEARCH AVAILABILITY UPDATE
+
+Unavailable compiler landing pages (C, C++, Rust, C#, Java) and the two planned extension pages now use noindex, follow and are excluded from the sitemap.
+Unavailable compiler cards and planned extension cards are excluded from the homepage. The /tools directory and its ItemList include the remaining tools only.
+Existing compiler editor URLs remain accessible. These changes do not connect or enable a compilation service.
+Compiler landing pages describe the current editing/export capability without backend setup terminology.
+The browser page remains indexable. Existing homepage headings, About/Contact links, practice lessons and responsive card fix are preserved.
+
+DEPLOY
+Replace the included source files, commit and push to your GitHub repository, then redeploy Vercel.
+No database migration, dependency installation or new credentials are required.
+Keep SITE_URL=https://www.sukoaa.com and SITE_INDEXING_ENABLED=true for production.
+After deployment check /tools/c for noindex, follow, check sitemap.xml excludes unavailable pages, and resubmit your sitemap in Search Console.
+Do not block these URLs in robots.txt; Google must crawl them to see noindex.
+
+RE-ENABLE
+After verifying real execution, remove the matching slug from unavailableToolSlugs in lib/marketing/availability.ts and update its visitor-facing availability copy. Redeploy to restore indexing, sitemap inclusion and /tools visibility. Update the homepage card status before restoring its promotion.
+For extensions remove their path from unlistedPaths only when an actual installable release is ready.

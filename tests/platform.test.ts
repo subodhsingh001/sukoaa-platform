@@ -1,3 +1,5 @@
+import {pageMetadata,publicPaths} from '../lib/marketing/site';
+import {unlistedPaths} from '../lib/marketing/availability';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {sameOrigin,body,HttpError} from '../lib/platform/http';import {projectInput} from '../lib/platform/validation';import {rateLimit} from '../lib/platform/redis';import {toBase64,fromBase64,runnerConfig} from '../lib/platform/runner';import {jsFrame,reactFrame} from '../lib/platform/sandbox';import {session,requireAdmin} from '../lib/platform/auth';import {POST as ai} from '../app/api/ai/run/route';import {POST as execute} from '../app/api/execute/route';
 // next/headers is substituted by scripts/test-platform.mjs, keeping real credentials out of tests.
@@ -39,3 +41,18 @@ import "./console-values.test";
 import "./python-http.test";
 
 import './compiled-languages.test';
+
+test('Unavailable releases stay out of search and the public sitemap',()=>{
+ const prior={SITE_URL:process.env.SITE_URL,SITE_INDEXING_ENABLED:process.env.SITE_INDEXING_ENABLED,VERCEL_ENV:process.env.VERCEL_ENV};
+ try {
+  process.env.SITE_URL='https://www.sukoaa.com';process.env.SITE_INDEXING_ENABLED='true';process.env.VERCEL_ENV='production';
+  for(const path of unlistedPaths){
+   assert.deepEqual(pageMetadata('Release','Availability',path).robots,{index:false,follow:true});
+   assert.equal(publicPaths.includes(path),false);
+  }
+  for(const path of ['/','/tools/javascript','/tools/python','/browser','/practice/python/count-words-dictionary']){
+   assert.deepEqual(pageMetadata('Ready','Description',path).robots,{index:true,follow:true});
+   assert.equal(publicPaths.includes(path),true);
+  }
+ } finally {for(const [key,value] of Object.entries(prior)){if(value===undefined)delete process.env[key];else process.env[key]=value;}}
+});
