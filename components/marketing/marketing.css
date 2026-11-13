@@ -20,3 +20,19 @@
 .practice-exercise-action .product-fineprint{margin:0;max-width:48ch;font-size:13px;line-height:1.7;color:#62745a}
 .practice-exercise-action .product-button:focus-visible{outline:3px solid #678747;outline-offset:4px}
 @media(max-width:480px){.practice-exercise-action .product-button{width:100%}}
+
+.practice-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:0 0 60px}
+.practice-directory .practice-exercise{min-width:0;display:flex;flex-direction:column}
+.practice-directory h2 a:hover{text-decoration:underline;text-underline-offset:5px}
+.practice-directory .practice-topic{font-size:13px;color:#617453;margin-top:auto}
+.practice-card-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:18px}
+.practice-card-actions .tool-guide-link{margin:0}.practice-card-actions .product-button{font-size:14px;min-height:44px;white-space:normal}
+.practice-lesson{margin-bottom:30px}.practice-lesson h1{font-size:clamp(30px,3.3vw,46px);letter-spacing:-1px;line-height:1.2;margin:12px 0 22px;max-width:1000px}
+.practice-lesson .lesson-intro{font-size:18px;max-width:950px}
+.practice-lesson section>p,.lesson-walkthrough li{font-size:16px;color:#56694e;line-height:1.85;max-width:950px}
+.practice-lesson section>h2{font-size:23px}.practice-lesson .lesson-output-note{font-size:13px;line-height:1.7;color:#617453;margin:12px 0}
+.lesson-walkthrough{padding-left:24px}.lesson-walkthrough li{padding-left:7px;margin:16px 0}.lesson-note{border-top:1px solid #e1e8d9;padding:18px 0 4px}
+.lesson-related{margin:35px 0 60px}.lesson-related>div{display:flex;flex-wrap:wrap;gap:14px}.lesson-related .product-button{font-size:14px;white-space:normal;min-height:44px}
+.practice-progress{display:flex;align-items:center;flex-wrap:wrap;gap:18px;padding:24px;background:#edf3e4;border:1px solid #dce5d1;border-radius:14px;margin:0 0 30px}
+.practice-lesson .practice-progress{margin-top:24px}.practice-progress>div{flex:1 1 350px}.practice-progress h2{font-size:23px;margin:0 0 8px}.practice-progress p{font-size:14px;line-height:1.7;margin:0;color:#56694e}.practice-progress .product-button{font-size:14px;white-space:normal;min-height:44px;text-align:center}.practice-progress>.product-fineprint{flex-basis:100%;font-size:12px}
+@media(max-width:760px){.practice-directory{grid-template-columns:minmax(0,1fr)}.practice-progress{padding:20px}.practice-lesson .lesson-intro{font-size:16px}.practice-lesson section>p,.lesson-walkthrough li{font-size:15px}.practice-progress .product-button{width:100%}}

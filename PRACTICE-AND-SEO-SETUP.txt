@@ -1,0 +1,24 @@
+SUKOAA - PRACTICE AND CONTENT UPDATE
+
+Six standalone practice pages are linked from /practice and relevant tool guides.
+Each page includes a hint, a complete solution, walkthrough, common mistake and edge case.
+All six pages have unique metadata, canonical URLs when SITE_URL is set, and sitemap entries.
+Original /workspace exercise links and /practice#exercise-id anchors still work.
+Practice progress uses local browser storage only. Completion is self-reported, never an automated grade.
+It does not sync to Supabase or across devices; clearing browser data removes it.
+AI remains disabled. No migration or new environment variable is required.
+
+DEPLOY
+Copy updated project source, preserve .env.local, run npm ci --include=dev if needed, then npm run build.
+Push to your GitHub repository and let Vercel redeploy.
+Production settings remain SITE_URL=https://www.sukoaa.com and SITE_INDEXING_ENABLED=true.
+
+AFTER DEPLOY
+Submit https://www.sukoaa.com/sitemap.xml to Google Search Console.
+Inspect the six new /practice/language/slug URLs using Test live URL and Request indexing.
+Public pages should allow indexing. /workspace remains noindex.
+Indexability does not guarantee indexing or search rankings.
+
+CHECKS
+Production builds, TypeScript and executable solution checks are run for this release.
+Browser UI interaction checks remain unavailable because the browser policy blocked local preview.

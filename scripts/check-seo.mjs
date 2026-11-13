@@ -30,11 +30,11 @@ async function main(){
  const url=new URL(value);if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash||!['','/'].includes(url.pathname))throw new Error('Supply a public HTTPS origin without a path, query or credentials.');
  const origin=url.origin;const read=async(path)=>{const response=await fetch(origin+path,{redirect:'follow',headers:{Accept:'text/html,application/xml,text/plain'},signal:AbortSignal.timeout(20000)});return {path,status:response.status,html:await response.text(),headerRobots:response.headers.get('x-robots-tag')||'',finalUrl:response.url}};
  const robots=await read('/robots.txt'),sitemap=await read('/sitemap.xml');
- const paths=['/','/tools','/practice','/tools/javascript','/tools/typescript','/tools/python','/tools/sql','/tools/json'];const pages=[];
+ const lessonPaths=[...sitemap.html.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g)].map(match=>{try{const u=new URL(match[1]);return u.origin===origin&&/^\/practice\/[a-z-]+\/[a-z-]+$/.test(u.pathname)?u.pathname:null}catch{return null}}).filter(Boolean).slice(0,50);const paths=[...new Set(['/','/tools','/practice','/tools/javascript','/tools/typescript','/tools/python','/tools/sql','/tools/json',...lessonPaths])];const pages=[];
  for(let index=0;index<paths.length;index+=3)pages.push(...await Promise.all(paths.slice(index,index+3).map(read)));
  const issues=seoIssues({origin,robots:robots.html,sitemap:sitemap.html,pages});
  if(robots.status!==200)issues.unshift('robots.txt returned HTTP '+robots.status);
  if(sitemap.status!==200)issues.unshift('sitemap.xml returned HTTP '+sitemap.status);
- if(issues.length){console.error('SEO launch checks failed:\n'+issues.map(issue=>' - '+issue).join('\n'));process.exitCode=1}else console.log('SEO launch checks passed for '+origin+' (8 public pages, robots.txt and sitemap). This does not guarantee indexing or rankings.');
+ if(issues.length){console.error('SEO launch checks failed:\n'+issues.map(issue=>' - '+issue).join('\n'));process.exitCode=1}else console.log('SEO launch checks passed for '+origin+' ('+paths.length+' public pages, robots.txt and sitemap). This does not guarantee indexing or rankings.');
 }
 if(process.argv[1]&&basename(process.argv[1])==='check-seo.mjs')main().catch(error=>{console.error(error.message);process.exitCode=1});

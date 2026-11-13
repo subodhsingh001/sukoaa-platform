@@ -1,3 +1,13 @@
+SUKOAA v0.13.0 - PRACTICE AND CONTENT UPDATE
+
+Six standalone lesson pages with hints, complete solutions and walkthroughs.
+Manual completion and Continue practising use local browser storage only.
+Homepage and tool descriptions updated; lesson metadata and sitemap entries added.
+131 tests and production builds passed. All six lesson pages generated as static HTML.
+Browser UI interaction testing remains unavailable in this environment.
+See PRACTICE-AND-SEO-SETUP.txt for deployment and Search Console steps.
+No new environment variables or database migrations. AI remains disabled.
+
 SUKOAA v0.12.0
 React Native Web preview and draggable code/display divider added. Native-only APIs and APK/iOS builds still require Expo/native tools.
 TypeScript and bundle tests pass. Local UI verification was blocked by browser policy.
