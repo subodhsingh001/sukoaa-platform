@@ -1,3 +1,42 @@
+ONLINE COMPILER SEARCH UPDATE
+Homepage, tool directory and JavaScript/Python guide metadata now target
+online compiler searches. Read GOOGLE-COMPILER-SEARCH.txt after deploying.
+Indexing and ranking depend on Google; public custom-domain configuration
+must be verified after Vercel deployment.
+
+SUKOAA 0.9.2 - APPROVED LOGO ACTIVE
+
+Approved uploaded artwork is used in the shared logo component, header,
+footer, workspace, studio and compact marks. A new SVG favicon uses its S.
+The original PNG remains intact. Browser branding visually verified.
+After pushing to GitHub and completing Vercel deployment, hard-refresh
+your custom domain. The hosted preview is deployed separately.
+
+SUKOAA 0.9.1 - TOOL ORDER, ICON TOOLBOX AND LOGO PREVIEW
+
+PASS: 113 automated platform checks and TypeScript checking.
+PASS: browser icon tooltip, drag expansion 72px to 234px, collapse, tool order.
+PASS: logged-out cloud save feedback in quick playground and Studio.
+Logo preview at /brand-preview; active logo unchanged pending approval.
+Cloud round trips against your real Supabase account not tested here.
+See TOOLBOX-AND-CLOUD.txt for behavior, requirements and deployment.
+
+SUKOAA PLATFORM 0.9.0 — REACT NATIVE UPDATE — 13 November 2026
+
+React Native playground at /native uses Expo Snack. It requires internet.
+PASS: 113 automated platform checks, including native starter TSX and URL checks.
+PASS: TypeScript checking, Next.js production build and hosted production build.
+PASS: embedded React Native web counter rendered; tapping changed 0 to 1.
+NOT LIVE-VERIFIED: physical Android/iOS Expo Go devices, searchable-list UI.
+No APK/IPA compiler, custom native modules or cloud emulator entitlement.
+The compact embed edits App.tsx; Open starter on Expo provides the full editor.
+Sukoaa downloads ORIGINAL starter source, not cross-origin Expo edits.
+No new database migration, Redis setting or API key. AI remains disabled.
+Read REACT-NATIVE-SETUP.txt. Copy project updates into your GitHub checkout,
+preserve .env.local, then commit/push to trigger your Vercel deployment.
+
+HISTORICAL RELEASE NOTES BELOW (older limitations may have changed):
+
 SUKOAA PLATFORM 0.2.0 — 31 October 2026
 
 AI: disabled in the interface and backend. No provider SDK, key or API calls.

@@ -1,0 +1,43 @@
+SUKOAA 0.9.1 - TOOLBOX AND CLOUD SAVES
+
+TOOL ORDER
+JavaScript, Python, HTML & CSS, React, Next.js, React Native, TypeScript,
+SQL, JSON, then Go (remote runner required; no public Go guide yet).
+The home All tools/Code directory, public coding directory, toolbox and
+Studio switcher follow this order for the tools available on each page.
+
+TOOLBOX
+The desktop toolbox starts with icons. Hover or keyboard-focus an icon for
+its name and runtime information. Drag the right edge to expand its width.
+Arrow keys resize it; Home collapses, End expands. The chevron button also
+expands/collapses. Width is remembered on this device. Reset widths restores
+the icon rail. Mobile uses a horizontal tool strip.
+
+CLOUD SAVES
+Local drafts: no account, stored only in this browser/device. Clearing site
+data or changing devices will not bring these drafts back. Export backups.
+Cloud: sign in first, then press Save cloud/Cloud. Saves are manual, not
+automatically synced. Open Cloud projects/Open cloud project to restore.
+Quick playground saves include name, language, source and standard input.
+Studio saves include project files in one source document, currently 50 KB
+maximum. Export larger projects as ZIP. Dependencies/build artifacts are
+not uploaded as installed node_modules. Project lists show the latest 50.
+The Supabase migration defines owner-only RLS and a 100-project quota.
+Production protected actions also require correct APP_ORIGIN and Upstash
+Redis configuration. Existing migrations must be applied to your Supabase.
+No new database migration is needed for this update.
+Cloud round trips with your real account were not verified in this preview.
+React Native uses Expo's own save/export controls; Sukoaa cannot save edits
+from the cross-origin embedded Expo editor to its Supabase cloud projects.
+
+APPROVED LOGO
+Open /brand-preview to review your uploaded logo in header and hero sizes.
+The full logo and tagline are shown larger; the header omits the tiny
+tagline using a display viewport over the unchanged original PNG.
+The approved logo is now active across the site, with its S letter used for compact marks and the favicon.
+This is a visual preview, not a trademark or ownership clearance.
+
+DEPLOY YOUR NEXT.JS PROJECT
+Copy updated files into your existing GitHub checkout. Preserve .env.local.
+Use Node 24 and npm ci --include=dev, then npm run build. Commit and push
+to your Vercel-linked branch. No credentials should be committed.

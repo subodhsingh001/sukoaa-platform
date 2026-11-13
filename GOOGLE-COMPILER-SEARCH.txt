@@ -1,0 +1,46 @@
+SUKOAA - GOOGLE SEARCH FOR ONLINE COMPILERS
+
+This release adds natural online compiler wording to the homepage, coding
+tool directory and JavaScript/Python guide titles. Existing canonical URLs,
+public sitemap, internal links and structured data remain in use.
+JavaScript/Python use browser runtimes; the term compiler describes the
+common search category and does not mean a hosted operating-system shell.
+
+DEPLOY TO YOUR PUBLIC DOMAIN FIRST
+1. Copy this release into your GitHub checkout and push to your Vercel branch.
+2. In Vercel production environment settings set:
+   SITE_URL=https://www.sukoaa.com
+   APP_ORIGIN=https://www.sukoaa.com
+   SITE_INDEXING_ENABLED=true
+   Use the same canonical host for production and auth configuration.
+3. Redeploy production after updating environment variables.
+4. Open robots.txt: public production must not say Disallow: /.
+5. Open sitemap.xml and check the www.sukoaa.com public tool-guide URLs.
+6. Run npm run seo:check -- https://www.sukoaa.com
+   It checks robots, canonical metadata and sitemap output.
+
+GOOGLE SEARCH CONSOLE
+Your domain verification was already completed. Submit sitemap.xml for the
+public domain. Inspect these URLs, Test live URL, then Request indexing:
+https://www.sukoaa.com/
+https://www.sukoaa.com/tools
+https://www.sukoaa.com/tools/javascript
+https://www.sukoaa.com/tools/python
+https://www.sukoaa.com/tools/react
+Use guide URLs, not private accounts or editable workspaces.
+A sitemap or indexing request is not a guarantee of indexing or ranking.
+
+CONTENT AND DISCOVERY
+Publish helpful original examples, explain inputs/outputs and fix runtime
+errors users encounter. Share useful demos in relevant communities and link
+the site from your real GitHub projects. Avoid purchased links or spam.
+Track impressions, clicks and queries in Search Console Performance.
+Start with specific phrases: online JavaScript compiler with console,
+online Python compiler with input, React playground with files.
+Broad compiler searches are competitive; no position or deadline promised.
+
+The private hosted ChatGPT preview intentionally stays excluded from search.
+Google should index your public Vercel custom domain instead.
+Live public robots/sitemap could not be verified by web retrieval in this
+session. Validate them after deploying; code changes alone do not prove
+that your public domain is configured or indexed.

@@ -1,0 +1,50 @@
+SUKOAA REACT NATIVE WORKSPACE (v0.9.0)
+
+Open /tools/react-native for the public guide, or /native for the workspace.
+React Native is also linked from the homepage, coding tools directory and the
+quick workspace's Toolbox.
+
+HOW TO USE
+1. Choose Counter or Searchable list. Both include App.tsx and an imported TSX
+   component under components/.
+2. Choose Web preview, then click Start Expo workspace.
+3. Edit files in Expo Snack. Use its preview and errors panel to inspect results.
+4. To test on a compatible Android/iOS phone, use My device and follow Expo Go
+   instructions provided by Expo. Cloud Android/iOS emulator tabs are not enabled
+   by this integration; no emulator credits are purchased or promised.
+5. Save/export edits using the Expo editor's controls before leaving or closing.
+
+IMPORTANT DIFFERENCES FROM LOCAL SUKOAA PLAYGROUNDS
+- This is an embedded Expo Snack editor, not a locally hosted native compiler.
+- Internet and Expo/package availability are required. Provider accounts, SDK
+  compatibility and service limits may apply.
+- Expo receives code edited in the frame. Do not paste secrets or private code.
+- Sukoaa cannot read, autosave, cloud-save or export edits inside the cross-origin
+  frame. Its Starter source button downloads the ORIGINAL example only.
+- Open starter on Expo opens the original example, not current embedded edits.
+- Only React Native/Expo-supported components and packages work. Custom native
+  modules and APK/IPA building require a separate Expo/native development setup.
+- Changing starters requires closing the frame, with an unsaved-edit warning.
+- Frame loaded is not a claim that the React Native app compiled successfully;
+  check the provider preview and error panel.
+
+DEPLOYMENT
+No database migration, API key, paid native runner or new npm dependency is needed.
+AI remains disabled. Existing Supabase/Redis settings stay as configured.
+Copy the updated source into your existing platform checkout, preserving .env.local.
+Use Node 24: npm ci --include=dev, npm run typecheck, npm test, npm run build.
+Commit and push to the repository connected to Vercel.
+
+The public /tools/react-native guide is added to the sitemap. /native is noindex,
+like the existing editor pages. Keep SITE_INDEXING_ENABLED=true in Vercel Production
+for public guides; previews remain excluded. This does not modify code.sukoaa.com.
+
+OFFICIAL REFERENCES
+https://github.com/expo/snack/blob/main/docs/url-query-parameters.md
+https://github.com/expo/snack/blob/main/docs/embedding-snacks.md
+https://docs.expo.dev/develop/tools/
+https://docs.expo.dev/get-started/create-a-project/
+
+The compact embedded editor focuses on App.tsx. Open starter on Expo for
+the full file explorer, component editing, and dependency controls. This
+external link opens the ORIGINAL starter, not unsaved embedded edits.

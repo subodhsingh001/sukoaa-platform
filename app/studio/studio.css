@@ -62,3 +62,5 @@
 
 .studio-brand>.sukoaa-logo{height:30px!important;max-width:133px}.preview-welcome>.sukoaa-logo{display:block!important;margin:0 auto 22px}.studio-loading>.sukoaa-logo{height:34px!important;width:auto!important}
 @media(max-width:600px){.studio-brand>.sukoaa-logo{height:26px!important;max-width:115px}}
+
+.studio-cloud-help{padding:10px 13px;font-size:12px;line-height:1.6;border-top:1px solid #dce4d1;color:#60794e}.studio-cloud-help a{text-decoration:underline;color:#204b40}
