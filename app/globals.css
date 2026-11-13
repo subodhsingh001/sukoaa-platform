@@ -32,7 +32,7 @@
 .workspace-result>pre.console-error{color:#ae4d48}
 @media(max-width:620px){.code-editor{--editor-line-height:20.9px}.line-number-viewport{min-width:31px}.diagnostics-panel{padding:12px}.diagnostics-heading{font-size:11px;flex-wrap:wrap}.diagnostics-heading>span:last-child{width:100%;margin:0 0 0 23px;font-size:8px}.diagnostic-item{flex-direction:column;gap:3px;font-size:10px}.diagnostic-item strong{font-size:10px}}
 
-.card-bottom>a{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#edf2e6;color:#536e43}.card-title{text-decoration:none}
+.card-bottom>a{display:flex;align-items:center;justify-content:center;background:#edf2e6;color:#536e43}.card-title{text-decoration:none}
 
 /* Shared reading size for playgrounds and Project Studio. */
 .editor-font-control{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;border:1px solid #d3ddc8;border-radius:7px;background:#fcfdf9;padding:3px}
@@ -67,6 +67,21 @@
 
 .home-practice-links{max-width:1200px;margin:55px auto;display:grid;grid-template-columns:1fr 1fr;gap:45px;padding:35px;border:1px solid #dfe6d5;border-radius:18px;background:#f0f4e8}.home-practice-links h2{font-size:32px;letter-spacing:-1px;font-weight:500;line-height:1.2}.home-practice-links p:not(.eyebrow){font-size:16px;line-height:1.8;color:#687961}.home-practice-links nav{display:grid;gap:14px;align-content:center}.home-practice-links nav a{font-size:15px;border-bottom:1px solid #dbe4cf;padding:7px 0}.home-practice-links nav a:hover{text-decoration:underline}@media(max-width:760px){.home-practice-links{margin:30px 20px;grid-template-columns:1fr;padding:25px;gap:25px}.home-practice-links nav{display:grid;position:static;box-shadow:none}}
 
-.card-bottom{flex-wrap:wrap;gap:12px}.card-bottom>a.home-tool-launch{width:auto;max-width:100%;height:auto;min-height:36px;border-radius:7px;padding:7px 10px;gap:6px;font-size:12px;white-space:normal}
+
 .account-placeholder{display:inline-block;width:94px;height:38px;background:#edf2e6;border-radius:8px}
 .faq p[hidden]{display:none}
+
+/* A dedicated action row keeps labels and tags inside cards at every breakpoint. */
+.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tool-card{display:flex;flex-direction:column;min-width:0}
+.tool-card>.card-title{min-width:0;gap:12px;overflow-wrap:anywhere}
+.tool-card>.card-title svg{flex-shrink:0}
+.tool-card>p{flex:1}
+.tool-card .card-bottom{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:12px;margin-top:auto}
+.tool-card .card-bottom>div{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.tool-card .card-bottom>a.home-tool-launch{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:44px;height:auto;padding:10px 12px;gap:8px;border-radius:8px;background:#edf2e6;color:#536e43;font-size:14px;line-height:1.4;font-weight:500;white-space:normal;overflow-wrap:anywhere;text-align:center}
+.tool-card .card-bottom>a.home-tool-launch svg{flex-shrink:0}
+.tool-card .card-bottom>a.home-tool-launch:hover{background:#dfe9d4;color:#294b35}
+.tool-card .card-bottom>a.home-tool-launch:focus-visible{outline:2px solid #536e43;outline-offset:3px}
+@media(max-width:1100px){.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.tool-grid{grid-template-columns:minmax(0,1fr)}.tool-card{padding:20px}.tool-card>p{font-size:14px;min-height:0;max-width:none}.tool-card .card-bottom span{font-size:11px;padding:5px 7px}}

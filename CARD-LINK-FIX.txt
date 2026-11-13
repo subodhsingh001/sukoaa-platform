@@ -1,0 +1,9 @@
+Responsive card action fix
+
+Replace app/globals.css, push to GitHub and redeploy Vercel.
+Tool tags and the launch link now have separate footer rows.
+The launch link uses 100% width, automatic height and a 44px minimum touch target.
+Text can wrap, and its arrow cannot shrink. More-specific selectors prevent the old 30px link rule from winning.
+Grid: one column up to 600px, two columns through 1100px, three columns above 1100px.
+No database or environment change is needed.
+The production site still needs your Vercel redeployment after updating the CSS.
