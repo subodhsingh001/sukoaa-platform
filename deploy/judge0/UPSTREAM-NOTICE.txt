@@ -1,0 +1,5 @@
+Judge0 v1.13.1 is the latest stable release returned by its official GitHub releases API on 13 November 2026.
+Source and GPL-3.0 license: https://github.com/judge0/judge0
+Release: https://github.com/judge0/judge0/releases/tag/v1.13.1
+This folder is a Sukoaa deployment configuration. It downloads the official container image when started; Judge0 source/binaries are not bundled here. Review upstream licensing and security notices when redistributing or modifying Judge0.
+Container images are pinned by registry digest in compose.yaml. Review and update those pins for maintenance.

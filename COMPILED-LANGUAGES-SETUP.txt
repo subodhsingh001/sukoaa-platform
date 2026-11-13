@@ -1,0 +1,73 @@
+SUKOAA 0.10.0 - C, C++, RUST, C# AND JAVA
+
+WHAT IS IMPLEMENTED
+Editors, syntax modes, demos with imports, standard input, console output,
+source export, local/cloud saves, compiler error line mapping, public tool
+guides and an isolated Judge0 execution integration.
+Site paths: /tools/c, /tools/cpp, /tools/rust, /tools/csharp, /tools/java.
+Workspace paths: /workspace?language=c (or cpp, rust, csharp, java).
+Home cards say Needs runner until the operator connects execution.
+The per-language status means configuration is present, not a health check.
+
+VERIFICATION
+PASS: 128 automated tests including five language configurations, bounded
+resource payloads, input/source transport, mocked authenticated submission
+and polling, private job ownership and compiler diagnostic fixtures.
+PASS: real local compilation and execution for all five supplied demos,
+standard-library imports and expected stdout; intentional compile errors
+reported source locations. See examples/compiled-languages/README.txt.
+PASS: browser shows all five starters, correct filenames and setup notices.
+NOT TESTED: a real Judge0 submission using your production credentials.
+JUDGE0_URL and credentials are absent in this environment.
+
+1. APPLY THE CLOUD-SAVE MIGRATION
+Supabase > SQL Editor: run supabase/migrations/003_compiled_language_projects.sql
+after 001 and 002. A .txt copy is included for Notepad.
+This extends the projects language constraint; owner-only RLS is preserved.
+Local drafts and editing do not need this migration.
+
+2. CONNECT AN ISOLATED RUNNER
+Use a maintained Judge0 service or an isolated host separate from Vercel.
+Do not execute visitor programs directly on the website server.
+Check official release/security notes and apply current security fixes.
+A hosted provider can impose quotas or charges; no unlimited-free claim.
+Query YOUR provider's /languages endpoint. Choose installed compiler IDs
+for C11 or later, C++17 or later, Rust, compatible C# and Java 8 or later.
+IDs are deployment-specific; they are deliberately not hardcoded.
+
+3. SET SERVER-SIDE VERCEL PRODUCTION VARIABLES
+JUDGE0_URL=https://YOUR-JUDGE0-SERVICE
+JUDGE0_AUTH_TOKEN=YOUR_TOKEN_IF_REQUIRED
+JUDGE0_RAPIDAPI_KEY=YOUR_KEY_IF_USING_RAPIDAPI
+JUDGE0_C_ID=YOUR_C_LANGUAGE_ID
+JUDGE0_CPP_ID=YOUR_CPP_LANGUAGE_ID
+JUDGE0_RUST_ID=YOUR_RUST_LANGUAGE_ID
+JUDGE0_CSHARP_ID=YOUR_CSHARP_LANGUAGE_ID
+JUDGE0_JAVA_ID=YOUR_JAVA_LANGUAGE_ID
+Use the provider's authentication method; do not put keys in browser code
+or commit .env.local. Existing Supabase, APP_ORIGIN and Upstash Redis
+settings are still required for authenticated execution.
+
+4. DEPLOY AND TEST EACH LANGUAGE
+Push this release to your Vercel-linked GitHub branch. Redeploy after env
+changes. Open each workspace, sign in, leave standard input as Sukoaa, and
+Run. Compare the two expected output lines in examples/compiled-languages.
+Then create a missing-variable error and check its reported line.
+Check /api/status remoteRuntimes for per-language configuration flags.
+A successful flag is not a guarantee that the provider is healthy.
+
+LIMITS AND IMPORTS
+Only one source file and standard-library headers/imports are supported.
+No npm/pip/Cargo/Maven/NuGet install, shell, user compiler flags, network or
+project archive execution. Required imports are present in every demo.
+Source limit for remote runs: 20,000 characters. Input: 5,000 characters.
+Server-side CPU 2s, wall 5s, output file 1 MB and bounded result output.
+Memory: 128,000 KB, or 256,000 KB for Java/C#. Threads/processes: 16 or 64
+for managed runtimes. Provider policy can reject these limits; verify its
+configuration and compiler runtime behavior rather than weakening isolation.
+Rate limits: 5 submissions/user/minute, 50/user/day, 100 globally/minute.
+No arbitrary program is guaranteed to run in these bounds.
+Python stays browser-local; existing Go uses the same isolated runner path.
+AI remains disabled.
+
+Official API documentation: https://ce.judge0.com/

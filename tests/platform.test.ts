@@ -37,3 +37,5 @@ import "./editor-keys.test";
 import "./console-values.test";
 
 import "./python-http.test";
+
+import './compiled-languages.test';

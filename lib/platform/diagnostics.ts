@@ -1,3 +1,4 @@
+import type {RemoteLanguage} from './remote-languages';
 export type CodeDiagnostic={message:string;line?:number;column?:number;source?:string};
 export type Compilation={code:string;sourceMap?:string};
 export class DiagnosticError extends Error{
@@ -31,10 +32,22 @@ export function editorDiagnostic(value:CodeDiagnostic,mapText:string|undefined,s
  const lines=source.split('\n');const valid=line!==undefined&&Number.isInteger(line)&&line>=1&&line<=lines.length;
  return {message:value.message.slice(0,2000),source:value.source,line:valid?line:undefined,column:valid&&Number.isInteger(column)&&column!>0?Math.min(column!,lines[line!-1].length+1):valid?1:undefined};
 }
-export function remoteDiagnostics(language:'python'|'go',errorOutput:string):CodeDiagnostic[]{
+export function remoteDiagnostics(language:RemoteLanguage,errorOutput:string):CodeDiagnostic[]{
  const lines=errorOutput.split('\n');const diagnostics:CodeDiagnostic[]=[];
  if(language==='go'){
   for(const text of lines){const match=text.match(/(?:^|[\s/])(?:main|prog)\.go:(\d+)(?::(\d+))?:\s*(.*)/);if(match)diagnostics.push({line:Number(match[1]),column:Number(match[2]||1),message:match[3]||'Go compilation error',source:'main.go'})}
+ }else if(language!=='python'){
+  let summary='Compilation or runtime error';
+  for(const text of lines){
+   if(/^\s*error(?:\[|:)/i.test(text))summary=text.trim();
+   const gcc=text.match(/(?:^|[\s/])(?:main|prog)\.(?:c|cpp|cc|rs):(\d+)(?::(\d+))?:?\s*(.*)/i);
+   const java=text.match(/(?:Main|main)\.java:(\d+)(?::\s*(.*)|\))/);
+   const cs=text.match(/(?:Main|main|prog)\.cs\((\d+)(?:,(\d+))?\):\s*(.*)/i)||text.match(/(?:Main|main)\.cs:line (\d+)(?:()(.*))?/i);
+   const m=gcc||cs;
+   const source=language==='java'?'Main.java':language==='csharp'?'Main.cs':language==='rust'?'main.rs':language==='cpp'?'main.cpp':'main.c';
+   if(m)diagnostics.push({line:Number(m[1]),column:Number(m[2]||1),message:m[3]?.trim()||summary,source});
+   else if(java)diagnostics.push({line:Number(java[1]),column:1,message:java[2]?.trim()||summary,source});
+  }
  }else{
   let position:number|undefined;
   for(const text of lines){const match=text.match(/File ["'](?:[^"']*\/)?(?:main\.py|script\.py|<stdin>|<string>)["'], line (\d+)/);if(match)position=Number(match[1])}

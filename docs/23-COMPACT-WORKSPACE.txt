@@ -1,0 +1,32 @@
+SUKOAA 0.10.1 - COMPACT WORKSPACE
+
+Font controls moved to the first toolbar row, beside Hide toolbox.
+Reset example, project name and save/run controls share the second row.
+The separate language-heading row and cloud-save-help banners are removed.
+Runtime availability remains visible below the editor and in Runtime details.
+Toolbox subtitles are hidden; descriptions remain on hover or focus.
+Save local and Save cloud have hover/keyboard-focus help. The cloud help
+contains a relative /account link that opens a new tab and preserves edits.
+
+DOM ERROR
+The Run/Stop control now keeps one stable button and wraps its changing
+label in a span. Save guidance keeps stable elements instead of inserting
+conditional text fragments around controls. The code workspace is marked
+translate=no so automatic browser translation does not rewrite React or
+Monaco's managed DOM. No global insertBefore patch or error suppression.
+The exact original NotFoundError was not reproduced before this change;
+report it if it still occurs, with browser translation/extension details.
+
+WHY THE OTHER LANGUAGES NEED A RUNNER
+JavaScript, Python, SQL and HTML/CSS have browser runtimes. C, C++, Rust,
+C#, Java and Go use an external isolated Judge0 service. Supabase stores
+accounts/projects, and Redis handles rate limits/jobs; neither compiles code.
+The website has the runner integration, not a provisioned Judge0 server.
+Real local demo tests verify the source examples, not production execution.
+See COMPILED-LANGUAGES-SETUP.txt for the required URL, credentials and
+per-language IDs. Set those on Vercel and redeploy, then sign in and test.
+These services were not provisioned or configured by this UI update.
+
+Deploy updated files through your GitHub/Vercel project. No new database
+migration is needed for this UI update. Compiled-language cloud projects
+still require migration 003 from the previous release.

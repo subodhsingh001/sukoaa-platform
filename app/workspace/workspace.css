@@ -76,15 +76,40 @@
 .workspace-sidebar .toolbox-links>a,.workspace-sidebar .toolbox-links>button{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:8px;border-radius:7px;text-align:left;font-size:14px;color:#385d47}
 .toolbox-links>a:hover,.toolbox-links>button:hover,.toolbox-links>.active{background:#e1eacc}
 .toolbox-links .language-icon{width:30px;min-width:30px;height:30px;display:grid;place-items:center;font-size:12px;border-radius:6px;background:#dfe8d4;color:#204b40;font-weight:700}
-.toolbox-copy{min-width:0;overflow-wrap:anywhere}.toolbox-copy small{display:block;color:#687b5c;font-size:11px;line-height:1.45;margin-top:3px}
+.toolbox-copy{min-width:0;overflow-wrap:anywhere}.toolbox-copy small{display:none;color:#687b5c;font-size:11px;line-height:1.45;margin-top:3px}
 .toolbox-tooltip{display:none;position:absolute;left:calc(100% + 12px);top:0;width:230px;z-index:1100;background:#204b40;color:#eff6e5;box-shadow:0 8px 25px #20362c33;padding:12px 14px;border-radius:8px;font-size:12px;line-height:1.6;pointer-events:none}
 .toolbox-tooltip strong{display:block;font-size:14px;margin-bottom:3px;color:white}
 .workspace-layout[data-compact=true] .toolbox-copy,.workspace-layout[data-compact=true] .toolbox-heading>span,.workspace-layout[data-compact=true] .workspace-sidebar>.sidebar-label,.workspace-layout[data-compact=true] .sidebar-bottom,.workspace-layout[data-compact=true] .workspace-sidebar>button>span{display:none}
 .workspace-layout[data-compact=true] .toolbox-links>a:hover .toolbox-tooltip,.workspace-layout[data-compact=true] .toolbox-links>button:hover .toolbox-tooltip,.workspace-layout[data-compact=true] .toolbox-links>:focus-visible .toolbox-tooltip{display:block}
 .workspace-layout[data-compact=true] .toolbox-heading{padding-left:8px}
 .workspace-layout[data-compact=true] .workspace-sidebar>.project-row{display:none}
-.cloud-save-help{padding:8px 14px;font-size:12px;line-height:1.6;border-bottom:1px solid #dfe6d5;color:#617854;background:#f7faf1}.cloud-save-help a{text-decoration:underline;color:#204b40;font-weight:600}
-@media(max-width:900px){.workspace-wide .workspace-layout{grid-template-columns:minmax(0,1fr)}.toolbox-heading{display:none}.workspace-wide .toolbox-links{flex-direction:row;overflow-x:auto;max-width:100%;padding:2px}.workspace-sidebar .toolbox-links>a,.workspace-sidebar .toolbox-links>button{width:auto;flex-shrink:0;min-height:42px}.workspace-layout[data-compact=true] .toolbox-copy{display:block}.workspace-sidebar .toolbox-copy small,.toolbox-tooltip{display:none!important}.cloud-save-help{font-size:12px}}
+@media(max-width:900px){.workspace-wide .workspace-layout{grid-template-columns:minmax(0,1fr)}.toolbox-heading{display:none}.workspace-wide .toolbox-links{flex-direction:row;overflow-x:auto;max-width:100%;padding:2px}.workspace-sidebar .toolbox-links>a,.workspace-sidebar .toolbox-links>button{width:auto;flex-shrink:0;min-height:42px}.workspace-layout[data-compact=true] .toolbox-copy{display:block}.workspace-sidebar .toolbox-copy small,.toolbox-tooltip{display:none!important}}
 .workspace-wide.workspace-focus .workspace-layout,.workspace-wide .workspace-layout[data-toolbox=closed]{grid-template-columns:minmax(0,1fr)}
 .workspace-sidebar .toolbox-links{margin:0;flex:0 0 auto;justify-content:flex-start;align-items:stretch}
 .workspace-sidebar .toolbox-tooltip{white-space:normal;overflow-wrap:anywhere;font-weight:400}
+
+/* Compact toolbar: save help appears only on hover or keyboard focus. */
+.workspace-wide .workspace-main{max-width:none;padding:16px 16px 12px 0}
+.workspace-wide .workspace-view-controls{justify-content:flex-start;gap:12px;padding:12px 20px;min-height:64px}
+.workspace-view-controls>.editor-font-control{margin-right:2px;flex-shrink:0}
+.workspace-view-controls>.toolbox-toggle{margin-right:auto}
+.workspace-view-controls>.editor-font-control button{padding:6px 11px;min-height:38px}
+.workspace-wide .bench-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:16px;min-height:58px;padding:8px 20px;overflow:visible}
+.workspace-wide .bench-controls>.text-btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;margin:0;padding:7px 0;color:#718166;background:transparent;border:0}
+.workspace-wide .bench-controls>input{flex:1 1 160px;text-align:center;width:auto;max-width:none;padding:8px;font-size:15px}
+.workspace-wide .bench-controls>div{display:flex;align-items:center;gap:14px;flex-shrink:0;flex-wrap:nowrap}
+.workspace-wide .workbench{overflow:visible;position:relative}
+.save-action{position:relative;display:inline-flex;align-items:center;flex-shrink:0}
+.save-action>button{display:inline-flex;align-items:center;gap:7px}
+.save-tooltip{display:none;position:absolute;top:100%;right:0;padding:12px 14px;width:300px;max-width:calc(100vw - 40px);background:#fcfdf9;color:#405b3a;border:1px solid #cbd8be;border-radius:8px;box-shadow:0 8px 28px #20362c26;font-size:12px;line-height:1.65;z-index:100;white-space:normal;cursor:auto}
+.save-tooltip>strong{display:block;margin-bottom:4px;font-size:13px}
+.save-tooltip a{display:inline;text-decoration:underline;font-weight:600;color:#204b40}
+.save-action:hover>.save-tooltip,.save-action:focus-within>.save-tooltip{display:block}
+.save-tooltip [hidden],.run-control-icon [hidden]{display:none!important}
+.run-control-icon{display:inline-flex;align-items:center}
+.workspace-wide .quick-panels{height:max(530px,calc(100dvh - 236px))}
+.workspace-sidebar .toolbox-copy small{display:none!important}
+.workspace-sidebar .toolbox-links>a:hover .toolbox-tooltip,.workspace-sidebar .toolbox-links>button:hover .toolbox-tooltip,.workspace-sidebar .toolbox-links>:focus-visible .toolbox-tooltip{display:block}
+@media(max-width:900px){.workspace-wide .workspace-main{padding:10px}.workspace-wide .workspace-view-controls{padding:10px;gap:8px}.workspace-wide .bench-controls{flex-wrap:wrap;padding:10px;gap:8px}.workspace-wide .bench-controls>input{flex:1;min-width:100px}.workspace-wide .bench-controls>div{width:100%;justify-content:flex-end;gap:12px}.workspace-wide .quick-panels{height:auto}.save-tooltip{right:-35px;width:260px}.workspace-sidebar .toolbox-tooltip{display:none!important}}
+.workspace-wide.workspace-focus .workspace-main{padding:10px}
+.workspace-wide.workspace-focus .quick-panels{height:auto;flex:1;min-height:0}

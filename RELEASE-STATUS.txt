@@ -1,3 +1,42 @@
+SUKOAA 0.11.0 - SELF-HOSTED JUDGE0 DEPLOYMENT KIT
+
+Prepared deploy/judge0 with digest-pinned containers, authenticated HTTPS
+gateway, private credential generation, host checks and six-language
+compile/run smoke verification. Vercel env export occurs only after all
+production verifier checks pass. Local checks do not export production env.
+PASS: 11 deployment helper tests (HTTP mocked), native Caddy validation,
+native Docker Compose validation for production/local configurations,
+and 128 platform tests.
+NOT VERIFIED: running containers, sandbox behavior, live Judge0 execution,
+DNS/TLS issuance, host firewall or real production credentials.
+The QA host has no Docker CLI/daemon and no target Linux server was supplied.
+No server was provisioned and no DNS or real Vercel runner secrets changed.
+Read SELF-HOSTED-JUDGE0-SETUP.txt. No additional database migration.
+
+SUKOAA 0.10.1 - COMPACT TOOLBARS AND SAVE TOOLTIPS
+
+PASS: 128 automated platform tests; TypeScript checking.
+PASS: browser JavaScript output, cancellable Run/Stop, reset, local save,
+cloud sign-in tooltip with keyboard-accessible link, toolbox resize and
+panel-layout changes. No horizontal overflow at desktop QA size.
+Cloud-save-help banners removed; toolbox subtitles hidden.
+The reported insertBefore error was not reproduced exactly. Controls now
+keep stable DOM nodes, text is wrapped, and editor translation is disabled.
+No global DOM/error monkey-patch is used. See COMPACT-WORKSPACE.txt.
+The six remote languages still need an actual Judge0 service configured;
+this UI release does not provision one or change its credentials.
+
+SUKOAA 0.10.0 - FIVE COMPILED LANGUAGES
+
+C, C++, Rust, C# and Java: editors, standard-library demos, input/output,
+error locations, runner configuration and public tool guides.
+PASS: 128 automated tests and real local demo compilation/execution for all
+five languages, including imports, stdin, expected output and error cases.
+Remote production runs are NOT verified: a Judge0 service is not configured
+in this QA environment. Connect it before presenting execution as live.
+Apply cloud-save migration 003 after 001 and 002. Read
+COMPILED-LANGUAGES-SETUP.txt and examples/compiled-languages/README.txt.
+
 ONLINE COMPILER SEARCH UPDATE
 Homepage, tool directory and JavaScript/Python guide metadata now target
 online compiler searches. Read GOOGLE-COMPILER-SEARCH.txt after deploying.

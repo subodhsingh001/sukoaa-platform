@@ -1,9 +1,11 @@
+import {isRemoteLanguage,runnerLanguageEnv,remoteLanguageNames,type RemoteLanguage} from './remote-languages';
 import {HttpError} from './http';
 export type RunnerResponse={token?:string;status?:{id:number;description:string};stdout?:string;stderr?:string;compile_output?:string;message?:string;time?:string;memory?:number};
-export function runnerConfig(language:'python'|'go'){
- const base=process.env.JUDGE0_URL?.replace(/\/$/,'');const id=Number(process.env[language==='python'?'JUDGE0_PYTHON_ID':'JUDGE0_GO_ID']);
- if(!base||!Number.isInteger(id)||id<=0)throw new HttpError(503,'Connect an isolated Judge0 runner and configure its language IDs first.','RUNNER_NOT_CONFIGURED');
- if(!base.startsWith('https://'))throw new HttpError(503,'The remote runner must use HTTPS.');
+export function runnerConfig(language:RemoteLanguage){
+ if(!isRemoteLanguage(language))throw new HttpError(400,'Unsupported runner language.');
+ const base=process.env.JUDGE0_URL?.replace(/\/$/,'');const id=Number(process.env[runnerLanguageEnv[language]]);
+ if(!base||!Number.isInteger(id)||id<=0)throw new HttpError(503,remoteLanguageNames[language]+' runner is not configured. Set JUDGE0_URL and '+runnerLanguageEnv[language]+'.','RUNNER_NOT_CONFIGURED');
+ if(!validRunnerUrl(base))throw new HttpError(503,'The remote runner must use HTTPS.');
  return {base,id};
 }
 export async function runnerFetch(path:string,init:RequestInit={}){
@@ -17,3 +19,7 @@ export async function runnerFetch(path:string,init:RequestInit={}){
 export function toBase64(value:string){const bytes=new TextEncoder().encode(value);let s='';for(const byte of bytes)s+=String.fromCharCode(byte);return btoa(s)}
 export function fromBase64(value:string|null|undefined){if(!value)return '';try{const raw=atob(value);return new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0)))}catch{return 'Unable to decode runner output.'}}
 export function runnerOutput(value:RunnerResponse){return ['stdout','stderr','compile_output','message'].map(key=>fromBase64(value[key as keyof RunnerResponse] as string)).filter(Boolean).join('\n').slice(0,30000)}
+
+function validRunnerUrl(raw:string){try{const url=new URL(raw);return url.protocol==='https:'&&!url.username&&!url.password&&!url.search&&!url.hash}catch{return false}}
+export function runnerAvailable(language:RemoteLanguage){try{runnerConfig(language);return true}catch{return false}}
+export function runnerSubmission(language:RemoteLanguage,source:string,stdin:string){const {id}=runnerConfig(language);return {source_code:toBase64(source),stdin:toBase64(stdin),language_id:id,cpu_time_limit:2,wall_time_limit:5,memory_limit:language==='java'||language==='csharp'?256000:128000,max_processes_and_or_threads:language==='java'||language==='csharp'?64:16,max_file_size:1024,enable_network:false,number_of_runs:1}}

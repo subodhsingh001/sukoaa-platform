@@ -7,7 +7,7 @@ export function supabaseConfig() {
   if (!url.startsWith('https://') && process.env.NODE_ENV === 'production') throw new Error('Supabase HTTPS required');
   return { url, key };
 }
-export const languages = ['javascript','typescript','html','react','python','sql','json','go','nextjs'] as const;
+export const languages = ['javascript','typescript','html','react','python','sql','json','go','nextjs','c','cpp','rust','csharp','java'] as const;
 export type Language = typeof languages[number];
 export type Project = {id:string; name:string; language:Language; source:string; stdin:string; updated_at:string};
 export const isLanguage=(x:unknown):x is Language=>typeof x==='string'&&(languages as readonly string[]).includes(x);

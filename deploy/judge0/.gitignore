@@ -1,0 +1,4 @@
+.env
+judge0.conf
+.generated/
+__pycache__/

@@ -1,0 +1,4 @@
+# Local testing only. Start db redis server worker, without the HTTPS gateway.
+services:
+  server:
+    ports: ["127.0.0.1:2358:2358"]

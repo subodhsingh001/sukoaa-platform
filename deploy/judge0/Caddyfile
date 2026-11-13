@@ -1,0 +1,29 @@
+{
+ email {$ACME_EMAIL}
+ admin off
+}
+{$RUNNER_DOMAIN} {
+ route {
+  @unauthorized not header X-Auth-Token {$JUDGE0_AUTH_TOKEN}
+  respond @unauthorized "Unauthorized" 401
+  request_body {
+   max_size 64KB
+  }
+  @languages {
+   method GET
+   path /languages
+  }
+  reverse_proxy @languages server:2358
+  @submit {
+   method POST
+   path /submissions
+  }
+  reverse_proxy @submit server:2358
+  @poll {
+   method GET
+   path_regexp poll ^/submissions/[a-zA-Z0-9-]{10,100}$
+  }
+  reverse_proxy @poll server:2358
+  respond "Not found" 404
+ }
+}
