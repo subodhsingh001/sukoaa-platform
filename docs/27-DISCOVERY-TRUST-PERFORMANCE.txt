@@ -1,0 +1,42 @@
+SUKOAA v0.14.0 - DISCOVERY, TRUST AND PERFORMANCE REVIEW
+
+CHANGES
+Homepage tool names now link to their /tools landing pages. Separate launch buttons keep direct editor access.
+Added /practice/javascript, /practice/python and /practice/sql with current lesson counts and topic guidance.
+Added About and Contact pages, linked from footers and included in the sitemap.
+Contact links to the verified public GitHub issue tracker. No email address was invented.
+SUPPORT_EMAIL is an existing optional setting: set it to an address you monitor in Vercel and redeploy to publish private support contact details.
+Do not send private information through public GitHub issues. No contact form or email delivery service has been added.
+All homepage FAQ answers remain in the initial HTML, with expandable display controls.
+Account loading uses a reserved-size placeholder without visible status text in the page copy.
+Homepage title now puts the coding-tool description before the brand.
+Privacy copy now includes local practice progress and the default React Native Web preview.
+
+MOBILE PERFORMANCE REVIEW - 13 NOVEMBER 2026
+A request was made to Google's PageSpeed Insights API with strategy=mobile for the homepage and /tools/python.
+Both requests returned HTTP 429 RESOURCE_EXHAUSTED (API quota). No Lighthouse score, LCP, INP or CLS measurement was obtained.
+No passing Core Web Vitals claim is made. A source/loading review cannot substitute for a mobile render or field measurement.
+The public homepage, Python guide and Practice directory were inspected for direct runtime script or preload references.
+Source inspection: Python and SQLite runtime downloads already start in their Run handlers. Monaco loads when an editor mounts, on editor pages.
+No heavy-runtime loading change was necessary for the public guides based on that inspection.
+The account placeholder reserves space, but its effect on CLS has not been measured.
+
+WHAT REMAINS TO MEASURE
+After deployment, open https://pagespeed.web.dev/ and run Mobile tests for your homepage, a tool guide and the Python workspace.
+The workspace test before Run will not measure Python startup. Test the first Run separately in browser DevTools on a slower mobile device.
+Record the report date, URL, LCP, CLS and blocking-time diagnostics. Check Search Console for real-user Core Web Vitals when sufficient traffic exists.
+Do not assume a lab performance score is the same as a field-data pass or a search-ranking result.
+Browser UI interaction testing here remains unavailable because local browser access was blocked by policy.
+
+DEPLOYMENT
+Copy matching project files from this ZIP while preserving .env.local.
+Run npm run build, push to GitHub and let Vercel deploy.
+No database migration or new mandatory environment variable is needed.
+Production indexing settings remain SITE_URL=https://www.sukoaa.com and SITE_INDEXING_ENABLED=true.
+Submit https://www.sukoaa.com/sitemap.xml, then inspect the new hub, About and Contact URLs in Search Console.
+Indexability is not a promise of indexing or rankings.
+
+HTTP INVENTORY (NOT A SPEED SCORE)
+{"path": "/", "http": 200, "htmlBytes": 64177, "externalScriptCount": 8, "runtimeScriptReferences": [], "runtimePreloads": []}
+{"path": "/tools/python", "http": 200, "htmlBytes": 30096, "externalScriptCount": 7, "runtimeScriptReferences": [], "runtimePreloads": []}
+{"path": "/practice", "http": 200, "htmlBytes": 30282, "externalScriptCount": 8, "runtimeScriptReferences": [], "runtimePreloads": []}

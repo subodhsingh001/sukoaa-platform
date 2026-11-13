@@ -36,3 +36,8 @@
 .practice-progress{display:flex;align-items:center;flex-wrap:wrap;gap:18px;padding:24px;background:#edf3e4;border:1px solid #dce5d1;border-radius:14px;margin:0 0 30px}
 .practice-lesson .practice-progress{margin-top:24px}.practice-progress>div{flex:1 1 350px}.practice-progress h2{font-size:23px;margin:0 0 8px}.practice-progress p{font-size:14px;line-height:1.7;margin:0;color:#56694e}.practice-progress .product-button{font-size:14px;white-space:normal;min-height:44px;text-align:center}.practice-progress>.product-fineprint{flex-basis:100%;font-size:12px}
 @media(max-width:760px){.practice-directory{grid-template-columns:minmax(0,1fr)}.practice-progress{padding:20px}.practice-lesson .lesson-intro{font-size:16px}.practice-lesson section>p,.lesson-walkthrough li{font-size:15px}.practice-progress .product-button{width:100%}}
+
+.practice-hub-topics,.practice-hub-note{margin:0 0 36px;padding:24px 0;border-top:1px solid #dfe5d7}
+.practice-hub-topics>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.practice-hub-topics h2,.practice-hub-note h2{font-size:28px;font-weight:500}.practice-hub-topics h3,.practice-hub-note h3{font-size:20px;font-weight:500}.practice-hub-topics p,.practice-hub-note p{font-size:16px;line-height:1.85;color:#56694e;max-width:900px}.hub-back{margin-bottom:50px}
+.prose-page ul{font-size:16px;line-height:1.85;color:#56694e;padding-left:24px}.prose-page a:not(.product-button){text-decoration:underline;text-underline-offset:3px}.practice-hub-links a{font-weight:500}
+@media(max-width:760px){.practice-hub-topics>div{grid-template-columns:minmax(0,1fr);gap:10px}.prose-page ul{font-size:14px}.product-footer nav{flex-wrap:wrap}}

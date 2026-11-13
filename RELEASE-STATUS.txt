@@ -1,3 +1,15 @@
+SUKOAA v0.14.0 - DISCOVERY, TRUST AND PRACTICE HUBS
+
+Homepage tool names link to guides; launch buttons keep direct workspace access.
+Added JavaScript, Python and SQL practice hubs, About and Contact pages.
+Private support email remains optional through the existing SUPPORT_EMAIL setting.
+Verified public GitHub issue tracker is offered for non-sensitive bug reports.
+Mobile PageSpeed API requests returned quota errors; no performance score is claimed.
+Source inspection and live HTML loading inventory are documented in DISCOVERY-CONTACT-PERFORMANCE.txt.
+133 tests pass. See included deployment and verification notes.
+Browser interaction checks remain unavailable in this environment.
+No migration or new required environment setting. AI remains disabled.
+
 SUKOAA v0.13.0 - PRACTICE AND CONTENT UPDATE
 
 Six standalone lesson pages with hints, complete solutions and walkthroughs.
