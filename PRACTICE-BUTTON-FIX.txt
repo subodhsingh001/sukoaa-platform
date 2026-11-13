@@ -1,0 +1,16 @@
+SUKOAA - PRACTICE BUTTON SPACING FIX
+
+Changed files:
+app/practice/page.tsx
+components/marketing/marketing.css
+
+The expected result, Open this exercise button, and help text now have separate spacing.
+The button has a readable 14px label, a 44px minimum height, an accessible exercise name, and a keyboard focus outline.
+On small phone screens it fills the result column width.
+Links still load the selected exercise starter in the workspace.
+
+To update your existing project, copy the two files listed above into their matching folders.
+Do not replace .env.local. No database migration or environment change is needed.
+Run npm run build, commit the two files to GitHub, and redeploy Vercel.
+
+This ZIP preserves the uploaded source and omits the generated TypeScript cache.
