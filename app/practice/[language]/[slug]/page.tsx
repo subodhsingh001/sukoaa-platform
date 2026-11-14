@@ -4,13 +4,14 @@ import {StructuredData} from '@/components/marketing/StructuredData';
 import {PracticeProgress} from '@/components/marketing/PracticeProgress';
 import {practiceExercises,practiceHref} from '@/lib/marketing/practice';
 import {practiceLessons,lessonHref,findPracticeLesson,completeSolution} from '@/lib/marketing/practice-lessons';
-import {breadcrumbs,pageMetadata} from '@/lib/marketing/site';
+import {breadcrumbs,pageMetadata,canonicalOrigin} from '@/lib/marketing/site';
 type Props={params:Promise<{language:string;slug:string}>};
 export const dynamicParams=false;
 export function generateStaticParams(){return practiceExercises.map(e=>({language:e.language,slug:practiceLessons[e.id].slug}))}
 export async function generateMetadata({params}:Props){const {language,slug}=await params;const e=findPracticeLesson(language,slug);if(!e)return {};const lesson=practiceLessons[e.id];return pageMetadata(lesson.title,lesson.description,lessonHref(e))}
-export default async function PracticeLesson({params}:Props){const {language,slug}=await params;const e=findPracticeLesson(language,slug);if(!e)notFound();const lesson=practiceLessons[e.id];const others=practiceExercises.filter(item=>item.id!==e.id);const related=[...others.filter(item=>item.language===e.language),...others.filter(item=>item.language!==e.language)].slice(0,2);return <SiteFrame>
+export default async function PracticeLesson({params}:Props){const {language,slug}=await params;const e=findPracticeLesson(language,slug);if(!e)notFound();const lesson=practiceLessons[e.id];const origin=canonicalOrigin();const others=practiceExercises.filter(item=>item.id!==e.id);const related=[...others.filter(item=>item.language===e.language),...others.filter(item=>item.language!==e.language)].slice(0,2);return <SiteFrame>
  <StructuredData data={breadcrumbs([{name:'Home',path:'/'},{name:'Coding practice',path:'/practice'},{name:lesson.title,path:lessonHref(e)}])}/>
+ {origin&&<StructuredData data={{'@context':'https://schema.org','@type':'LearningResource',name:lesson.title,description:lesson.description,url:origin+lessonHref(e),inLanguage:'en',educationalLevel:'Beginner',learningResourceType:'Exercise',teaches:e.topic,timeRequired:'PT'+lesson.minutes+'M',isAccessibleForFree:true,isPartOf:{'@type':'CollectionPage',name:'Sukoaa coding practice',url:origin+'/practice'},publisher:{'@id':origin+'/#organization'}}}/>}
  <Crumbs name={e.title} parent={{label:'Coding practice',href:'/practice'}}/>
  <article className="practice-exercise practice-lesson">
  <p className="product-eyebrow">{e.language.toUpperCase()} · BEGINNER · ABOUT {lesson.minutes} MINUTES</p><h1>{lesson.title}</h1><p className="lesson-intro">{lesson.intro}</p><p><strong>Before you start:</strong> {lesson.prerequisites}</p>

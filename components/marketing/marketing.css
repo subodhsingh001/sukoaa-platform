@@ -41,3 +41,5 @@
 .practice-hub-topics>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.practice-hub-topics h2,.practice-hub-note h2{font-size:28px;font-weight:500}.practice-hub-topics h3,.practice-hub-note h3{font-size:20px;font-weight:500}.practice-hub-topics p,.practice-hub-note p{font-size:16px;line-height:1.85;color:#56694e;max-width:900px}.hub-back{margin-bottom:50px}
 .prose-page ul{font-size:16px;line-height:1.85;color:#56694e;padding-left:24px}.prose-page a:not(.product-button){text-decoration:underline;text-underline-offset:3px}.practice-hub-links a{font-weight:500}
 @media(max-width:760px){.practice-hub-topics>div{grid-template-columns:minmax(0,1fr);gap:10px}.prose-page ul{font-size:14px}.product-footer nav{flex-wrap:wrap}}
+
+.product-footer{flex-wrap:wrap}.product-footer nav.footer-tools{display:flex;flex-wrap:wrap;flex-basis:100%;order:5;justify-content:center;gap:10px 22px;margin:6px 0 0;padding-top:22px;border-top:1px solid var(--product-line);font-size:10px}.product-footer nav.footer-tools a{color:var(--product-muted)}.product-footer nav.footer-tools a:hover{color:var(--product-ink)}.product-footer small{order:6}

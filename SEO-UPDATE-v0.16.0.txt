@@ -1,0 +1,52 @@
+SUKOAA - SEO AND PRACTICE-CONTENT UPDATE (on top of v0.15.5)
+
+IMPORTANT: THE LIVE SITE IS BEHIND YOUR PROJECT
+When www.sukoaa.com was crawled on 14 Nov 2026 it was still serving an older build than
+this project: homepage title with "Sukoaa -" first, "Checking account..." in the page text,
+cards linking to /workspace?... URLs, C/C++/Rust/C#/Java guides indexable (and showing
+Judge0/Supabase/Redis setup text), six practice exercises, no practice hubs. The project
+already fixes those. Deploy it first; that alone changes what Google sees.
+
+WHAT THIS UPDATE CHANGES
+1. Practice content grows from 6 to 19 exercises (all original, with hints, full solutions,
+   common mistakes and edge cases). Every new solution was run and matches its documented
+   output. Languages: JavaScript 6, Python 4, SQL 4, TypeScript 3, JSON 2.
+2. Practice hubs: /practice/typescript and /practice/json added; JavaScript, Python and SQL hubs
+   rewritten for the larger sets (removed "currently has one exercise").
+3. Structured data: LearningResource on every lesson, ItemList on /practice and each hub,
+   Organization.sameAs (public GitHub repository).
+4. Site-wide footer links (Python compiler, JavaScript compiler, TypeScript, SQLite, JSON, HTML/CSS,
+   React, and the Python/JavaScript/SQL practice hubs) so every page passes link equity to them.
+5. Titles/descriptions trimmed so they are not truncated in results (all public titles <= 60
+   characters including " | Sukoaa", descriptions 70-160). A test now enforces this.
+   JSON tool title shortened to "Online JSON Validator and Formatter" (the core query).
+6. app/not-found.tsx: helpful 404 with links (not indexed).
+7. Tests updated: lesson/hub counts, every JavaScript and TypeScript solution is executed and
+   compared with its expected output, unique slugs, metadata length limits.
+   Checked: tsc --noEmit passes; marketing test suite 21/21 pass.
+   NOT run: next build, the Pyodide/SQL tests (runtime files were not in the upload), a browser render.
+
+FILES (copy over the same paths, keep .env.local)
+app/about/page.tsx, app/layout.tsx, app/not-found.tsx (new), app/practice/page.tsx,
+app/practice/[language]/page.tsx, app/practice/[language]/[slug]/page.tsx, app/tools/page.tsx,
+components/marketing/SiteFrame.tsx, components/marketing/marketing.css,
+lib/marketing/practice.ts, lib/marketing/practice-lessons.ts, lib/marketing/practice-hubs.ts,
+lib/marketing/tools.ts, tests/marketing.test.ts
+
+DEPLOY
+npm run typecheck && npm run build, push, let Vercel deploy. Production env must be:
+APP_ORIGIN=https://www.sukoaa.com  SITE_URL=https://www.sukoaa.com  SITE_INDEXING_ENABLED=true
+Then: npm run seo:check -- https://www.sukoaa.com
+Then Search Console (see docs/18-GOOGLE-SEO-SETUP.txt): verify the domain, submit
+https://www.sukoaa.com/sitemap.xml, Request indexing for /, /tools, /practice, /tools/python,
+/tools/json and the new /practice/* hubs.
+
+WHAT CODE CANNOT DO (the real ranking levers)
+- No one can guarantee page 1. "online python compiler" is dominated by large sites.
+- Realistic first targets: the brand query "sukoaa", then long-tail pages: JSON validator,
+  SQLite playground, "python dictionary exercises", "javascript reduce practice", etc.
+- Backlinks: Show HN, Product Hunt, dev.to/Hashnode write-ups, GitHub README links, relevant
+  subreddits/communities. This is usually the biggest missing factor for a new domain.
+- Keep adding genuinely useful exercises (aim for 50+) and a short explainer on each tool page.
+- Measure: Search Console Performance, PageSpeed Insights (mobile) for /, /tools/python, /practice.
+- Not done here: per-page social images, sitemap lastmod (only add if dates are accurate).
