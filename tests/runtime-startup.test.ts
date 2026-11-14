@@ -26,6 +26,17 @@ function fakeContainer(failure=''){
  return {container,kills:()=>kills,installs:()=>installs,servers:()=>servers,probes:()=>probes,spawns,writes,removed};
 }
 async function browserTask(task:()=>Promise<void>){const descriptor=Object.getOwnPropertyDescriptor(globalThis,'window');Object.defineProperty(globalThis,'window',{value:{isSecureContext:true,crossOriginIsolated:true},configurable:true});try{await task();}finally{if(descriptor)Object.defineProperty(globalThis,'window',descriptor);else Reflect.deleteProperty(globalThis,'window');}}
+test('background preparation installs dependencies without starting or auto-resuming application code',()=>browserTask(async()=>{
+ for(const project of [angularTemplate(),template('nextjs')]){const mock=fakeContainer();const runtime=new NodeRuntime({log(){},issue(){},ready(){assert.fail('Preparation must not open a preview')}},{acquire:async()=>mock.container,limits,scope:project.files['angular.json']?'projects/angular':'projects/nextjs'});
+ try{await runtime.prepare(project);assert.equal(mock.installs(),1);assert.equal(mock.servers(),0);assert.equal(runtime.canResume(),false);
+ runtime.updateCallbacks({log(){},issue(){},ready(){}});await runtime.start(project,observer);assert.equal(mock.installs(),1);assert.equal(mock.servers(),1);
+ }finally{runtime.stop();}}
+}));
+test('Run joins pending preparation and synchronizes the newest edits before starting one server',()=>browserTask(async()=>{
+ const mock=fakeContainer();let release!:()=>void;const gate=new Promise<void>(resolve=>release=resolve);const project=template('nextjs');const runtime=new NodeRuntime({log(){},issue(){},ready(){}},{acquire:async()=>{await gate;return mock.container;},limits:{...limits,boot:500},scope:'projects/nextjs'});
+ try{const prepare=runtime.prepare(project);const edited={...project,files:{...project.files,'pages/index.tsx':'export default function Page(){return <h1>Latest edit</h1>}'}};const run=runtime.start(edited,observer);release();await Promise.all([prepare,run]);assert.equal(mock.installs(),1);assert.equal(mock.servers(),1);assert.equal(mock.writes.filter(path=>path==='projects/nextjs/pages/index.tsx').length,2);}
+ finally{runtime.stop();}
+}));
 test('startup deadline and cancellation reject pending provider work',async()=>{
  await assert.rejects(runtimeWait(new Promise(()=>{}),5,'Provider timeout'),/Provider timeout/);
  const controller=new AbortController();const pending=runtimeWait(new Promise(()=>{}),1000,'unused',controller.signal);controller.abort();await assert.rejects(pending,{name:'AbortError'});

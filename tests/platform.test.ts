@@ -61,3 +61,4 @@ test('Unavailable releases stay out of search and the public sitemap',()=>{
 import './angular.test';
 
 import './runtime-startup.test';
+import './background-prepare.test';

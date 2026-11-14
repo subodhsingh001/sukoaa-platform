@@ -30,21 +30,25 @@ type RuntimeLimits={boot:number;probe:number;files:number;install:number;server:
 const defaultLimits:RuntimeLimits={boot:45000,probe:15000,files:30000,install:180000,server:120000};
 export class NodeRuntime{
  private container?:WebContainer;private processes=new Set<WebContainerProcess>();private listeners:(()=>void)[]=[];private mounted=new Set<string>();private sources=new Map<string,string>();private installed='';private attempted='';private session=0;private controller?:AbortController;private liveUrl='';private liveKey='';private pending?:Promise<void>;private pendingKey='';private failed=false;private port?:number;
+ private requestedRun=false;
  constructor(private callbacks:NodeCallbacks,private options:{acquire?:()=>Promise<WebContainer>;limits?:Partial<RuntimeLimits>;scope?:string}={}){}
  updateCallbacks(callbacks:NodeCallbacks){this.callbacks=callbacks}
- canResume(){return !this.failed&&!!(this.pending||this.liveUrl||this.installed||this.attempted)}
- async start(project:StudioProject,observer:ObserverConfig):Promise<void>{
+ canResume(){return this.requestedRun&&!this.failed&&!!(this.pending||this.liveUrl||this.installed||this.attempted)}
+ prepare(project:StudioProject):Promise<void>{return this.queue(project,undefined,true)}
+ start(project:StudioProject,observer:ObserverConfig):Promise<void>{this.requestedRun=true;return this.queue(project,observer,false)}
+ private async queue(project:StudioProject,observer:ObserverConfig|undefined,prepareOnly:boolean):Promise<void>{
   const key=serverKey(project);
-  if(this.pending&&this.pendingKey===key){this.callbacks.phase?.('Continuing existing project setup');await this.pending;return this.begin(project,observer);}
-  const pending=this.begin(project,observer);this.pending=pending;this.pendingKey=key;
+  if(this.pending&&this.pendingKey===key){this.callbacks.phase?.('Continuing existing project setup');await this.pending;if(prepareOnly)return;return this.queue(project,observer,false);}
+  const pending=this.begin(project,observer,prepareOnly);this.pending=pending;this.pendingKey=key;
   try{await pending}finally{if(this.pending===pending){this.pending=undefined;this.pendingKey=''}}
  }
- private async begin(project:StudioProject,observer:ObserverConfig){
+ private async begin(project:StudioProject,observer:ObserverConfig|undefined,prepareOnly=false){
   this.failed=false;
   const blocked=nodePreflight();if(blocked)throw new Error(blocked);
   if(this.liveUrl&&this.liveKey===serverKey(project)&&this.container&&activeRuntimes.has(this)){
+   if(prepareOnly)return;
    const current=this.session;this.callbacks.phase?.('Updating running preview');
-   await this.container.setPreviewScript(observerScript({...observer,mode:'node',mocks:{}}));
+   await this.container.setPreviewScript(observerScript({...observer!,mode:'node',mocks:{}}));
    await this.sync(project);if(current===this.session&&this.liveUrl)this.callbacks.ready(this.liveUrl);return;
   }
   const port=projectPort(project);const retainedScopes=['projects/angular','projects/nextjs'];
@@ -77,11 +81,13 @@ export class NodeRuntime{
     if(previewReady){this.callbacks.failed?.(error.message);this.stop();}
     else{rejectReady(error);controller.abort(error);}
    };
+   if(!prepareOnly){
    this.listeners.push(container.on('server-ready',(port,url)=>{if(current===this.session&&(this.port===undefined||port===this.port)){previewReady=true;resolveReady(url);}}));
    this.listeners.push(container.on('preview-message',message=>{if(current===this.session&&(this.port===undefined||message.port===this.port)&&'message'in message)this.callbacks.issue(message.message,message.stack);}));
    this.listeners.push(container.on('error',error=>fail(new Error('Browser runtime: '+error.message))));
+   }
    await step('Writing project files',async()=>{
-    await container.setPreviewScript(observerScript({...observer,mode:'node',mocks:{}}));
+    if(observer)await container.setPreviewScript(observerScript({...observer,mode:'node',mocks:{}}));
     await this.sync(project);
    },limits.files);
    const packageJson=await dependencyKey(project.files);
@@ -99,6 +105,7 @@ export class NodeRuntime{
     },limits.install);
     this.installed=packageJson;
    }
+   if(prepareOnly){this.callbacks.phase?.('Environment ready');return;}
    const url=await step('Compiling project and starting preview',async()=>{
     const server=await container.spawn('npm',['run','dev'],isAngularProject(project)?{env:{CI:'false',NG_CLI_ANALYTICS:'false'}}:undefined);this.track(server,current);
     server.exit.then(code=>{this.processes.delete(server);if(current===this.session)fail(new Error(previewReady?'Development server stopped (exit '+code+'). Run the project again.':'Development server exited before the preview was ready (exit '+code+'). Read Terminal for the compiler error.'));}).catch(error=>fail(error instanceof Error?error:new Error(String(error))));
