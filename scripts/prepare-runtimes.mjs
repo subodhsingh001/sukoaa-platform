@@ -38,7 +38,7 @@ import 'monaco-editor/languages/definitions/sql/register.js';
 import 'monaco-editor/language/css/monaco.contribution.js';
 import 'monaco-editor/language/html/monaco.contribution.js';
 import 'monaco-editor/language/json/monaco.contribution.js';
-self.MonacoEnvironment={getWorkerUrl:(_module,label)=>'/runtime/monaco/'+(['typescript','javascript'].includes(label)?'ts':['css','scss','less'].includes(label)?'css':label==='html'?'html':label==='json'?'json':'editor')+'.worker.js'};
+self.MonacoEnvironment={getWorker:(_module,label)=>new Worker('/runtime/monaco/'+(['typescript','javascript'].includes(label)?'ts':['css','scss','less'].includes(label)?'css':label==='html'?'html':label==='json'?'json':'editor')+'.worker.js',{type:'classic',name:'sukoaa-monaco-'+label})};
 window.sukoaaMonaco=monaco;window.sukoaaMonacoTS=monacoTS;`,resolveDir:process.cwd(),loader:'js'},bundle:true,format:'iife',platform:'browser',outfile:'public/runtime/monaco/editor.js',loader:{'.ttf':'file'},minify:true,legalComments:'eof'});
 for(const [name,entry] of Object.entries({ts:'language/typescript/ts.worker.js',css:'language/css/css.worker.js',html:'language/html/html.worker.js',json:'language/json/json.worker.js',editor:'editor/editor.worker.js'})){
  await build({entryPoints:[require.resolve('monaco-editor/'+entry)],bundle:true,format:'iife',platform:'browser',outfile:'public/runtime/monaco/'+name+'.worker.js',minify:true,legalComments:'eof'});
@@ -51,13 +51,30 @@ for(const file of ['index.d.ts','client.d.ts'])types['file:///node_modules/@type
 const reactRequire=createRequire(require.resolve('@types/react/package.json'));
 types['file:///node_modules/csstype/index.d.ts']=await readFile(reactRequire.resolve('csstype/index.d.ts'),'utf8');
 await writeFile('public/runtime/monaco/react-types.json',JSON.stringify(types));
+// Next declarations are loaded only by Next projects, separately from React.
+const nextTypes={};
+const {readdir}=await import('node:fs/promises');
+async function collectDeclarations(root,prefix){
+ for(const entry of await readdir(root,{withFileTypes:true})){
+  const path=join(root,entry.name),key=prefix+'/'+entry.name;
+  if(entry.isDirectory()&&entry.name!=='node_modules')await collectDeclarations(path,key);
+  else if(entry.isFile()&&entry.name.endsWith('.d.ts'))nextTypes[key]=await readFile(path,'utf8');
+ }
+}
+await collectDeclarations(dirname(require.resolve('next/package.json')),'file:///node_modules/next');
+await collectDeclarations(dirname(require.resolve('@types/node/package.json')),'file:///node_modules/@types/node');
+const nodeTypesRequire=createRequire(require.resolve('@types/node/package.json'));
+await collectDeclarations(dirname(nodeTypesRequire.resolve('undici-types/package.json')),'file:///node_modules/undici-types');
+const nextRequire=createRequire(require.resolve('next/package.json'));
+await collectDeclarations(dirname(nextRequire.resolve('styled-jsx/package.json')),'file:///node_modules/styled-jsx');
+await writeFile('public/runtime/monaco/next-types.json',JSON.stringify(nextTypes));
 console.log('Prepared Studio bundler, Monaco editor and local language workers.');
 
 // Pinned browser Python runtime. No CDN, remote execution key or account needed.
 const pythonRoot=dirname(require.resolve('pyodide/package.json'));
 await mkdir('public/runtime/python',{recursive:true});
 for(const file of ['pyodide.mjs','pyodide.asm.mjs','pyodide.asm.wasm','python_stdlib.zip','pyodide-lock.json'])await copyFile(join(pythonRoot,file),join('public/runtime/python',file));
-await build({entryPoints:['lib/platform/python-entry.mjs'],bundle:true,format:'iife',platform:'browser',target:'es2022',outfile:'public/runtime/python/runner.js',minify:true,legalComments:'eof',banner:{js:'/* Sukoaa Python bundled worker v5 */\nself.importScripts = () => { throw new Error("Script imports are disabled in this self-contained worker."); };'},define:{'import.meta.url':JSON.stringify('https://runtime.invalid/pyodide.asm.mjs')},external:['node:*']});
+await build({entryPoints:['lib/platform/python-entry.mjs'],bundle:true,format:'iife',platform:'browser',target:'es2022',outfile:'public/runtime/python/runner.js',minify:true,legalComments:'eof',banner:{js:'/* Sukoaa Python bundled worker v6 */\nself.importScripts = () => { throw new Error("Script imports are disabled in this self-contained worker."); };'},define:{'import.meta.url':JSON.stringify('https://runtime.invalid/pyodide.asm.mjs')},external:['node:*']});
 console.log('Prepared local Pyodide 314.0.7 runtime.');
 
 await mkdir('public/runtime/sql',{recursive:true});

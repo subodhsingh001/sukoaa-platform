@@ -113,3 +113,5 @@
 @media(max-width:900px){.workspace-wide .workspace-main{padding:10px}.workspace-wide .workspace-view-controls{padding:10px;gap:8px}.workspace-wide .bench-controls{flex-wrap:wrap;padding:10px;gap:8px}.workspace-wide .bench-controls>input{flex:1;min-width:100px}.workspace-wide .bench-controls>div{width:100%;justify-content:flex-end;gap:12px}.workspace-wide .quick-panels{height:auto}.save-tooltip{right:-35px;width:260px}.workspace-sidebar .toolbox-tooltip{display:none!important}}
 .workspace-wide.workspace-focus .workspace-main{padding:10px}
 .workspace-wide.workspace-focus .quick-panels{height:auto;flex:1;min-height:0}
+
+@media(min-width:1024px){.workspace-wide .workspace-message{text-align:center}}

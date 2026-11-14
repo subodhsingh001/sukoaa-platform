@@ -1,0 +1,40 @@
+SUKOAA ANGULAR PROJECT STUDIO — 0.15.0
+
+OPEN
+https://www.sukoaa.com/studio?framework=angular
+Guide: https://www.sukoaa.com/tools/angular
+These URLs show the new studio after you push and redeploy the included project.
+
+WHAT IS INCLUDED
+Angular 22.2.6, Angular CLI/build 22.2.7, TypeScript 6.0.3.
+Three starters: standalone signals/routes/forms, NgModule, Angular Material.
+Separate TS, HTML and style files; add/import files and folders; npm terminal; preview; console; HTTP inspector; compiler error locations; resize editor/preview; full-page mode; local save; existing optional cloud save; export ZIP.
+No new Supabase migration or database credentials are required. Angular projects use the existing Studio document format; angular.json identifies Angular and drafts are stored separately from React.
+
+HOW TO USE
+1. Open Angular Studio in current desktop Chrome or Edge, over HTTPS or localhost.
+2. Choose a starter. Click Run project. First run downloads the browser runtime and npm packages.
+3. Edit files. Save & sync writes changes to the running dev server.
+4. Install a compatible npm package from Terminal: npm install PACKAGE@VERSION
+5. Click Pull runtime files after terminal edits/package installs. This copies supported source files and package.json into the editor. It excludes dependencies, build output, hidden runtime folders and generated dependency locks.
+6. Save locally or export a ZIP. Stop and Run again when dependencies change.
+7. Console shows browser logs; Errors includes compiler source locations when supplied; API/Network shows instrumented fetch/XHR. Browser DevTools includes additional browser traffic.
+
+LIBRARIES AND LATEST FEATURES
+This is a real CLI workspace, not a simulated Angular template. It can compile features supported by the pinned Angular release, including standalone components and NgModules, signals, computed values, signal inputs, built-in control flow, defer, dependency injection, forms, HttpClient and lazy routes.
+Compatible browser Angular/npm libraries can be installed. Every library must satisfy Angular peer dependencies. No project can guarantee all libraries, native binaries, operating-system services, external databases, arbitrary SSR setups or future releases.
+Angular 22 requires Node ^22.22.3, ^24.15.0 or >=26 and TypeScript >=6 <6.1. The studio checks its browser Node version and gives a clear export/local-run path if the provider runtime is older.
+Monaco supplies syntax editing; this integration does not include the full Angular language service. Angular CLI provides template/type diagnostics on compilation.
+Current source limits: 150 files, 1 MB total, 200 KB per file. npm dependencies are installed in the runtime and are not counted as source.
+
+HOSTING
+/studio already has COOP same-origin and COEP credentialless in next.config.ts. Keep these response headers after deployment. No new Vercel server compiler is installed.
+Browser Node/npm execution uses the existing WebContainer integration. Commercial, for-profit production use requires the provider's eligible license; do not assume the prototype mode grants commercial production rights. See https://webcontainers.io/enterprise
+A browser blocker, unsupported browser, insufficient device memory, offline network or provider restriction may prevent execution. The ZIP can also run locally using supported Node: npm install, npm run dev.
+AI remains disabled.
+
+DEPLOY
+Copy the updated full project into your existing repository; preserve your .env.local.
+Run npm ci --include=dev, npm test, npm run build.
+Commit and push the changed source files, then redeploy Vercel.
+No credentials belong in source code or exported example projects.

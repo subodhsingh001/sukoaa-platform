@@ -81,3 +81,9 @@
 @media(max-width:760px){.studio-workbench.view-split{grid-template-rows:minmax(0,var(--studio-editor-share,55%)) 10px minmax(0,1fr)}}
 
 .studio-fullscreen{position:fixed;inset:0;z-index:1000}.studio-fullscreen .studio-header{display:none}.studio-shell.studio-fullscreen{grid-template-rows:auto minmax(0,1fr) 29px}
+
+.angular-studio .studio-toolbar,.angular-studio .studio-toolbar-actions{flex-wrap:wrap;gap:10px}.angular-studio .studio-toolbar{padding-block:10px}.angular-studio .studio-project-name{min-width:140px}.angular-studio .studio-preview-canvas iframe{width:100%}
+
+.runtime-startup-panel{width:100%;max-width:760px;max-height:100%;margin:auto;padding:28px;overflow:auto;color:#294233;text-align:left}.runtime-startup-panel h2{font-size:clamp(19px,2vw,28px);line-height:1.4;overflow-wrap:anywhere}.runtime-startup-panel p{font-size:14px;line-height:1.6}.runtime-startup-panel pre{background:#20362c;color:#e1ecd6;border-radius:10px;padding:16px;font:13px/1.6 Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto}.runtime-startup-panel>div{display:flex;flex-wrap:wrap;gap:10px}.runtime-startup-panel button{background:#294b35;color:white;padding:11px 15px;border-radius:7px;min-height:42px;font-size:14px}.runtime-startup-panel.failed h2{color:#a63e2a}@media(max-width:760px){.runtime-startup-panel{padding:18px}.runtime-startup-panel pre{max-height:180px}}
+
+.explorer-note,.studio-cloud-help{display:none}

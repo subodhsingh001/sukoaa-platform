@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": [
+    "types/next-production.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "examples",
+    "dist",
+    ".vinext",
+    ".wrangler",
+    ".sites-runtime",
+    "outputs",
+    "work",
+    ".next/dev",
+    ".next-dev",
+    "next-env.d.ts"
+  ]
+}

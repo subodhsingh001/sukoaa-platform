@@ -1,0 +1,31 @@
+Sukoaa Platform v0.15.2 — full project update
+
+Extract this FULL ZIP into a NEW empty folder. Do not copy only app/ or components/.
+The included lib/marketing/practice-hubs.ts and practice-lessons.ts are required.
+Keep your existing .env.local privately; copy it into the new project folder.
+Do not commit .env.local or credentials to GitHub.
+
+Use Node.js 24. Stop any running dev server before installing on Windows.
+In the folder containing package.json:
+  npm ci --include=dev
+  npm run check:source
+  npm test
+  npm run build
+  npm run dev
+
+Changes:
+- Tool selection validates destinations before mutating workspace state.
+  Angular, React, Next.js and React Native open their project studios.
+- Real Next.js and Node declarations are loaded only for Next.js editors.
+  Errors in user code remain enabled.
+- Python core files start loading when selecting Python, without downloading
+  Requests wheels for standard-library-only code. Requests imports or API mode
+  load the verified optional bundle. Every run retains a fresh isolated worker.
+- Desktop workspace messages are centered.
+- Prebuild checks local imports and reports missing source files clearly.
+
+Deploy:
+Replace the project source in your GitHub repository with this complete tree,
+retain your private environment settings in Vercel, commit and push. Vercel
+builds the new commit automatically if your repository is connected. This ZIP
+contains no credentials. No database migration or new service is needed.

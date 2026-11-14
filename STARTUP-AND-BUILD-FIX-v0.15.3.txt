@@ -1,0 +1,36 @@
+Sukoaa Platform v0.15.3 — build and Studio startup fixes
+
+Stop your local dev server before replacing source or building.
+Extract the complete ZIP into a clean folder. Keep .env.local private.
+Use Node 24. Run npm ci --include=dev, npm run typecheck, npm test, npm run build.
+Run npm run dev to develop. Push the complete source to your connected GitHub
+repository for Vercel to redeploy. No database migration is required.
+
+For stale generated files in your existing Windows project, stop npm run dev,
+then run in PowerShell from the project root:
+Remove-Item -Recurse -Force .next,.next-dev -ErrorAction SilentlyContinue
+npm run build
+Do not edit generated routes.d.ts by hand.
+
+The platform now isolates dev output in .next-dev and uses tsconfig.build.json
+for production checks. Development next-env.d.ts is excluded from that check;
+production Next declarations and .next/types remain included. Source errors
+still fail builds. New exported Next.js starters use the same configuration.
+
+Studio performance:
+- Boot begins while opening Angular/Next.js Studio.
+- Run with ordinary source edits updates the running server via HMR.
+- Unchanged files are not rewritten; build caches are retained.
+- Dependencies remain installed in the running tab; npm prefers its local cache.
+- Dependency/configuration changes restart the server as needed.
+- Angular starts in a local development environment with CLI analytics disabled; new starters enable CLI caching in all environments.
+- Stop still terminates processes. This is a persistent project dev environment,
+  not an isolated fresh VM per Run.
+
+The first full Angular/Next.js setup still downloads large packages after a fresh page load. These
+changes reduce repeated work, not the size of a cold framework install. An
+instant full-stack first run requires preinstalled hosted workspaces or verified
+prebuilt dependency snapshots; this release does not promise that service.
+
+Hidden: explorer-note and studio-cloud-help.
+AI remains disabled. Existing compilers and project features are retained.

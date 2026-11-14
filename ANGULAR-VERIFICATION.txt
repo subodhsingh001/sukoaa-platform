@@ -1,0 +1,23 @@
+ANGULAR VERIFICATION — 13 NOVEMBER 2026
+
+PASS: 138 platform regression tests.
+PASS: TypeScript checks in production Next.js build.
+PASS: Native hosted-site production build.
+PASS: Portable Next.js production build.
+PASS: Angular CLI production builds for standalone, NgModule and Material starters.
+PASS: Deliberately invalid template reports missingMember at src/app/home.html:8:6.
+PASS: Browser npm install and Angular 22 dev-server preview for all three starters.
+PASS: Standalone signal count 0 -> 1, computed 0 -> 2, form task insertion, deferred statistics and lazy /about route.
+PASS: HttpClient JSONPlaceholder demo request returns 200 and appears in API/Network.
+PASS: NgModule FormsModule binding changes heading to Hello, Subo; counter increments.
+PASS: Material button renders with mat-mdc-unelevated-button class and increments count.
+PASS: Browser terminal installs lodash-es 4.17.21; Pull runtime files includes it in editor package.json.
+PASS: Editor/preview divider changes from 55% to 48% by dragging.
+PASS: Angular tool landing page has its own metadata, launch URL and sitemap entry.
+
+LIMITS
+Monaco background-worker warnings appeared in the managed development preview. The editor rendered and Angular CLI compilation/preview continued to work. Runtime worker headers are included, but worker readiness on the user's Vercel deployment has not been verified.
+Cloud saving reuses the existing project backend; no real account/cloud-save round trip was performed in this task.
+No claim that every npm library, OS integration, server workflow or browser/device is supported.
+Commercial WebContainer production use requires an eligible provider license.
+The existing private preview was published; the user's GitHub repository and www.sukoaa.com Vercel deployment were not changed directly.

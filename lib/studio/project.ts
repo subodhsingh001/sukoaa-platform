@@ -8,7 +8,7 @@ export function projectId(){return 'p-'+Array.from(crypto.getRandomValues(new Ui
 export function filePath(value:string){
  if(!value||value.length>180||value.startsWith('/')||value.includes('\\')||value.includes(':')||/[?#%<>|]/.test(value)||/[\x00-\x1f]/.test(value))throw new Error('Use a relative project path, for example src/components/Card.tsx.');
  const parts=value.split('/');if(parts.some(p=>!p||p==='.'||p==='..'||p.trim()!==p))throw new Error('Paths cannot contain empty segments, . or ...');
- if(parts.some(p=>['node_modules','.git','.next','dist','__proto__'].includes(p)||(/^\.env(?:\.|$)/.test(p)&&p!=='.env.example')||/\.(pem|key|p12|pfx)$/i.test(p)))throw new Error('Dependencies, build folders and secret files are excluded. Use .env.example without real secrets.');
+ if(parts.some(p=>['node_modules','.git','.next','.next-dev','.angular','out-tsc','dist','__proto__'].includes(p)||(/^\.env(?:\.|$)/.test(p)&&p!=='.env.example')||/\.(pem|key|p12|pfx)$/i.test(p)))throw new Error('Dependencies, build folders and secret files are excluded. Use .env.example without real secrets.');
  return value;
 }
 export function validateProject(value:unknown):StudioProject{
@@ -61,9 +61,11 @@ export function template(kind:ProjectKind,router:'pages'|'app'='pages'):StudioPr
   'components/ApiCard.tsx':'"use client";\nimport { useState } from "react";\nexport default function ApiCard(){\n  const [result,setResult]=useState("Click to call your real Next.js route.");\n  async function load(){\n    console.log("Calling /api/hello");\n    const response=await fetch("/api/hello");\n    const data=await response.json();\n    setResult(JSON.stringify(data,null,2));\n    console.log("API response",data);\n  }\n  return <section className="card"><h2>An actual API route.</h2><button onClick={load}>Call /api/hello</button><pre>{result}</pre></section>;\n}\n',
   'app/api/hello/route.ts':'export async function GET(){\n  console.log("GET /api/hello handled by Next.js");\n  return Response.json({message:"Hello from your Next.js route!",server:true,time:new Date().toISOString()});\n}\n',
   'app/globals.css':css,
-  'next.config.mjs':'export default { experimental: { useWasmBinary: true }, turbopack: { root: process.cwd() }, outputFileTracingRoot: process.cwd() };\n',
+  'next.config.mjs':"export default { distDir:process.env.NODE_ENV==='development'?'.next-dev':'.next', typescript:{tsconfigPath:process.env.NODE_ENV==='production'?'tsconfig.build.json':'tsconfig.json'}, experimental: { useWasmBinary: true }, turbopack: { root: process.cwd() }, outputFileTracingRoot: process.cwd() };\n",
   'postcss.config.mjs':'export default { plugins: {} };\n',
   'tsconfig.json':JSON.stringify({compilerOptions:{target:'ES2017',lib:['dom','dom.iterable','esnext'],allowJs:true,skipLibCheck:true,strict:true,noEmit:true,esModuleInterop:true,module:'esnext',moduleResolution:'bundler',resolveJsonModule:true,isolatedModules:true,jsx:'react-jsx',plugins:[{name:'next'}]},include:['next-env.d.ts','**/*.ts','**/*.tsx','.next/types/**/*.ts'],exclude:['node_modules']},null,2),
+  'tsconfig.build.json':JSON.stringify({extends:'./tsconfig.json',compilerOptions:{incremental:false},include:['types/next-production.d.ts','**/*.ts','**/*.tsx','.next/types/**/*.ts'],exclude:['node_modules','next-env.d.ts','.next/dev','.next-dev']},null,2),
+  'types/next-production.d.ts':'/// <reference types="next" />\n/// <reference types="next/image-types/global" />\n',
   'README.md':'# My Sukoaa Next.js project\n\nStart Node runtime inside Sukoaa to install packages and run next dev. Requires HTTPS/localhost, cross-origin isolation, a supported browser, and internet. WebContainer commercial production usage requires an eligible license.\n\nOr export the project ZIP and run locally: npm install, npm run dev, then open http://localhost:3000.\n\nThis is real Next.js; React Fast preview is not used to emulate server rendering.\n'
  };
  if(kind==='nextjs'&&router==='pages'){
@@ -77,6 +79,6 @@ export function template(kind:ProjectKind,router:'pages'|'app'='pages'):StudioPr
  return validateProject({version:1,id:projectId(),name:kind==='react'?'My React project':'My Next.js project',kind,files,folders:[],entry:kind==='react'?'src/main.tsx':router==='pages'?'pages/index.tsx':'app/page.tsx'});
 }
 
-export function projectMainFile(project:StudioProject){return ['App.tsx','App.js','src/App.tsx','app/page.tsx','src/app/page.tsx','pages/index.tsx','pages/index.jsx','pages/index.js','src/pages/index.tsx',project.entry].find(path=>project.files[path]!==undefined)||Object.keys(project.files)[0]}
+export function projectMainFile(project:StudioProject){return ['src/app/app.ts','src/app/app.component.ts','App.tsx','App.js','src/App.tsx','app/page.tsx','src/app/page.tsx','pages/index.tsx','pages/index.jsx','pages/index.js','src/pages/index.tsx',project.entry].find(path=>project.files[path]!==undefined)||Object.keys(project.files)[0]}
 export function isAppRouter(project:StudioProject){return project.kind==='nextjs'&&Object.keys(project.files).some(path=>/^(?:src\/)?app\/(?:.*\/)?page\.[jt]sx?$/.test(path))}
 export function issueKey(issue:StudioIssue){return issue.file&&issue.line?[issue.file,issue.line,issue.column||1].join(':'):issue.message.replace(/^(?:Uncaught(?: \(in promise\))?\s+)?(?:[A-Za-z]*Error:\s*)+/,'')}

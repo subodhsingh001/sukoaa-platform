@@ -1,0 +1,29 @@
+SUKOAA STUDIO STARTUP & MENU FIX — v0.15.1
+
+CHANGES
+- Monaco context menu shadow roots now receive the bundled editor stylesheet and explicit readable menu colors. Menus keep their overflow positioning, including in full-page view. This applies to Studio and quick-playground editors.
+- Node startup reports each stage: loading runtime, checking Node, writing files, installing dependencies, compiling/starting preview.
+- Preview shows elapsed time, recent logs, Stop startup and Show terminal even if the inspector is hidden.
+- Every awaited startup stage has a deadline. Stop cancels pending waits and kills tracked processes.
+- Server exit before exposing a preview port fails immediately, including exit code 0.
+- Startup errors show Retry startup, Save draft & reload and Export project. Source is not deleted.
+
+TIME LIMITS
+Browser Node load: 45 seconds.
+Node version probe: 15 seconds.
+Project filesystem/preload setup: 30 seconds.
+Dependency installation: 180 seconds.
+Compilation and preview port: 120 seconds.
+The first successful run can take over a minute while packages download. The current stage and logs now remain visible.
+
+DEPLOY
+Push the updated files to your GitHub repository and redeploy Vercel. No migration or new credentials are needed.
+For the existing ChatGPT Site preview, the new version is published separately by this task.
+Reload an already-open Studio tab to load the update. Save/export unsaved work before a manual reload; the Save draft & reload button saves locally first.
+
+STATUS OF OTHER LANGUAGES
+Ruby, C/C++, C#, Go and Java browser runtimes are not implemented in this release. Existing remote compiler integrations still need their separate execution service. Do not advertise them as working browser compilers.
+
+VERIFICATION
+142 regression tests include provider timeout, pending version probe, hanging npm install, missing preview port, server exit before ready and Stop cancellation.
+The private hosted preview requires authentication in the QA browser; its exact reported startup failure cannot be reproduced there without access. Local runtime startup and popup UI are checked separately. Provider/browser restrictions can still prevent execution, but should now result in an explicit error instead of an indefinite Starting state.

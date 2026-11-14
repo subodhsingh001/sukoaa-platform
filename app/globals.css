@@ -85,3 +85,11 @@
 .tool-card .card-bottom>a.home-tool-launch:focus-visible{outline:2px solid #536e43;outline-offset:3px}
 @media(max-width:1100px){.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.tool-grid{grid-template-columns:minmax(0,1fr)}.tool-card{padding:20px}.tool-card>p{font-size:14px;min-height:0;max-width:none}.tool-card .card-bottom span{font-size:11px;padding:5px 7px}}
+
+/* Monaco menus are portaled outside the editor. Give them an explicit theme. */
+.monaco-menu-container,.monaco-menu,.context-view .monaco-menu{--vscode-menu-background:#243b30;--vscode-menu-foreground:#edf3e6;--vscode-menu-selectionBackground:#486440;--vscode-menu-selectionForeground:#ffffff;--vscode-menu-border:#647c58;--vscode-menu-separatorBackground:#58704e;--vscode-widget-shadow:#0008;background-color:#243b30!important;color:#edf3e6!important;border-radius:8px}
+.monaco-menu .monaco-action-bar{background:#243b30!important;color:#edf3e6!important;border:1px solid #647c58;box-shadow:0 8px 28px #0006;border-radius:8px;padding:5px 0}
+.monaco-menu .monaco-action-bar .action-item,.monaco-menu .monaco-action-bar .action-label,.monaco-menu .monaco-action-bar .keybinding,.monaco-menu .monaco-action-bar .submenu-indicator{color:#edf3e6!important;background-color:transparent}
+.monaco-menu .monaco-action-bar .action-item.focused,.monaco-menu .monaco-action-bar .action-item:hover{background:#486440!important;color:#fff!important}
+.monaco-menu .monaco-action-bar .action-item.disabled .action-label,.monaco-menu .monaco-action-bar .action-item.disabled .keybinding{color:#a6b6a0!important}
+.monaco-menu .monaco-action-bar .action-item .action-label.separator{border-bottom-color:#58704e!important}

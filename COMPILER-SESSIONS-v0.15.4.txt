@@ -1,0 +1,44 @@
+Sukoaa Platform v0.15.4 — retained Angular and Next.js sessions
+
+What changed
+- Internal compiler switching uses client navigation rather than reloading the document.
+- Leaving Studio detaches its view rather than destroying the browser Node VM.
+- Angular, Next.js and React use separate folders in the same live browser runtime.
+- Returning to a started Studio automatically resumes its retained session.
+- Returning during initial setup joins the ongoing operation rather than starting another install.
+- Angular and Next.js can keep their development servers running together on
+  separate ports. Preview and error events are filtered by port. A different
+  Node tool or conflicting port stops an incompatible server while retaining
+  its files and dependencies. JavaScript/Python playgrounds do not stop them.
+- A successful Node version check no longer waits for its output stream to close.
+  Compatible versions are remembered for that VM; checks still have a timeout.
+- Source drafts are saved immediately when leaving Studio.
+- Workspace, Studio and Native routes share cross-origin isolation headers so
+  client navigation does not break the Node runtime.
+
+Limits
+The FIRST install for each framework still downloads packages. Refreshing the
+page, closing the tab or leaving through a full-page navigation clears the live
+browser VM. Dependency changes can require npm installation. This release does
+not claim instant cold starts or permanent on-disk runtime persistence.
+AI remains disabled. No database migration or additional account is required.
+
+Install and deploy
+Stop your local dev server. Replace the complete source with this ZIP while
+keeping your .git folder and private .env.local. Never upload .env.local.
+Use Node 24. From the folder containing package.json:
+npm ci --include=dev
+npm run typecheck
+npm test
+npm run build
+npm run dev
+Push the full source update to your connected GitHub repository for Vercel.
+
+Verify
+1. Open Angular, run it once and note the preview address.
+2. Use Switch coding tool to open JavaScript, then select Angular in its toolbox.
+3. The existing preview should return without npm installation.
+4. Repeat the same check for Next.js after its first successful startup.
+5. Switching between Angular and Next.js preserves dependencies in their folders.
+6. Stop still stops the current server. Save draft & reload remains available if
+   the underlying browser runtime is unresponsive.

@@ -1,3 +1,4 @@
+import './workspace-repair.test';
 import {pageMetadata,publicPaths} from '../lib/marketing/site';
 import {unlistedPaths} from '../lib/marketing/availability';
 import test from 'node:test';import assert from 'node:assert/strict';
@@ -56,3 +57,7 @@ test('Unavailable releases stay out of search and the public sitemap',()=>{
   }
  } finally {for(const [key,value] of Object.entries(prior)){if(value===undefined)delete process.env[key];else process.env[key]=value;}}
 });
+
+import './angular.test';
+
+import './runtime-startup.test';

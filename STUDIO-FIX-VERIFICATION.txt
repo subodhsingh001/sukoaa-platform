@@ -1,0 +1,12 @@
+SUKOAA STUDIO FIX VERIFICATION — 13 NOVEMBER 2026
+
+142 regression tests passed, including stalled runtime calls, hanging version probe, dependency install timeout, missing preview port, server exit before ready and Stop cancellation.
+TypeScript check passed. Both native and portable production builds passed.
+Browser: context menu uses a dark green background and readable light labels, with a full stylesheet inside its shadow root. It is not clipped by the editor.
+Browser: startup phase, elapsed time and current logs remained visible after hiding the inspector.
+Browser: Angular Material reached the live preview after 70,956 ms; counter changed 0 -> 1 and computed value 0 -> 2.
+Browser: full-page view retained a readable context menu and working preview.
+
+The exact hosted session shown by the user could not be reproduced because the private hosted preview requires authentication in the test browser. Local execution was verified. Provider, browser or network problems may still prevent execution; the startup should now report the relevant stage/error instead of remaining indefinitely at Starting.
+
+Ruby, C/C++, C#, Go and Java browser runtimes remain unimplemented. This is a Studio repair release.

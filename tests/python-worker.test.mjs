@@ -9,7 +9,7 @@ const stdlib=await readFile(new URL('python_stdlib.zip',base));
 const lock=await readFile(new URL('pyodide-lock.json',base),'utf8');
 const manifest=JSON.parse(await readFile(new URL('packages/manifest.json',base),'utf8'));
 const packages=Object.fromEntries(await Promise.all(manifest.map(async p=>[p.filename,await readFile(new URL('packages/'+p.filename,base))])));
-async function execute(source,stdin='',http=async()=>({ok:false,kind:'blocked',error:'API access is off.'})){
+async function execute(source,stdin='',http=async()=>({ok:false,kind:'blocked',error:'API access is off.'}),includePackages=true){
  const worker=new Worker(`
   const {parentPort,workerData}=require('node:worker_threads');
   globalThis.process=undefined;
@@ -24,7 +24,7 @@ async function execute(source,stdin='',http=async()=>({ok:false,kind:'blocked',e
   (0,eval)(workerData.runner);
   parentPort.on('message',data=>globalThis.onmessage({data}));
   globalThis.onmessage({data:workerData.payload});
- `,{eval:true,workerData:{runner,payload:{source,stdin,assets:{wasm,stdlib,lock,packages}}}});
+ `,{eval:true,workerData:{runner,payload:{source,stdin,assets:{wasm,stdlib,lock,packages:includePackages?packages:{}}}}});
  const messages=[];
  return new Promise((resolve,reject)=>{
   const timer=setTimeout(()=>{worker.terminate();reject(new Error('Prepared Python worker timed out'))},20000);
@@ -33,7 +33,7 @@ async function execute(source,stdin='',http=async()=>({ok:false,kind:'blocked',e
  });
 }
 test('prepared bundled worker initializes real WASM without ESM imports or network',async()=>{
- const messages=await execute('import math\nprint("Hello, " + input())\nprint(math.factorial(5))','Sukoaa');
+ const messages=await execute('import math\nprint("Hello, " + input())\nprint(math.factorial(5))','Sukoaa',undefined,false);
  assert.ok(messages.some(m=>m.ready),JSON.stringify(messages));
  assert.ok(messages.some(m=>m.line==='Hello, Sukoaa'),JSON.stringify(messages));
  assert.ok(messages.some(m=>m.line==='120'));
