@@ -1,0 +1,32 @@
+SUKOAA - MAKING C, C++, C# AND JAVA EXECUTION LIVE
+14 November 2026
+
+CURRENT STATUS
+The live site's /api/status reported all remoteRuntimes false when checked during this update. C/C++/C#/Java execution is not connected. Browser Python works independently and does not need Judge0. The editor, starters, input, output formatting and isolated-runner integration already exist. Adding the notepad does not enable these compilers.
+
+RECOMMENDED ROUTE
+Connect one maintained Judge0 API endpoint for all four languages. It can be a managed provider (no VPS for you to manage) or a separately hosted, maintained Linux runner. Hosting, usage quotas and prices depend on the provider. Open-source software does not make infrastructure unlimited or free. Vercel can keep hosting the website; Supabase and Upstash keep their existing roles.
+A CDN delivers files; it is not by itself a compiler. Browser-only runtimes are possible for specific cases but need actual toolchains, library/runtime downloads, compatibility testing, cancellation and limits. This release does not contain a verified browser C/C++/C#/Java implementation.
+
+SERVER-SIDE VERCEL VARIABLES
+JUDGE0_URL=https://YOUR-RUNNER-ENDPOINT
+JUDGE0_AUTH_TOKEN=YOUR_TOKEN_IF_REQUIRED
+# If using a RapidAPI provider, use its authentication key instead:
+JUDGE0_RAPIDAPI_KEY=YOUR_PROVIDER_KEY
+JUDGE0_C_ID=ID_FROM_YOUR_RUNNER_LANGUAGES_ENDPOINT
+JUDGE0_CPP_ID=ID_FROM_YOUR_RUNNER_LANGUAGES_ENDPOINT
+JUDGE0_CSHARP_ID=ID_FROM_YOUR_RUNNER_LANGUAGES_ENDPOINT
+JUDGE0_JAVA_ID=ID_FROM_YOUR_RUNNER_LANGUAGES_ENDPOINT
+
+IDs differ by runner deployment. Query the chosen provider's /languages and use its installed versions. Keep credentials server-side, never in NEXT_PUBLIC variables or public GitHub. Existing Supabase authentication, APP_ORIGIN and Upstash protection are still used by execution actions. Redeploy after adding environment variables.
+
+VERIFY BEFORE LISTING OR INDEXING
+Run the included examples/compiled-languages demos through the deployed website, with standard input Sukoaa, after signing in. Check correct output, a deliberate compiler error and its source line, timeout behavior, and job ownership. /api/status flags indicate configuration, not a complete live health test.
+After these checks pass, update the release policy in lib/marketing/availability.ts, update the unavailable-execution descriptions in lib/marketing/tools.ts and publish the ready tools. Until then, keeping unavailable compiler pages out of search and public listings avoids promising a feature that cannot run.
+
+SELF-HOSTING
+The existing deploy/judge0 folder contains a separate-server deployment guide, demos and verification helper. Read its current upstream/security requirements and use maintained releases. It has not been deployed or live-tested against your server in this session. Do not put untrusted compiler execution directly into the main website process.
+
+Official references:
+https://judge0.com/
+https://ce.judge0.com/

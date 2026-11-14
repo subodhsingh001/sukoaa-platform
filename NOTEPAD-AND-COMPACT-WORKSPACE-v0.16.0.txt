@@ -1,0 +1,54 @@
+SUKOAA v0.16.0 - ONLINE NOTEPAD AND COMPACT CODE WORKSPACE
+14 November 2026
+
+WHAT IS INCLUDED
+This is the complete Next.js project. It preserves the supplied scripts.zip source updates, the earlier compilers and practice/SEO work, and Angular/Next.js background dependency preparation.
+
+COMPACT CODING SCREEN
+The quick workspace now has one main action bar: project name, reset, Options, full-page toggle, local/cloud saves, export and Run/Stop.
+Options contains editor font size, toolbox toggle, width reset, layout choice, standard input, code folding, and Python demo API settings. These controls no longer occupy permanent rows above or below the code. Full-page mode hides the extra runtime/message strips and gives the editor and output the remaining height. The editor/output divider remains resizable by pointer or keyboard. Escape closes Options without leaving full-page mode.
+Python API access remains opt-in. Moving its settings into Options does not change its bounded JSONPlaceholder-only access rules.
+
+ONLINE NOTEPAD
+Path after your Vercel deployment: /tools/notepad
+Listed on the homepage (Write category), Tools page and shared footer. The page includes metadata, canonical handling, breadcrumbs, WebApplication data and useful instructions. Sitemap inclusion follows the existing production indexing configuration.
+
+Features:
+- Multiple notes with titles, folders, tags, pinning, search across titles/content/tags and recent/alphabetical sorting.
+- Local autosave, explicit save with Ctrl/Command+S, and clear save-failure status. Notes are not sent to a database or AI provider by this tool.
+- Plain-text writing; Write/Split/Preview views; adjustable desktop split; focus mode; paper/dark themes; font family and size; wrapping and browser spellcheck.
+- A safe Markdown subset: headings, lists, task-list display, quotes, fenced code, bold, italic and simple links. HTML stays text; images/embeds do not load; code does not execute.
+- Find next, literal find/replace, case-sensitive matching, replace all, undo/redo in the current note editing session, Markdown insertion buttons, date/time insertion and copy.
+- Word, character and line counts, cursor location and estimated reading time.
+- Manual snapshots (latest five per note); restoring a snapshot also preserves the replaced text in snapshots.
+- Recoverable Trash; permanent deletion has a confirmation.
+- Import .txt/.md files and merge Sukoaa .json backups. Import does not clear existing notes. Conflicting notes are retained as recovered copies.
+- Download .txt/.md, export all notes/snapshots/Trash in a JSON backup, and print the current Markdown preview (or use the browser's Save as PDF option).
+- Detect another tab's saves and pause on revision conflicts. Web Locks serialize saves on supported browsers; fallback revision checks are best effort. Download both copies or merge before continuing.
+
+LIMITATIONS
+This is not encrypted storage, cloud sync, collaboration, a full word processor, or a complete Markdown implementation. Local data can be removed by clearing site data, private browsing or device loss. Keep downloaded backups. Limits: 100 notes including Trash; 200,000 characters per note; 2 MB serialized text notebook. Browser storage quotas can be lower. Folder deletion and automatic synchronization across devices are not implemented. Undo history is session-local, not the same as saved snapshots.
+
+RESEARCH SUMMARY
+Reviewed public feature/help pages on 14 November 2026:
+https://anotepad.com/features
+https://onlinenotepad.org/
+https://www.rapidtables.com/tools/notepad_help.html
+
+Autosave, multiple documents, find/replace, printing and Markdown already exist in competitors. They are baseline features, not unique claims. aNotepad also advertises rich text, sharing, collections, spreadsheets, audio and whiteboards. Its public guest-mode documentation says guest notes are public; Sukoaa's notes stay local and are not published.
+Sukoaa's intended strengths are local-only guest writing, explicit storage/backup status, portable whole-notebook backups, recoverable Trash, manual snapshots and conflict warnings alongside developer tools. Manual snapshots and cross-tab conflict handling were not documented on the reviewed basic-notepad pages; this is not evidence that no competing product offers them.
+
+DEPLOY
+1. Extract the complete ZIP over your GitHub working copy, preserving .git and your private .env.local.
+2. Do not commit node_modules, generated builds or credentials.
+3. Run npm ci --include=dev
+4. Run npm run typecheck
+5. Run npm test
+6. Run npm run build
+7. Commit and push to your Vercel-connected GitHub branch, then wait for deployment.
+8. Test /tools/notepad and /workspace?language=python. Open Options for advanced workspace controls.
+No new account, API key, Supabase migration or Redis change is required for the notepad/layout update. AI remains disabled.
+
+VERIFICATION
+169 automated tests passed. Notebook tests cover Unicode round-trip, conflict protection, backup merging, snapshot restoration, malformed/oversized data rejection, literal replacements, counts, safe filenames, and safe preview elements. Production builds are checked for both the native preview and portable Next.js project.
+Browser checks covered editing, split preview, local saving, snapshot restore, undo, find/replace, text-file import, backup download, recoverable Trash, another-tab warning and merge. Python ran in the compact full-page layout. Layout options and keyboard divider resizing remain functional.

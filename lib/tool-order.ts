@@ -1,4 +1,4 @@
-export const toolOrder=['javascript','python','html-css','react','angular','nextjs','react-native','typescript','sql','json','c','cpp','rust','csharp','java'] as const;
+export const toolOrder=['javascript','python','html-css','react','angular','nextjs','react-native','typescript','sql','json','notepad','c','cpp','rust','csharp','java'] as const;
 export const toolLinks=[
  {id:'javascript',name:'JavaScript',icon:'JS',href:'/workspace?language=javascript',info:'Browser JavaScript · console and error locations'},
  {id:'python',name:'Python',icon:'Py',href:'/workspace?language=python',info:'Browser Python · standard input and console'},

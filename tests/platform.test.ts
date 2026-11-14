@@ -62,3 +62,5 @@ import './angular.test';
 
 import './runtime-startup.test';
 import './background-prepare.test';
+
+import "./notepad.test";
