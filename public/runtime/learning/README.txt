@@ -1,0 +1,1 @@
+Learning-only assets: PGlite 0.5.15 (Apache-2.0 with bundled PostgreSQL notices) and Tailwind browser 4.2.1 (MIT). Browser engine assets load only when a lab is opened and Run is chosen. See bundled licences and THIRD-PARTY-NOTICES.md.

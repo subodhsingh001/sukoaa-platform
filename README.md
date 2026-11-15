@@ -1,10 +1,12 @@
-# Sukoaa Platform — v0.4.0
+Current release: v0.21.0. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
+
+# Sukoaa Platform — v0.21.0
 
 A professional home for Sukoaa's browser, extensions and developer tools. This source release includes the frontend, Next.js backend routes, Supabase database migration, optional Redis integration, a code workspace, release distribution metadata and setup guides. **AI agents are disabled.**
 
 ## Start here
 
-1. Install Node.js 22 LTS or a newer supported LTS from https://nodejs.org/.
+1. Install Node.js 24 LTS from https://nodejs.org/.
 2. Extract the ZIP and open the **sukoaa-platform** directory in VS Code.
 3. Open Terminal in that directory and run `npm ci`, then `npm run dev`.
 4. Open http://localhost:3000 and choose **Workspace**.

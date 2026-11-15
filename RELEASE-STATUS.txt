@@ -1,169 +1,35 @@
-SUKOAA v0.14.0 - DISCOVERY, TRUST AND PRACTICE HUBS
+SUKOAA PLATFORM v0.21.0 — 15 November 2026
 
-Homepage tool names link to guides; launch buttons keep direct workspace access.
-Added JavaScript, Python and SQL practice hubs, About and Contact pages.
-Private support email remains optional through the existing SUPPORT_EMAIL setting.
-Verified public GitHub issue tracker is offered for non-sensitive bug reports.
-Mobile PageSpeed API requests returned quota errors; no performance score is claimed.
-Source inspection and live HTML loading inventory are documented in DISCOVERY-CONTACT-PERFORMANCE.txt.
-133 tests pass. See included deployment and verification notes.
-Browser interaction checks remain unavailable in this environment.
-No migration or new required environment setting. AI remains disabled.
+AI remains disabled.
 
-SUKOAA v0.13.0 - PRACTICE AND CONTENT UPDATE
+VERIFIED
+217 automated tests, including real PHP, FastAPI, Laravel, PostgreSQL/PGlite,
+Python and SQLite execution, sandbox isolation, real CRUD, GraphQL/REST continuity,
+atomic Redis write transport, production fail-closed behavior and GitHub refresh.
+TypeScript and Next.js production builds pass. Native Site build also passes.
 
-Six standalone lesson pages with hints, complete solutions and walkthroughs.
-Manual completion and Continue practising use local browser storage only.
-Homepage and tool descriptions updated; lesson metadata and sitemap entries added.
-131 tests and production builds passed. All six lesson pages generated as static HTML.
-Browser UI interaction testing remains unavailable in this environment.
-See PRACTICE-AND-SEO-SETUP.txt for deployment and Search Console steps.
-No new environment variables or database migrations. AI remains disabled.
+Browser checks: PHP two-file include and output, Laravel HTML + API navigation,
+Tailwind CSS and interactive JavaScript, PostgreSQL statements and result tables,
+Node HTTP page, local import, console and API response preview. Private sandbox
+creation, POST then GET, nested GraphQL and local builder preview also verified.
+Phone/tablet widths checked by browser zoom; wide layout, font/layout controls,
+full-page mode and keyboard resizing verified. No external account settings changed.
 
-SUKOAA v0.12.0
-React Native Web preview and draggable code/display divider added. Native-only APIs and APK/iOS builds still require Expo/native tools.
-TypeScript and bundle tests pass. Local UI verification was blocked by browser policy.
-See REACT-NATIVE-AND-GOOGLE-SETUP.txt for deployment and Google indexing instructions.
+RUNTIME LIMITS
+Node remains experimental and depends on WebContainer provider access/browser
+support. It runs built-ins and project files; no automatic npm installation.
+Its response preview blocks browser fetch/external assets; test APIs in API / Network.
+PHP and Laravel use network-isolated WebAssembly. Composer dependencies are bundled;
+editing composer.json does not install packages. Tailwind DOM scripts run in an opaque
+preview, with external network blocked. FastAPI uses the actual ASGI application.
 
-SUKOAA 0.11.0 - SELF-HOSTED JUDGE0 DEPLOYMENT KIT
+PUBLICATION
+The ChatGPT Site deployment and your GitHub/Vercel deployment are separate.
+To update www.sukoaa.com, commit these files to your GitHub repository and redeploy.
+Production private sandboxes require APP_ORIGIN and existing Upstash REST credentials.
+Shared demo data remains available without Redis. See API-STUDIO-SETUP.txt.
 
-Prepared deploy/judge0 with digest-pinned containers, authenticated HTTPS
-gateway, private credential generation, host checks and six-language
-compile/run smoke verification. Vercel env export occurs only after all
-production verifier checks pass. Local checks do not export production env.
-PASS: 11 deployment helper tests (HTTP mocked), native Caddy validation,
-native Docker Compose validation for production/local configurations,
-and 128 platform tests.
-NOT VERIFIED: running containers, sandbox behavior, live Judge0 execution,
-DNS/TLS issuance, host firewall or real production credentials.
-The QA host has no Docker CLI/daemon and no target Linux server was supplied.
-No server was provisioned and no DNS or real Vercel runner secrets changed.
-Read SELF-HOSTED-JUDGE0-SETUP.txt. No additional database migration.
-
-SUKOAA 0.10.1 - COMPACT TOOLBARS AND SAVE TOOLTIPS
-
-PASS: 128 automated platform tests; TypeScript checking.
-PASS: browser JavaScript output, cancellable Run/Stop, reset, local save,
-cloud sign-in tooltip with keyboard-accessible link, toolbox resize and
-panel-layout changes. No horizontal overflow at desktop QA size.
-Cloud-save-help banners removed; toolbox subtitles hidden.
-The reported insertBefore error was not reproduced exactly. Controls now
-keep stable DOM nodes, text is wrapped, and editor translation is disabled.
-No global DOM/error monkey-patch is used. See COMPACT-WORKSPACE.txt.
-The six remote languages still need an actual Judge0 service configured;
-this UI release does not provision one or change its credentials.
-
-SUKOAA 0.10.0 - FIVE COMPILED LANGUAGES
-
-C, C++, Rust, C# and Java: editors, standard-library demos, input/output,
-error locations, runner configuration and public tool guides.
-PASS: 128 automated tests and real local demo compilation/execution for all
-five languages, including imports, stdin, expected output and error cases.
-Remote production runs are NOT verified: a Judge0 service is not configured
-in this QA environment. Connect it before presenting execution as live.
-Apply cloud-save migration 003 after 001 and 002. Read
-COMPILED-LANGUAGES-SETUP.txt and examples/compiled-languages/README.txt.
-
-ONLINE COMPILER SEARCH UPDATE
-Homepage, tool directory and JavaScript/Python guide metadata now target
-online compiler searches. Read GOOGLE-COMPILER-SEARCH.txt after deploying.
-Indexing and ranking depend on Google; public custom-domain configuration
-must be verified after Vercel deployment.
-
-SUKOAA 0.9.2 - APPROVED LOGO ACTIVE
-
-Approved uploaded artwork is used in the shared logo component, header,
-footer, workspace, studio and compact marks. A new SVG favicon uses its S.
-The original PNG remains intact. Browser branding visually verified.
-After pushing to GitHub and completing Vercel deployment, hard-refresh
-your custom domain. The hosted preview is deployed separately.
-
-SUKOAA 0.9.1 - TOOL ORDER, ICON TOOLBOX AND LOGO PREVIEW
-
-PASS: 113 automated platform checks and TypeScript checking.
-PASS: browser icon tooltip, drag expansion 72px to 234px, collapse, tool order.
-PASS: logged-out cloud save feedback in quick playground and Studio.
-Logo preview at /brand-preview; active logo unchanged pending approval.
-Cloud round trips against your real Supabase account not tested here.
-See TOOLBOX-AND-CLOUD.txt for behavior, requirements and deployment.
-
-SUKOAA PLATFORM 0.9.0 — REACT NATIVE UPDATE — 13 November 2026
-
-React Native playground at /native uses Expo Snack. It requires internet.
-PASS: 113 automated platform checks, including native starter TSX and URL checks.
-PASS: TypeScript checking, Next.js production build and hosted production build.
-PASS: embedded React Native web counter rendered; tapping changed 0 to 1.
-NOT LIVE-VERIFIED: physical Android/iOS Expo Go devices, searchable-list UI.
-No APK/IPA compiler, custom native modules or cloud emulator entitlement.
-The compact embed edits App.tsx; Open starter on Expo provides the full editor.
-Sukoaa downloads ORIGINAL starter source, not cross-origin Expo edits.
-No new database migration, Redis setting or API key. AI remains disabled.
-Read REACT-NATIVE-SETUP.txt. Copy project updates into your GitHub checkout,
-preserve .env.local, then commit/push to trigger your Vercel deployment.
-
-HISTORICAL RELEASE NOTES BELOW (older limitations may have changed):
-
-SUKOAA PLATFORM 0.2.0 — 31 October 2026
-
-AI: disabled in the interface and backend. No provider SDK, key or API calls.
-
-PASS: clean npm ci of the portable project (57 packages).
-PASS: portable TypeScript check.
-PASS: 23 automated platform/security tests with mocked external services.
-PASS: standard Next.js 16.3.4 production build.
-PASS: Vinext/Cloudflare preview production build.
-PASS: browser JavaScript output and infinite-loop termination after 3 seconds.
-PASS: TypeScript transpilation and execution (not full type checking).
-PASS: interactive React counter changed from 0 to 1.
-PASS: HTML/CSS preview and inline button interaction.
-PASS: local draft save and restoration after reload.
-PASS: Python reports an explicit missing-runner requirement.
-
-NOT CONFIGURED / NOT LIVE-VERIFIED:
-Supabase Auth/SMTP/database migration/RLS and real cloud project CRUD;
-Upstash Redis connectivity and multi-instance behavior;
-Judge0 Python and Go execution/provider isolation;
-external GitHub/Vercel deployment; Docker startup; physical mobile devices.
-Next.js workspace is a downloadable local starter, not a hosted full IDE.
-Browser installers, APKs and extension binaries are not bundled.
-
-All compiler options are therefore NOT live-working out of the box.
-Working browser tools: JavaScript, TypeScript, HTML/CSS, single-file React.
-Needs separate runner: Python, Go. Next.js: Project Studio Node integration; see requirements below.
-
-Start with README.md, then docs/02-LOCAL-SETUP.md and docs/03-DEPLOYMENT.md.
-
-INLINE DIAGNOSTICS UPDATE
-PASS: JavaScript runtime error at line 3 and clickable jump to that position.
-PASS: TypeScript runtime line 4 mapped through erased interface declarations.
-PASS: React runtime error mapped to original TSX line 3, column 15.
-PASS: syntax diagnostics preserve source positions (JS, TS, JSX).
-PASS: Python and Go diagnostic parsers (fixture tests only; runner still unconfigured).
-PASS: HTML inline JavaScript error reported at original line 4, column 3.
-PASS: click-to-error in an 81-line file scrolls the editor and gutter together.
-
-SUKOAA 0.3.0 — PROJECT STUDIO UPDATE
-PASS: 39 automated checks; TypeScript checking.
-PASS: exact Next.js Studio starter production build, including /api/hello.
-PASS: browser multi-file React rendering and imported component interaction.
-PASS: browser folder/file creation and importing a newly created module.
-PASS: browser mock API capture (GET /api/hello, HTTP 200, duration, labeled mock).
-PASS: browser console capture and imported-file error locations (src/ui/Badge.tsx:4:16).
-INTEGRATED BUT NOT LIVE-VERIFIED: WebContainer Node runtime in the browser.
-The HTTP QA preview cannot satisfy its secure-context requirement.
-Use HTTPS/localhost plus supplied isolation headers, supported browser, internet,
-and appropriate commercial licensing. No database migration for this update.
-Python/Go and Supabase/Redis live configuration remain separate prerequisites.
-
-PASS: platform Next.js production build and published-site production build.
-PASS: browser Monaco autocomplete after complete editor service registration.
-
-SUKOAA 0.3.1 — RUNTIME RECOVERY AND SIDE INSPECTOR
-PASS: 44 automated checks; TypeScript checking.
-PASS: React browser worker and compatibility fallback compilation.
-PASS: browser API request/status/timing displayed in right inspector.
-PASS: desktop preview and inspector use full available height with no page horizontal overflow.
-PASS: Next.js Pages Router starter production build with /api/hello.
-App Router request-context errors have an explicit Pages starter/backup path.
-No claim that arbitrary App Router projects run inside WebContainer.
-Native platform build and publication validation are recorded in delivery.
+GITHUB INTEGRATION
+Imports public configuration files. Optional refresh-on-use checks at most once per
+five minutes. Changed configs regenerate data; unchanged configs preserve edits.
+No GitHub App, private-repository access or push webhook installation is included.

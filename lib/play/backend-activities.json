@@ -1,0 +1,707 @@
+[
+  {
+    "id": "fastapi-path-type",
+    "title": "A typed path parameter",
+    "track": "fastapi",
+    "language": "fastapi",
+    "kind": "bug",
+    "topic": "HTTP and validation",
+    "code": "@app.get(\"/products/{product_id}\")\ndef product(product_id: int):\n    return {\"id\": product_id}\n\n# GET /products/not-a-number",
+    "options": [
+      "The handler receives the string.",
+      "The framework returns a validation error (422).",
+      "The route returns 404."
+    ],
+    "answer": 1,
+    "explanation": "FastAPI validates a declared integer path parameter before calling the handler. A non-integer value causes a 422 response.",
+    "hint": "The annotation is part of the request contract.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "fastapi-query",
+    "title": "A missing optional query",
+    "track": "fastapi",
+    "language": "fastapi",
+    "kind": "output",
+    "topic": "HTTP and validation",
+    "code": "@app.get(\"/products\")\ndef products(limit: int = 10):\n    return {\"limit\": limit}\n\n# GET /products",
+    "options": [
+      "{\"limit\": 0}",
+      "{\"limit\": 10}",
+      "The request must include limit."
+    ],
+    "answer": 1,
+    "explanation": "A query parameter with a default is optional. Omitting it uses the declared default, 10.",
+    "hint": "Look for the default value after the equals sign.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "fastapi-bounds",
+    "title": "Bound a page size",
+    "track": "fastapi",
+    "language": "fastapi",
+    "kind": "bug",
+    "topic": "HTTP and validation",
+    "code": "def products(limit: int = Query(default=10, ge=1, le=50)):\n    ...\n\n# GET /products?limit=500",
+    "options": [
+      "500 is silently clamped to 50.",
+      "The handler receives 500.",
+      "The request fails validation (422)."
+    ],
+    "answer": 2,
+    "explanation": "Query bounds reject values outside the accepted range; they do not clamp the caller’s input.",
+    "hint": "What do ge and le describe?",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "fastapi-missing",
+    "title": "A deliberate missing record",
+    "track": "fastapi",
+    "language": "fastapi",
+    "kind": "bug",
+    "topic": "HTTP and validation",
+    "code": "@app.get(\"/products/{product_id}\")\ndef product(product_id: int):\n    if product_id not in products:\n        return {\"error\": \"Missing\"}",
+    "options": [
+      "Raise HTTPException(status_code=404, detail=\"Missing\") to return a 404.",
+      "Returning an error dictionary automatically sets 404.",
+      "Use a print statement to set the status."
+    ],
+    "answer": 0,
+    "explanation": "Returning an ordinary dictionary normally produces a 200 response. Raise HTTPException to set the intended error status.",
+    "hint": "A response body does not determine its HTTP status.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "fastapi-body",
+    "title": "Validate a request body",
+    "track": "fastapi",
+    "language": "fastapi",
+    "kind": "bug",
+    "topic": "HTTP and validation",
+    "code": "class Product(BaseModel):\n    title: str\n    price: float = Field(gt=0)\n\n@app.post(\"/products\", status_code=201)\ndef create(product: Product):\n    return product\n\n# {\"title\":\"Lamp\", \"price\": -1}",
+    "options": [
+      "A product is created with a negative price.",
+      "Body validation fails before creation.",
+      "status_code=201 disables validation."
+    ],
+    "answer": 1,
+    "explanation": "The Pydantic model validates the JSON request body. Field(gt=0) requires a positive price.",
+    "hint": "Check the constraint on price.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "fastapi-async",
+    "title": "Avoid blocking an async route",
+    "track": "fastapi",
+    "language": "fastapi",
+    "kind": "bug",
+    "topic": "HTTP and validation",
+    "code": "@app.get(\"/slow\")\nasync def slow():\n    time.sleep(2)\n    return {\"ok\": True}",
+    "options": [
+      "Use await asyncio.sleep(2) for a non-blocking delay.",
+      "async def makes time.sleep non-blocking.",
+      "Run an endless loop to keep the server busy."
+    ],
+    "answer": 0,
+    "explanation": "time.sleep blocks the event-loop thread. An awaited asynchronous operation lets the loop handle other work during the wait.",
+    "hint": "async def does not transform synchronous calls automatically.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "nodejs-json",
+    "title": "Finish a JSON response",
+    "track": "nodejs",
+    "language": "nodejs",
+    "kind": "bug",
+    "topic": "Node.js requests and async",
+    "code": "res.writeHead(200, {\"Content-Type\":\"application/json\"});\nres.write(JSON.stringify({ok:true}));\n// The client keeps waiting.",
+    "options": [
+      "Call res.end() when the response is complete.",
+      "Call console.log() to close the socket.",
+      "JSON.stringify closes the response."
+    ],
+    "answer": 0,
+    "explanation": "write sends bytes without ending the response. end marks the response as complete so the client can finish reading it.",
+    "hint": "Which API signals that no more body data is coming?",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "nodejs-path",
+    "title": "A query is not the pathname",
+    "track": "nodejs",
+    "language": "nodejs",
+    "kind": "bug",
+    "topic": "Node.js requests and async",
+    "code": "// req.url is /api/products?inStock=true\nif (req.url === \"/api/products\") { /* ... */ }",
+    "options": [
+      "Use new URL(req.url, \"http://localhost\").pathname for route matching.",
+      "Use req.url.toUpperCase().",
+      "Remove all routing and return the same response."
+    ],
+    "answer": 0,
+    "explanation": "The raw URL includes its query string. Parse it, then use pathname for the route and searchParams for filters.",
+    "hint": "Separate the path from its query parameters.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "nodejs-event-loop",
+    "title": "Promise or timer first?",
+    "track": "nodejs",
+    "language": "nodejs",
+    "kind": "output",
+    "topic": "Node.js requests and async",
+    "code": "console.log(\"start\");\nsetTimeout(() => console.log(\"timer\"), 0);\nPromise.resolve().then(() => console.log(\"promise\"));\nconsole.log(\"end\");",
+    "options": [
+      "start, timer, promise, end",
+      "start, end, promise, timer",
+      "start, end, timer, promise"
+    ],
+    "answer": 1,
+    "explanation": "Synchronous statements finish first. The resolved promise callback runs as a microtask before the timer callback in this example.",
+    "hint": "A zero-millisecond timer is still asynchronous.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "nodejs-await",
+    "title": "Await the request",
+    "track": "nodejs",
+    "language": "nodejs",
+    "kind": "bug",
+    "topic": "Node.js requests and async",
+    "code": "async function load() {\n  const response = fetch(\"https://example.com/data\");\n  return response.json();\n}",
+    "options": [
+      "Add await before fetch.",
+      "Remove async from load.",
+      "Use JSON.stringify(response)."
+    ],
+    "answer": 0,
+    "explanation": "fetch returns a Promise. Await it to obtain a Response before calling json(). Also handle non-success HTTP statuses in real code.",
+    "hint": "Which value has the json method?",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "nodejs-size",
+    "title": "Bound a request body",
+    "track": "nodejs",
+    "language": "nodejs",
+    "kind": "bug",
+    "topic": "Node.js requests and async",
+    "code": "let body = \"\";\nfor await (const chunk of req) {\n  body += chunk;\n}\n// Accepts a body of any size.",
+    "options": [
+      "Count incoming bytes and reject a body over the limit.",
+      "Only inspect Content-Length, even if it is absent.",
+      "Convert every chunk to uppercase."
+    ],
+    "answer": 0,
+    "explanation": "Enforce a byte limit while reading the stream, including when Content-Length is missing or inaccurate. Reject an oversized body before parsing it.",
+    "hint": "Limits must apply to the bytes actually received.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "nodejs-status",
+    "title": "Return a meaningful status",
+    "track": "nodejs",
+    "language": "nodejs",
+    "kind": "bug",
+    "topic": "Node.js requests and async",
+    "code": "res.writeHead(200, {\"Content-Type\":\"application/json\"});\nres.end(JSON.stringify({error:\"Product not found\"}));",
+    "options": [
+      "Use a 404 response status for a missing product.",
+      "JSON error keys automatically change the status.",
+      "Use 201 for a missing product."
+    ],
+    "answer": 0,
+    "explanation": "An error-shaped JSON body can still be an HTTP success. Set the correct status so clients can use response.ok and error handling.",
+    "hint": "Status and body are separate parts of HTTP.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "postgresql-null",
+    "title": "Find missing values",
+    "track": "postgresql",
+    "language": "postgresql",
+    "kind": "bug",
+    "topic": "PostgreSQL queries",
+    "code": "SELECT * FROM products WHERE category = NULL;",
+    "options": [
+      "Use category IS NULL.",
+      "Use category == NULL.",
+      "NULL equals every value."
+    ],
+    "answer": 0,
+    "explanation": "NULL represents an unknown or missing value. Equality with NULL is not true; use IS NULL to test for it.",
+    "hint": "SQL uses three-valued logic.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "postgresql-parameter",
+    "title": "Keep data out of SQL text",
+    "track": "postgresql",
+    "language": "postgresql",
+    "kind": "bug",
+    "topic": "PostgreSQL queries",
+    "code": "const sql = \"SELECT * FROM products WHERE title = '\" + title + \"'\";",
+    "options": [
+      "Use a parameterised query with a $1 placeholder and a separate values array.",
+      "Escape only spaces.",
+      "Trust every value from a form."
+    ],
+    "answer": 0,
+    "explanation": "Parameterised queries keep user values separate from SQL syntax. String concatenation can turn a value into executable SQL.",
+    "hint": "Data should be supplied separately from the query string.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "postgresql-jsonb-read",
+    "title": "Read a JSONB property",
+    "track": "postgresql",
+    "language": "postgresql",
+    "kind": "output",
+    "topic": "PostgreSQL queries",
+    "code": "SELECT metadata->>'color' AS color\nFROM products WHERE id = 1;",
+    "options": [
+      "A text value such as green.",
+      "The whole database.",
+      "Always a JSON array."
+    ],
+    "answer": 0,
+    "explanation": "The ->> operator extracts a JSON property as text. The -> operator retains a JSON value.",
+    "hint": "Notice the second greater-than sign.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "postgresql-in-stock",
+    "title": "Query PostgreSQL products",
+    "track": "postgresql",
+    "language": "postgresql",
+    "kind": "postgres",
+    "topic": "PostgreSQL lab",
+    "code": "SELECT * FROM products;",
+    "solution": "SELECT id, title FROM products WHERE stock > 0 ORDER BY id;",
+    "goal": "Return id and title for products in stock, ordered by id.",
+    "expectedObjects": [
+      {
+        "id": 1,
+        "title": "Notebook"
+      },
+      {
+        "id": 2,
+        "title": "Lamp"
+      }
+    ],
+    "explanation": "Return id and title for products in stock, ordered by id. This activity executes in a disposable PGlite PostgreSQL engine on your device.",
+    "hint": "Use the table explorer and select only the requested columns.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "postgresql-jsonb",
+    "title": "Investigate JSONB data",
+    "track": "postgresql",
+    "language": "postgresql",
+    "kind": "postgres",
+    "topic": "PostgreSQL lab",
+    "code": "SELECT * FROM products;",
+    "solution": "SELECT title, metadata->>'color' AS color FROM products WHERE metadata->>'color' = 'green';",
+    "goal": "Return title and color as text for the green product.",
+    "expectedObjects": [
+      {
+        "title": "Notebook",
+        "color": "green"
+      }
+    ],
+    "explanation": "Return title and color as text for the green product. This activity executes in a disposable PGlite PostgreSQL engine on your device.",
+    "hint": "Use the table explorer and select only the requested columns.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "postgresql-window",
+    "title": "Rank the product prices",
+    "track": "postgresql",
+    "language": "postgresql",
+    "kind": "postgres",
+    "topic": "PostgreSQL lab",
+    "code": "SELECT * FROM products;",
+    "solution": "SELECT title, row_number() OVER (ORDER BY price DESC)::int AS price_rank FROM products ORDER BY price DESC;",
+    "goal": "Return title and an integer price_rank, most expensive first. Use row_number over price descending.",
+    "expectedObjects": [
+      {
+        "title": "Lamp",
+        "price_rank": 1
+      },
+      {
+        "title": "Bag",
+        "price_rank": 2
+      },
+      {
+        "title": "Notebook",
+        "price_rank": 3
+      }
+    ],
+    "explanation": "Return title and an integer price_rank, most expensive first. Use row_number over price descending. This activity executes in a disposable PGlite PostgreSQL engine on your device.",
+    "hint": "Use the table explorer and select only the requested columns.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "tailwindcss-responsive",
+    "title": "Start small, then expand",
+    "track": "tailwindcss",
+    "language": "tailwindcss",
+    "kind": "output",
+    "topic": "Utility-first layouts",
+    "code": "<div class=\"grid grid-cols-1 md:grid-cols-2\">...</div>",
+    "options": [
+      "One column by default; two from the md breakpoint upwards.",
+      "Two columns only on phones.",
+      "Two columns at every width."
+    ],
+    "answer": 0,
+    "explanation": "Unprefixed classes apply by default. The md variant applies at the medium breakpoint and larger widths.",
+    "hint": "Tailwind responsive variants are mobile-first.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "tailwindcss-focus",
+    "title": "A visible keyboard focus",
+    "track": "tailwindcss",
+    "language": "tailwindcss",
+    "kind": "bug",
+    "topic": "Utility-first layouts",
+    "code": "<button class=\"outline-none\">Save</button>",
+    "options": [
+      "Add an intentional focus-visible outline or ring.",
+      "Remove the button’s label.",
+      "Hide the button when it receives focus."
+    ],
+    "answer": 0,
+    "explanation": "Removing an outline without a replacement makes keyboard focus difficult to find. Supply a visible focus style with sufficient contrast.",
+    "hint": "Keyboard users need to know which control is active.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "tailwindcss-dynamic",
+    "title": "A class the build cannot see",
+    "track": "tailwindcss",
+    "language": "tailwindcss",
+    "kind": "bug",
+    "topic": "Utility-first layouts",
+    "code": "const className = `bg-${color}-500`;",
+    "options": [
+      "Map allowed colors to complete class strings such as bg-green-500.",
+      "Every possible interpolated class is always generated.",
+      "Add arbitrary user input as a class name."
+    ],
+    "answer": 0,
+    "explanation": "Production builds detect complete class names in source. Map options to full classes so the needed utilities are present.",
+    "hint": "Can the scanner see bg-green-500 as a complete string?",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "tailwindcss-center",
+    "title": "Centre a Tailwind card",
+    "track": "tailwindcss",
+    "language": "html",
+    "kind": "tailwind",
+    "topic": "Tailwind CSS lab",
+    "code": "<main data-target class=\"min-h-[240px] bg-lime-50\"><article class=\"rounded-2xl bg-white p-6\">A little idea</article></main>",
+    "solution": "<main data-target class=\"flex min-h-[240px] items-center justify-center bg-lime-50\"><article class=\"rounded-2xl bg-white p-6\">A little idea</article></main>",
+    "goal": "Give the stage flex layout, centre its children on both axes, and use a 240px minimum height.",
+    "checks": {
+      "display": "flex",
+      "alignItems": "center",
+      "justifyContent": "center"
+    },
+    "explanation": "Give the stage flex layout, centre its children on both axes, and use a 240px minimum height. Checks inspect computed styles generated by the actual Tailwind browser engine.",
+    "hint": "Edit complete utility class names on the element marked data-target.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "tailwindcss-grid",
+    "title": "Two columns with utilities",
+    "track": "tailwindcss",
+    "language": "html",
+    "kind": "tailwind",
+    "topic": "Tailwind CSS lab",
+    "code": "<main data-target class=\"bg-lime-50 p-4\"><article class=\"rounded-xl bg-white p-6\">One</article><article class=\"rounded-xl bg-white p-6\">Two</article></main>",
+    "solution": "<main data-target class=\"grid grid-cols-2 gap-4 bg-lime-50 p-4\"><article class=\"rounded-xl bg-white p-6\">One</article><article class=\"rounded-xl bg-white p-6\">Two</article></main>",
+    "goal": "Set the stage to a two-column grid with a 16px gap.",
+    "checks": {
+      "display": "grid",
+      "columns": 2,
+      "gap": "16px"
+    },
+    "explanation": "Set the stage to a two-column grid with a 16px gap. Checks inspect computed styles generated by the actual Tailwind browser engine.",
+    "hint": "Edit complete utility class names on the element marked data-target.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "tailwindcss-button",
+    "title": "Style an accessible action",
+    "track": "tailwindcss",
+    "language": "html",
+    "kind": "tailwind",
+    "topic": "Tailwind CSS lab",
+    "code": "<button data-target class=\"bg-green-800 px-6 text-white\">Keep learning</button>",
+    "solution": "<button data-target class=\"min-h-12 rounded-xl bg-green-800 px-6 font-bold text-white focus-visible:outline-2 focus-visible:outline-offset-4\">Keep learning</button>",
+    "goal": "Give the button a bold font, a 12px radius and a 48px minimum height. Keep its label.",
+    "checks": {
+      "fontWeight": "700",
+      "borderRadius": "12px",
+      "minHeight": "48px"
+    },
+    "explanation": "Give the button a bold font, a 12px radius and a 48px minimum height. Keep its label. Checks inspect computed styles generated by the actual Tailwind browser engine.",
+    "hint": "Edit complete utility class names on the element marked data-target.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "php-map",
+    "title": "Transform an array",
+    "track": "php",
+    "language": "php",
+    "kind": "output",
+    "topic": "PHP arrays and requests",
+    "code": "<?php\n$values = [1, 2, 3];\n$result = array_map(fn($n) => $n * 2, $values);\necho json_encode($result);",
+    "options": [
+      "[1,2,3]",
+      "[2,4,6]",
+      "null"
+    ],
+    "answer": 1,
+    "explanation": "array_map returns a new array of callback results. Each number is multiplied by two, and json_encode serialises that array.",
+    "hint": "Apply the callback to each element.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "php-missing",
+    "title": "A safe optional field",
+    "track": "php",
+    "language": "php",
+    "kind": "output",
+    "topic": "PHP arrays and requests",
+    "code": "<?php\n$user = [\"name\" => \"Asha\"];\necho $user[\"city\"] ?? \"Unknown\";",
+    "options": [
+      "Unknown",
+      "An empty array",
+      "A fatal exception"
+    ],
+    "answer": 0,
+    "explanation": "The null-coalescing operator supplies the fallback when the array key is missing or null.",
+    "hint": "Which expression is on the right of ??",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "php-strict",
+    "title": "Avoid a loose comparison",
+    "track": "php",
+    "language": "php",
+    "kind": "bug",
+    "topic": "PHP arrays and requests",
+    "code": "<?php\n$enabled = \"0\";\nif ($enabled == false) { echo \"off\"; }",
+    "options": [
+      "Use an explicit input contract and strict comparisons when types matter.",
+      "== never converts types.",
+      "All non-empty strings are true in PHP, including \"0\"."
+    ],
+    "answer": 0,
+    "explanation": "Loose comparison performs coercion. PHP also treats the string \"0\" as falsy. Validate the input format, then compare the intended types explicitly.",
+    "hint": "The special string \"0\" is an important PHP edge case.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "php-json",
+    "title": "Reject malformed JSON",
+    "track": "php",
+    "language": "php",
+    "kind": "bug",
+    "topic": "PHP arrays and requests",
+    "code": "<?php\n$input = json_decode($raw, true);\n// How should malformed JSON be handled?",
+    "options": [
+      "Use JSON_THROW_ON_ERROR and catch JsonException.",
+      "Treat every null result as a valid object.",
+      "Print the request into an HTML page without escaping."
+    ],
+    "answer": 0,
+    "explanation": "JSON_THROW_ON_ERROR distinguishes malformed JSON from a legitimate JSON null. Validate that a decoded request has the expected object shape.",
+    "hint": "Parsing and validating the resulting shape are different steps.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "php-keys",
+    "title": "Preserve a JSON list",
+    "track": "php",
+    "language": "php",
+    "kind": "bug",
+    "topic": "PHP arrays and requests",
+    "code": "<?php\n$rows = [0 => \"A\", 1 => \"B\", 2 => \"C\"];\n$filtered = array_filter($rows, fn($v) => $v !== \"B\");\necho json_encode($filtered);",
+    "options": [
+      "Use array_values($filtered) before JSON encoding if a JSON array is required.",
+      "array_filter always reindexes numeric keys.",
+      "json_encode removes every key automatically."
+    ],
+    "answer": 0,
+    "explanation": "array_filter preserves keys. Non-contiguous numeric keys encode as a JSON object; array_values reindexes them into a list.",
+    "hint": "The retained keys are 0 and 2.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "php-escape",
+    "title": "Display user text safely",
+    "track": "php",
+    "language": "php",
+    "kind": "bug",
+    "topic": "PHP arrays and requests",
+    "code": "<?php echo $name; ?>",
+    "options": [
+      "Escape HTML output with htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, \"UTF-8\").",
+      "Trust all names because they are short.",
+      "Use JSON encoding as a universal HTML escaping solution."
+    ],
+    "answer": 0,
+    "explanation": "Use context-appropriate escaping when outputting user text into HTML. htmlspecialchars handles the HTML text context; other contexts need their own handling.",
+    "hint": "The destination is HTML, not a JSON response.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "laravel-route",
+    "title": "A route parameter",
+    "track": "laravel",
+    "language": "laravel",
+    "kind": "output",
+    "topic": "Laravel routing and validation",
+    "code": "Route::get(\"/products/{product}\", function (string $product) {\n    return [\"id\" => $product];\n});\n// GET /api/products/7 in routes/api.php",
+    "options": [
+      "The placeholder supplies the value 7 to the handler.",
+      "The handler always receives the entire URL.",
+      "The parameter is an automatic SQL query."
+    ],
+    "answer": 0,
+    "explanation": "A route placeholder supplies its matched segment to the handler. A typed Eloquent model would enable model binding, but this example uses a string.",
+    "hint": "Look at the placeholder and handler parameter.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "laravel-validation",
+    "title": "Validate a price",
+    "track": "laravel",
+    "language": "laravel",
+    "kind": "bug",
+    "topic": "Laravel routing and validation",
+    "code": " $data = $request->validate([\n    \"title\" => [\"required\", \"string\", \"max:120\"],\n    \"price\" => [\"required\", \"numeric\", \"gt:0\"],\n ]);\n // JSON request with price: -1",
+    "options": [
+      "Validation rejects the negative price.",
+      "The title rule converts the price to zero.",
+      "Validation is skipped for JSON."
+    ],
+    "answer": 0,
+    "explanation": "The gt:0 rule requires a positive value. JSON clients should send Accept: application/json to receive JSON validation responses.",
+    "hint": "Read the numeric constraint after required.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "laravel-response",
+    "title": "Created means 201",
+    "track": "laravel",
+    "language": "laravel",
+    "kind": "bug",
+    "topic": "Laravel routing and validation",
+    "code": "return response()->json($product); // a newly created resource",
+    "options": [
+      "Pass 201 as the second argument for the intended created status.",
+      "The word product changes the status automatically.",
+      "Always return 500 after creation."
+    ],
+    "answer": 0,
+    "explanation": "A JSON body and its status are separate. response()->json($product, 201) explicitly marks successful creation.",
+    "hint": "The default success status is not Created.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "laravel-mass-assignment",
+    "title": "Accept only intended fields",
+    "track": "laravel",
+    "language": "laravel",
+    "kind": "bug",
+    "topic": "Laravel routing and validation",
+    "code": "Product::create($request->all());",
+    "options": [
+      "Validate allowed fields and configure model assignment rules.",
+      "Trust all submitted properties.",
+      "Rename the request variable to make it safe."
+    ],
+    "answer": 0,
+    "explanation": "A client can submit unexpected properties. Use validated fields and deliberate fillable/guarded configuration instead of treating the whole request as trusted data.",
+    "hint": "Should a client be able to set owner_id or is_admin?",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "laravel-missing",
+    "title": "A missing model",
+    "track": "laravel",
+    "language": "laravel",
+    "kind": "bug",
+    "topic": "Laravel routing and validation",
+    "code": " $product = Product::findOrFail($id);\n // No product has this id.",
+    "options": [
+      "Laravel can turn the model-not-found exception into a 404 response.",
+      "It silently inserts a new product.",
+      "It returns the first product instead."
+    ],
+    "answer": 0,
+    "explanation": "findOrFail throws when the record is absent. The framework exception handler translates an uncaught model-not-found exception to a not-found response.",
+    "hint": "The OrFail suffix describes the missing-record path.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  },
+  {
+    "id": "laravel-n-plus-one",
+    "title": "Load relationships deliberately",
+    "track": "laravel",
+    "language": "laravel",
+    "kind": "bug",
+    "topic": "Laravel routing and validation",
+    "code": " $orders = Order::all();\n foreach ($orders as $order) {\n    echo $order->customer->name;\n }",
+    "options": [
+      "Consider eager loading with Order::with(\"customer\")->get().",
+      "Run one extra query per order on purpose.",
+      "Add a CSS class to reduce SQL queries."
+    ],
+    "answer": 0,
+    "explanation": "Accessing an unloaded relationship in a loop can cause one query per order. Eager loading fetches the relationship for the collection deliberately.",
+    "hint": "Think about when customer is loaded.",
+    "difficulty": "Beginner",
+    "minutes": 4
+  }
+]

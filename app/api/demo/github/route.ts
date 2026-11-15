@@ -1,0 +1,2 @@
+import {loadRepo,repoInput} from '@/lib/demo-api/github';import {body,sameOrigin} from '@/lib/platform/http';import {rateLimit,anonymousKey} from '@/lib/platform/redis';import {apiJSON,guarded} from '@/lib/demo-api/sandboxes';
+export const dynamic='force-dynamic';export async function POST(req:Request){return guarded(async()=>{sameOrigin(req);await rateLimit('demo-import:'+anonymousKey(req),20,3600);return apiJSON(await loadRepo(repoInput(await body(req,1000))));});}

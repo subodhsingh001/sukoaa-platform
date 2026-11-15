@@ -1,0 +1,3 @@
+import {runGraphQL} from '@/lib/demo-api/graphql';import {datasets} from '@/lib/demo-api/data';import {HttpError,body} from '@/lib/platform/http';import {apiJSON,guarded} from '@/lib/demo-api/sandboxes';
+let count=0,until=0;
+export const dynamic='force-dynamic';export async function POST(req:Request){return guarded(async()=>{if(Date.now()>until){until=Date.now()+60000;count=0;}if(++count>100)throw new HttpError(429,'GraphQL demo capacity reached. Retry shortly.');const {result}=await runGraphQL(await body(req,16000),datasets);return apiJSON(result);});}export function OPTIONS(){return new Response(null,{status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}});}

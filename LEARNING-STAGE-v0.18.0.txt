@@ -1,0 +1,103 @@
+SUKOAA v0.18.0 — SIX NEW TECHNOLOGY TRACKS
+
+Start at /play. There are now 78 activities: the previous 42 plus 36 new
+activities across FastAPI, Node.js, PostgreSQL, Tailwind CSS, PHP and Laravel.
+Existing progress, bookmarks, compiler projects and notebook data are kept.
+AI remains disabled. All 57 existing compiler source files are unchanged.
+
+WHERE TO GO
+/play/tracks/fastapi
+/play/tracks/nodejs
+/play/tracks/postgresql
+/play/tracks/tailwindcss
+/play/tracks/php
+/play/tracks/laravel
+Each track has six activities, explanations, hints, official documentation,
+requirements, and a Download starter ZIP link.
+
+BROWSER LABS
+/labs/postgresql — real PGlite 0.5.15 PostgreSQL WebAssembly engine.
+Run SELECT/WITH/EXPLAIN queries against fictional products. JSONB and window
+functions are supported and tested. Read-only transaction, 200 displayed
+rows, 12,000-character input and five-second query timeout. First startup
+has a 30-second deadline. Stop resets the disposable in-memory engine.
+This is not a remote PostgreSQL server and is separate from SQLite/Supabase.
+It does not include every server extension or native PostgreSQL feature.
+
+/labs/tailwindcss — real Tailwind browser 4.2.1 utility compilation.
+Edit static HTML and utility classes. Refresh creates a sandboxed preview;
+exercise checks inspect computed styles. Scripts, external resources and
+active elements are removed. Preview network access is blocked. Use the
+CLI starter to generate production CSS; the browser engine is for practice.
+
+/labs/nodejs — optional, experimental WebContainer Node environment.
+A dependency-free HTTP server runs in the browser VM. No npm install step.
+The API request check is a real HTTP request from a short-lived Node process
+inside that same VM. This avoids preview-proxy CORS restrictions. The editor
+and terminal have size limits; startup stops waiting after 30 seconds.
+Applicable WebContainer provider terms, browser support, connectivity and
+site-owner configuration still apply. This route is deliberately noindex.
+It uses the existing NEXT_PUBLIC_WEBCONTAINER_MODE and public API-key settings
+when configured. No provider subscription or licence has been purchased.
+
+No heavy learning runtime downloads until Run or Refresh is chosen.
+On low-memory devices, use one heavy browser lab at a time or use a local
+starter. The website never executes students' server code on its web host.
+
+LOCAL STARTERS
+Download from the track page or /api/learning/starters/<technology>.
+The same source is in examples/learning/<technology>/ in this project.
+- FastAPI: Python virtual environment, pinned requirements, five TestClient
+  checks, Uvicorn command, /docs, validated query/body parameters and errors.
+- Node.js: no dependencies, real HTTP tests, /health, filtered products and
+  a bounded JSON echo request. Node 22+; tested with Node 24.
+- PostgreSQL: Docker Compose with PostgreSQL 17, loopback port 5433, schema,
+  fictional records, JSONB and window queries. Demo credentials are local only.
+- Tailwind CSS: pinned CLI 4.2.1 starter with responsive HTML and a static
+  production stylesheet build.
+- PHP: a small request handler, local development router and five logic
+  checks. Requires PHP 8.3+. No Composer dependency for this starter.
+- Laravel: a minimal Laravel 13 API project, Composer dependencies, routes,
+  validation and four framework test methods. Requires PHP 8.3+ extensions
+  and Composer 2. Run the included tests locally before relying on it.
+All sample writes are fictional and non-persistent. These are teaching
+projects, without production authentication or deployment hardening.
+
+VERIFICATION
+195 platform tests passed, including real PostgreSQL exercise execution,
+read-only enforcement, starter ZIP contents and old-progress compatibility.
+The existing compiler tests remain in the suite. Strict typecheck passed.
+Both Next.js and Site production builds passed.
+FastAPI: five real TestClient tests passed.
+Node.js: real HTTP route/filter/error test passed; browser VM server started
+and its own HTTP client returned 200 with the expected product data.
+PHP: five PHP-engine logic checks passed using the WordPress PHP WASM CLI.
+Tailwind: CLI production build and browser computed-style checks passed.
+PostgreSQL: browser JSONB query and read-only boundary checked. SQL schema
+and window functions were also tested with the real PGlite engine.
+Laravel's full native Composer/framework tests were NOT run here. The Docker
+PostgreSQL service and the native PHP web server were NOT launched here.
+Those requirements are stated in the downloadable READMEs and track pages.
+
+DATABASE / DEPLOYMENT
+No new database migration for this release. If cloud Play & Learn progress
+was already configured in v0.17.0, keep the same play_profiles table/policies.
+Guest progress and the new lab drafts work locally. For a first cloud setup,
+use the existing PLAY-CLOUD-PROGRESS-SQL.txt, then test account isolation.
+
+Use Node 24 for this platform. Keep .env.local private. Run:
+  npm ci --include=dev
+  npm test
+  npm run build
+Then review, commit and push your GitHub deployment branch to update Vercel.
+The ChatGPT preview publication does not update your personal GitHub repo or
+www.sukoaa.com automatically. No extra domain is required for these modules.
+
+PRIMARY REFERENCES
+https://fastapi.tiangolo.com/tutorial/testing/
+https://nodejs.org/docs/latest-v24.x/api/http.html
+https://pglite.dev/docs/api
+https://tailwindcss.com/docs/installation/play-cdn
+https://www.php.net/manual/en/features.commandline.webserver.php
+https://laravel.com/docs/13.x
+https://developer.stackblitz.com/guides/user-guide/general-faqs

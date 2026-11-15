@@ -1,0 +1,3 @@
+import {strToU8,zipSync} from 'fflate';
+import {getStarter} from '@/lib/learning/starters';
+export async function GET(_req:Request,{params}:{params:Promise<{technology:string}>}){const {technology}=await params;const files=getStarter(technology);if(!files)return Response.json({error:'Unknown learning starter.'},{status:404});const bytes=zipSync(Object.fromEntries(Object.entries(files).map(([name,text])=>[name,strToU8(text)])));return new Response(bytes as unknown as BodyInit,{headers:{'Content-Type':'application/zip','Content-Disposition':`attachment; filename="Sukoaa-${technology}-starter.zip"`,'Cache-Control':'public, max-age=3600','X-Content-Type-Options':'nosniff','X-Robots-Tag':'noindex'}});}

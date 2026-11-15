@@ -1,0 +1,13 @@
+{
+  "name": "sukoaa-tailwind-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./public/output.css --minify",
+    "dev": "tailwindcss -i ./src/input.css -o ./public/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "4.2.1",
+    "@tailwindcss/cli": "4.2.1"
+  }
+}

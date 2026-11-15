@@ -3,6 +3,7 @@
 export const unavailableToolSlugs = ['c', 'cpp', 'rust', 'csharp', 'java'] as const;
 export const unlistedPaths: readonly string[] = [
   '/play/progress',
+  '/labs/nodejs',
   ...unavailableToolSlugs.map(slug => '/tools/' + slug),
   '/extensions/quick-replies',
   '/extensions/web-pdf-studio',

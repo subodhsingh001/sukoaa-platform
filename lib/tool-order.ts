@@ -1,3 +1,5 @@
+import {learningModules} from './learning/modules';
+export const learningToolLinks=learningModules.map(m=>({id:m.id,name:m.name,icon:({fastapi:'FA',nodejs:'Node',postgresql:'PG',tailwindcss:'TW',php:'PHP',laravel:'L'} as const)[m.id],href:'/labs/'+m.id,info:m.id==='nodejs'?'Run Node.js · browser HTTP server':m.id==='postgresql'?'Run PostgreSQL · tables, queries and JSONB':m.id==='tailwindcss'?'Compile Tailwind CSS · live preview':m.id==='fastapi'?'Run FastAPI · routes, validation and responses':m.id==='laravel'?'Run Laravel · routes and HTTP responses':'Run PHP · code, output and errors'}));
 export const toolOrder=['javascript','python','html-css','react','angular','nextjs','react-native','typescript','sql','json','notepad','c','cpp','rust','csharp','java'] as const;
 export const toolLinks=[
  {id:'javascript',name:'JavaScript',icon:'JS',href:'/workspace?language=javascript',info:'Browser JavaScript · console and error locations'},
@@ -9,6 +11,7 @@ export const toolLinks=[
  {id:'react-native',name:'React Native',icon:'RN',href:'/native',info:'React Native Web · local preview · optional Expo phone testing'},
  {id:'typescript',name:'TypeScript',icon:'TS',href:'/workspace?language=typescript',info:'Browser TypeScript · transpilation and console'},
  {id:'sql',name:'SQL / SQLite',icon:'SQL',href:'/workspace?language=sql',info:'SQLite queries · local browser database'},
+ ...learningToolLinks,
  {id:'json',name:'JSON validator',icon:'{}',href:'/workspace?language=json',info:'Validate and format JSON'},
  {id:'go',name:'Go',icon:'Go',href:'/workspace?language=go',info:'Go execution · configured remote runner required'},
  {"id": "c", "name": "C", "icon": "C", "href": "/workspace?language=c", "info": "C \u00b7 isolated compiler; runner setup and sign-in required"},

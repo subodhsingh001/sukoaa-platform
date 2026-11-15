@@ -1,3 +1,4 @@
+import './learning-stage.test';
 import './play.test';
 import './workspace-repair.test';
 import {pageMetadata,publicPaths} from '../lib/marketing/site';
@@ -65,3 +66,7 @@ import './runtime-startup.test';
 import './background-prepare.test';
 
 import "./notepad.test";
+
+import "./types-studio.test";
+
+import './demo-studio.test';

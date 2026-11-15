@@ -85,3 +85,6 @@ console.log('Prepared local SQLite SQL runtime.');
 await copyFile(join(dirname(require.resolve('jsonc-parser/package.json')),'LICENSE.md'),'public/runtime/jsonc-parser-LICENSE.txt');
 
 await import('./prepare-python-packages.mjs');
+
+// Separate learning assets; existing compiler preparation above is unchanged.
+await import('./prepare-learning-runtimes.mjs');

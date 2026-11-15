@@ -1,0 +1,15 @@
+name: sukoaa-postgres-learning
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: learner
+      POSTGRES_PASSWORD: local-learning-only
+      POSTGRES_DB: sukoaa_learning
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - learning-data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+volumes:
+  learning-data:

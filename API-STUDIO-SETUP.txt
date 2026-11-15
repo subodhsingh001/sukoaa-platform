@@ -1,0 +1,97 @@
+Sukoaa v0.21 — Compiler workspaces and API Studio
+
+OPEN
+/labs/php — PHP files, includes and console
+/labs/nodejs — Node console programs and HTTP preview
+/labs/postgresql — PostgreSQL scripts and result tables
+/labs/tailwindcss — HTML, CSS, JavaScript and Tailwind preview
+/labs/laravel — real web/API routes and local preview navigation
+/labs/fastapi — real FastAPI and Pydantic requests
+/demo-api#api-studio — REST, private sandboxes, builder, GraphQL, GitHub
+
+VERCEL ENVIRONMENT
+APP_ORIGIN=https://www.sukoaa.com
+UPSTASH_REDIS_REST_URL=<your existing HTTPS Redis REST URL>
+UPSTASH_REDIS_REST_TOKEN=<your existing Redis REST token>
+No extra database, domain, AI key or Mockend account is required.
+Use your actual canonical origin (including www when applicable).
+After changing environment values, redeploy Vercel.
+
+Shared REST reads and simulated writes do not require Redis.
+Shared GraphQL is read-only. Private sandbox creation and stateful API requests
+require Redis in production. Development uses bounded memory when Redis is absent.
+Private previews retain the site's existing access restrictions.
+
+SANDBOX STORAGE
+Redis key: sukoaa:demo:sandbox:<uuid>
+24-hour TTL, never extended by requests. Only a SHA-256 token digest is stored.
+Use Authorization: Bearer <token> on EVERY sandbox request, including GET.
+Never put the token in URLs, public source code or screenshots.
+Creation returns the token once. This browser stores it in sessionStorage only.
+Anyone holding the token can access the sandbox. This is capability-based privacy,
+not account ownership. Do not put personal, confidential or production data here.
+Deletes use an atomic comparison; concurrent writes return 409 rather than silently
+losing changes. At most 1,500 total records / 500 per resource / 500KB per sandbox.
+The API stores generated configuration and the fictional test records only.
+
+ROUTES
+POST /api/demo/sandboxes                  create from shared datasets
+POST /api/demo/sandboxes {config: "..."}  create from JSON/YAML
+GET /api/demo/sandboxes/:id               metadata (Bearer required)
+GET, POST /api/demo/sandboxes/:id/posts
+GET, PUT, PATCH, DELETE /api/demo/sandboxes/:id/posts/:recordId
+GET /api/demo/sandboxes/:id/users/1/posts
+POST /api/demo/sandboxes/:id/graphql
+GET /api/demo/sandboxes/:id/export
+POST /api/demo/sandboxes/:id/reset
+PUT /api/demo/sandboxes/:id/config {config:"..."} (replaces generated data)
+DELETE /api/demo/sandboxes/:id
+POST /api/demo/graphql                   shared read-only GraphQL
+
+GITHUB
+Commit sukoaa-api.yml (downloaded from Builder) to a PUBLIC GitHub repo.
+Enter owner, repo, branch and path in API Studio > GitHub configuration.
+Load config imports it. Create linked sandbox stores the repository reference.
+Optional auto-sync checks on authenticated sandbox use at most every five minutes.
+An updated config resets generated records. Unchanged files preserve edits.
+Sync now requests an immediate refresh (rate-limited). Disable sync keeps records.
+This does not install a GitHub App, create webhooks, or read private repositories.
+Public GitHub API rate limits and repository availability apply.
+
+RATE LIMITS
+Sandbox creation: 10/hour per trusted-IP bucket, otherwise one shared anonymous
+bucket. Configure TRUSTED_CLIENT_IP_HEADER only after verifying your proxy overwrites it.
+Authenticated sandbox traffic: 120/minute per sandbox. Manual sync: 12/hour.
+GitHub imports: 20/hour per anonymous bucket. Limits use existing Redis in production.
+Public shared REST uses its existing per-instance 600/minute guard.
+Public shared GraphQL uses a bounded per-instance guard (100/minute).
+Free provider quotas still apply; these protections are not unlimited hosting.
+
+COMPILERS
+PHP: edit main.php, Run, read Console. greeting.php demonstrates include.
+Options > Entry file chooses another executable file. + adds a relative file path.
+Laravel: web routes are in routes/web.php. API routes in routes/api.php receive /api
+prefix. Preview local links make requests through the real Laravel HTTP kernel.
+composer.json describes pre-bundled dependencies; it does not install packages.
+PHP/Laravel run in an opaque iframe/worker with outbound network blocked.
+Node uses WebContainer; browser support, isolation and provider licence/access apply.
+Starter has no npm install. Built-in modules and local file imports work. Custom npm
+packages are not installed automatically. Simple console-only programs show Console.
+Tailwind bundles v4.2.1 automatically. Local CSS/script files and interactive DOM
+code work inside an opaque sandbox. External packages/network are disabled.
+PostgreSQL uses real PGlite. Tables remain until Stop/reset or leaving the page.
+No compiler executes untrusted user code on the Vercel web host. AI remains disabled.
+
+DEPLOY
+npm ci --include=dev
+npm test
+npm run build
+Commit project files to YOUR GitHub repository. Vercel redeploys from that repository.
+The separate ChatGPT Site preview does not push changes to your personal GitHub repo.
+
+NODE PREVIEW NOTE
+The page preview reads HTTP responses through a Node subprocess inside the runtime,
+then displays them in an opaque frame. This avoids a separate preview service-worker
+requirement. Local links make new GET requests. Local CSS/JavaScript and inline DOM
+scripts work. Dynamic browser fetch calls, external assets and client-side API calls
+are blocked in this response preview; use API / Network to test server endpoints.

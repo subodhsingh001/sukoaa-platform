@@ -22,3 +22,18 @@ Unmodified pure-Python wheels from the pinned Pyodide 314.0.7 distribution are d
 The Python source files, certificate bundle and license notices remain included in those wheels. Preserve them in source and deployment distributions.
 
 React Native Web 0.21.2 — MIT — https://github.com/necolas/react-native-web. License copied to public/runtime/react-native-web-LICENSE.txt.
+
+## Separate learning runtimes
+PGlite 0.5.15 by ElectricSQL: Apache-2.0; its bundled PostgreSQL components retain their upstream notices. Tailwind CSS browser 4.2.1 by Tailwind Labs: MIT. Runtime licences are copied to public/runtime/learning. The browser Tailwind engine is used only for practice previews; starter exports use a CLI build for production CSS.
+
+## Types Studio
+JSON5 2.2.3 (MIT) parses data in the browser. No executable JavaScript evaluation is used. Package source and license: https://github.com/json5/json5. Types Studio emits Zod source; the generated user's project must install Zod separately.
+
+## Backend browser runtimes
+FastAPI 0.136.1 and Pydantic 2.12.5 are MIT-licensed. Their Pyodide dependency wheel archives include package metadata and license notices; prepare-api-runtimes.mjs verifies SHA-256 values against the pinned Pyodide lock.
+@php-wasm/universal and @php-wasm/web-8-3 3.1.61 are GPL-2.0-or-later, from https://github.com/WordPress/wordpress-playground (release v3.1.61). PHP 8.3.33 retains its PHP license. The PHP-WASM license is copied alongside php.wasm. The upstream release provides source and build instructions; npm versions and lockfiles identify the build used.
+Laravel 13.42.0 is MIT-licensed. Its bundled Composer dependencies retain vendor source and license files inside public/runtime/backend/laravel.zip; examples/browser-laravel/composer.lock records the full dependency set and reconstruction files are supplied.
+
+## API Studio dependencies (v0.21)
+
+GraphQL.js 16.11.0 and yaml 2.8.1 are MIT licensed. Full license texts are included in docs/licenses/. Their sources are https://github.com/graphql/graphql-js and https://github.com/eemeli/yaml. Lockfiles pin the distributed builds. Sukoaa's generated datasets and SVG placeholders are fictional first-party examples.
