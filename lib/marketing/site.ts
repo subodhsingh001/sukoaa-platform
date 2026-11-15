@@ -8,6 +8,7 @@ export function canonicalOrigin(){
  if(!raw)return undefined;
  try{const url=new URL(raw);if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash||!['','/'].includes(url.pathname)||/^(localhost|127\.|\[::1\])/.test(url.hostname))return undefined;return url.origin}catch{return undefined}
 }
+export const contentUpdated='2026-11-15';
 export function indexingEnabled(){return !!canonicalOrigin()&&process.env.SITE_INDEXING_ENABLED==='true'&&process.env.VERCEL_ENV!=='preview'}
 export function pageMetadata(title:string,description:string,path:string):Metadata{
  const origin=canonicalOrigin();return {title,description,alternates:origin?{canonical:origin+path}:undefined,robots:{index:indexingEnabled()&&isPubliclyReady(path),follow:true},openGraph:{type:'website',siteName:'Sukoaa',title,description,...(origin?{url:origin+path}:{}),images:[{url:'/social/sukoaa.png',width:1200,height:630,alt:'Sukoaa — Browse. Build. Make everyday easier.'}]},twitter:{card:'summary_large_image',title,description,images:['/social/sukoaa.png']}};

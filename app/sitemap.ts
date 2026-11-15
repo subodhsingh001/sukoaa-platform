@@ -1,2 +1,4 @@
-import type {MetadataRoute} from 'next';import {canonicalOrigin,indexingEnabled,publicPaths} from '@/lib/marketing/site';
-export default function sitemap():MetadataRoute.Sitemap{const origin=canonicalOrigin();if(!origin||!indexingEnabled())return [];return publicPaths.map(path=>({url:origin+path,changeFrequency:'monthly' as const,priority:path==='/'?1:path.startsWith('/tools/')?.8:.6}))}
+import type {MetadataRoute} from 'next';import {canonicalOrigin,indexingEnabled,publicPaths,contentUpdated} from '@/lib/marketing/site';
+// lastModified: set SITE_LASTMOD (YYYY-MM-DD) in Vercel when content really changes; otherwise the release date in site.ts is used.
+const priority=(path:string)=>path==='/'?1:path==='/tools'||path==='/practice'||path==='/play'?.9:path.startsWith('/tools/')||path.startsWith('/labs/')||path==='/demo-api'?.8:path.startsWith('/practice/')||path.startsWith('/play/tracks/')?.7:.5;
+export default function sitemap():MetadataRoute.Sitemap{const origin=canonicalOrigin();if(!origin||!indexingEnabled())return [];const lastModified=new Date(process.env.SITE_LASTMOD||contentUpdated);return publicPaths.map(path=>({url:origin+path,lastModified,changeFrequency:'monthly' as const,priority:priority(path)}))}
