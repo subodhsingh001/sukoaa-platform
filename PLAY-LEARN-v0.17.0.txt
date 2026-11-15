@@ -1,0 +1,85 @@
+SUKOAA PLATFORM v0.17.0 — Play & Learn + Demo API
+
+WHAT IS INCLUDED
+1. /play — home, five tracks and 42 reviewed activities.
+   10 Output Detective, 10 Code Ordering, 10 Find the Bug,
+   6 editable JavaScript API repairs, 3 CSS Match, 3 SQL Detective.
+2. /play/daily — daily selection changes at 00:00 UTC.
+3. /play/progress — device progress, bookmarks, resumable drafts,
+   export/import and an optional explicit cloud merge preview.
+4. /tools/json-studio, /tools/regex, /tools/text-compare.
+5. /demo-api — interactive documentation with JavaScript, Python,
+   cURL, React and Angular examples; /api/demo/openapi specification.
+6. Explicit learning-note import preview in Notepad. Confirmation adds a
+   separate note using the notebook's existing guarded save flow.
+
+DEMO API
+No new domain, key or database is needed. Use your deployed origin:
+https://www.sukoaa.com/api/demo/users
+https://www.sukoaa.com/api/demo/products?inStock=true&limit=5
+https://www.sukoaa.com/api/demo/posts/1/comments
+Resources: users, products, posts, comments, todos, carts and orders.
+Lists return {data,total,page,limit}. Individual records return an object.
+Pagination limit: 1–50. Delay: 0–1500ms. Request JSON: under 20,000 bytes.
+POST/PUT/PATCH/DELETE simulate responses and NEVER persist changes.
+The /status/400, /status/401, /status/404, /status/429 and /status/500
+endpoints intentionally return errors. CORS supports credential-free use.
+Cached reads and a 600/minute per-server-instance guard reduce load. This
+is not a distributed per-user quota. Configure host protection as traffic
+increases. No uptime SLA. All records are fictional. Do not send secrets.
+The owner-private ChatGPT preview is not a public cross-origin API host.
+Publish the source to your public Vercel domain for public API consumers.
+
+COMPILERS
+Compiler execution, runtime settings and saved projects are unchanged.
+Play & Learn has its own bounded JS worker, CSS frame and SQLite worker.
+Existing compiler network restrictions still apply. The API documentation
+examples are for your own projects/environments; adding the Demo API does
+not enable network access inside the snippet compilers. AI remains off.
+
+OPTIONAL CLOUD PROGRESS SETUP
+Guest play works immediately without Supabase or sign-in.
+For account sync, run supabase/migrations/202611150001_play_progress.sql
+in your Supabase SQL Editor (after the existing platform setup). The same
+SQL is supplied as PLAY-CLOUD-PROGRESS-SQL.txt for opening in Notepad.
+It adds only play_profiles with row-level ownership policies. It does not
+change existing projects or Code Lab tables.
+Keep your existing SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, Upstash values
+and set APP_ORIGIN to your exact canonical public origin.
+Sign in, open /play/progress, click Review cloud merge, inspect the summary,
+then Confirm merge and save. This is manual sync, not automatic sync.
+The server checks account identity and revision; a concurrent update asks
+for a fresh review. The higher attempt count avoids counting synced work
+again. Device drafts win when both copies have a draft for one activity.
+Live cloud sync has not been verified against your Supabase deployment;
+apply the migration and verify it with two test accounts before relying on
+it. Automated tests cover authentication, ownership request construction,
+validation, stale revision rejection, and local/cloud merge behavior.
+
+UPDATE YOUR PUBLIC WEBSITE
+1. Back up the project and .env.local. Extract this complete ZIP over your
+   source. Keep private environment files; do not commit them.
+2. Use Node 24. Run npm ci --include=dev, npm test, npm run build.
+3. Review git diff, commit, and push your Vercel deployment branch.
+4. Apply the optional SQL migration if you want account progress.
+5. Check /play, /demo-api and /api/demo/users on your own deployed domain.
+This release updates the ChatGPT preview, not your personal GitHub repo or
+www.sukoaa.com automatically. No separate domain purchase is required.
+
+NEXT-STAGE ROADMAP (NOT IMPLEMENTED IN THIS RELEASE)
+FastAPI, Node.js, PostgreSQL, Tailwind CSS, PHP and Laravel.
+Start with guided exercises and reviewed examples. Separate real backend
+execution from browser-only previews. Do not describe a mock server as a
+full FastAPI/Laravel runtime or SQLite as PostgreSQL. Runtime prototypes,
+isolation, dependencies and hosting must be verified before listing these
+as runnable public tools.
+
+VALIDATION
+189 automated tests passed, including all existing compiler tests.
+Both Next.js and Site production builds passed.
+All 57 existing compiler source files match v0.16.1 byte-for-byte.
+Browser checks covered correct answers, reload persistence, bookmarks,
+code ordering, JavaScript success and timeout, SQLite, CSS validation,
+JSON/regex/text tools, API success/errors, explicit note import, daily
+route, mobile menu and mobile/tablet horizontal overflow.
+Cloud database policies still require verification on your own Supabase.

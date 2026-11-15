@@ -2,6 +2,7 @@
 // This explicit release policy is independent of whether credentials happen to exist.
 export const unavailableToolSlugs = ['c', 'cpp', 'rust', 'csharp', 'java'] as const;
 export const unlistedPaths: readonly string[] = [
+  '/play/progress',
   ...unavailableToolSlugs.map(slug => '/tools/' + slug),
   '/extensions/quick-replies',
   '/extensions/web-pdf-studio',

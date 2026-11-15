@@ -1,0 +1,29 @@
+Sukoaa Platform v0.16.1 — Workspace menus and notebook-first page
+
+Layout is now a separate menu beside Options: Code + output, Code only,
+Output only, and Reset panel widths.
+Code folding controls sit beside Copy in the editor file bar. You can also
+fold individual blocks with their gutter chevrons.
+Full-page view is an icon outside the menus; hover or focus it for details.
+
+Standard input is text passed to a program that asks for input. For example:
+  name = input()
+  print(name)
+Enter Subo in Standard input to print Subo. Put each answer on a new line.
+Leave it blank for code that does not read input.
+
+Notepad opens with the notebook filling the first viewport. Scroll down for
+its guide. Click the notebook brand to return to Tools. Existing local notes
+and backups continue to work.
+
+Validation: 169 tests passed; strict typecheck, Next.js production build,
+Site production build, and desktop browser checks passed.
+No database migration or new credentials. AI remains disabled.
+
+To update your GitHub/Vercel deployment:
+1. Back up your existing project and local environment settings.
+2. Extract this complete source ZIP into your project, replacing source files.
+3. Keep .env.local private. Run npm ci --include=dev, then npm run build.
+4. Review git diff, commit the changes, and push your deployment branch.
+5. Vercel rebuilds your GitHub project. This preview release does not push
+   to your personal GitHub repository or update www.sukoaa.com directly.

@@ -1,3 +1,4 @@
+import './play.test';
 import './workspace-repair.test';
 import {pageMetadata,publicPaths} from '../lib/marketing/site';
 import {unlistedPaths} from '../lib/marketing/availability';

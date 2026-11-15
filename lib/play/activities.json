@@ -1,0 +1,994 @@
+[
+  {
+    "id": "js-filter",
+    "title": "Only the available phones",
+    "kind": "output",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Arrays",
+    "code": "const phones = [{model:\"A\",inStock:true},{model:\"B\",inStock:false}];\nconsole.log(phones.filter(p => p.inStock).map(p => p.model));",
+    "options": [
+      "[\"A\"]",
+      "[\"A\", \"B\"]",
+      "[]"
+    ],
+    "answer": 0,
+    "explanation": "filter keeps only records where the callback is true. map then extracts each retained model.",
+    "hint": "Apply filter before map.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-count",
+    "title": "Count repeated words",
+    "kind": "output",
+    "language": "python",
+    "track": "python",
+    "topic": "Dictionaries",
+    "code": "words = \"code learn code\".split()\ncounts = {}\nfor word in words:\n    counts[word] = counts.get(word, 0) + 1\nprint(counts[\"code\"])",
+    "options": [
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": 1,
+    "explanation": "get supplies zero on the first encounter. The word code appears twice.",
+    "hint": "Follow the value across both appearances of code.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-map",
+    "title": "A new array",
+    "kind": "output",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Arrays",
+    "code": "const values = [1, 2, 3];\nconst doubled = values.map(n => n * 2);\nconsole.log(values[0], doubled[0]);",
+    "options": [
+      "2 2",
+      "1 2",
+      "1 1"
+    ],
+    "answer": 1,
+    "explanation": "map returns a new array. It does not replace the original primitive elements.",
+    "hint": "Which array does map return?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-slice",
+    "title": "Read a slice",
+    "kind": "output",
+    "language": "python",
+    "track": "python",
+    "topic": "Lists",
+    "code": "values = [10, 20, 30, 40]\nprint(values[1:3])",
+    "options": [
+      "[10, 20, 30]",
+      "[20, 30]",
+      "[20, 30, 40]"
+    ],
+    "answer": 1,
+    "explanation": "The start index is included; the end index is excluded. Indices 1 and 2 hold 20 and 30.",
+    "hint": "Python indices start at zero.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-total",
+    "title": "Reduce a cart",
+    "kind": "output",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Functions",
+    "code": "const prices = [5, 10, 15];\nconsole.log(prices.reduce((total, price) => total + price, 0));",
+    "options": [
+      "15",
+      "30",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "The accumulator starts at zero and adds all three prices.",
+    "hint": "Track the accumulator: 0, 5, …",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-range",
+    "title": "Where does range stop?",
+    "kind": "output",
+    "language": "python",
+    "track": "python",
+    "topic": "Loops",
+    "code": "total = 0\nfor n in range(1, 4):\n    total += n\nprint(total)",
+    "options": [
+      "10",
+      "6",
+      "4"
+    ],
+    "answer": 1,
+    "explanation": "range(1, 4) yields 1, 2 and 3. The stop value is excluded.",
+    "hint": "The final value in the loop is 3.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-nullish",
+    "title": "A valid zero",
+    "kind": "output",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Conditions",
+    "code": "const count = 0;\nconsole.log(count ?? 10);",
+    "options": [
+      "0",
+      "10",
+      "undefined"
+    ],
+    "answer": 0,
+    "explanation": "Nullish coalescing uses the fallback only for null or undefined. Zero is retained.",
+    "hint": "Compare ?? with ||.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-alias",
+    "title": "Two names, one list",
+    "kind": "output",
+    "language": "python",
+    "track": "python",
+    "topic": "Lists",
+    "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)",
+    "options": [
+      "[1, 2]",
+      "[1, 2, 3]",
+      "[3]"
+    ],
+    "answer": 1,
+    "explanation": "Both names refer to the same mutable list. append changes that list.",
+    "hint": "Assignment does not copy a list.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-closure",
+    "title": "A remembered value",
+    "kind": "output",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Functions",
+    "code": "function makeAdder(x) { return y => x + y; }\nconst addTwo = makeAdder(2);\nconsole.log(addTwo(5));",
+    "options": [
+      "2",
+      "5",
+      "7"
+    ],
+    "answer": 2,
+    "explanation": "The returned function closes over x, which remains 2 when y is supplied as 5.",
+    "hint": "The inner function remembers x.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-fallback",
+    "title": "A missing dictionary key",
+    "kind": "output",
+    "language": "python",
+    "track": "python",
+    "topic": "Dictionaries",
+    "code": "user = {\"name\": \"Asha\"}\nprint(user.get(\"city\", \"Unknown\"))",
+    "options": [
+      "None",
+      "Unknown",
+      "KeyError"
+    ],
+    "answer": 1,
+    "explanation": "dict.get returns the supplied fallback when the key does not exist.",
+    "hint": "Look at the second argument of get.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-order-loop",
+    "title": "Build a total",
+    "kind": "order",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Loops",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "let total = 0;",
+      "for (const n of [1, 2, 3]) {",
+      "  total += n;",
+      "}",
+      "console.log(total);"
+    ],
+    "answer": 0,
+    "explanation": "Initialise before the loop, update inside it, then print after it.",
+    "hint": "Find the initialisation first.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "let total = 0;",
+      "for (const n of [1, 2, 3]) {",
+      "  total += n;",
+      "}",
+      "console.log(total);"
+    ]
+  },
+  {
+    "id": "py-order-count",
+    "title": "Build a word counter",
+    "kind": "order",
+    "language": "python",
+    "track": "python",
+    "topic": "Dictionaries",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "counts = {}",
+      "for word in \"code code\".split():",
+      "    counts[word] = counts.get(word, 0) + 1",
+      "print(counts[\"code\"])"
+    ],
+    "answer": 0,
+    "explanation": "Create the dictionary before using it. The indented statement belongs to the loop.",
+    "hint": "Indentation marks the loop body.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "counts = {}",
+      "for word in \"code code\".split():",
+      "    counts[word] = counts.get(word, 0) + 1",
+      "print(counts[\"code\"])"
+    ]
+  },
+  {
+    "id": "js-order-fn",
+    "title": "Define then call",
+    "kind": "order",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Functions",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "const double = n => {",
+      "  return n * 2;",
+      "};",
+      "console.log(double(4));"
+    ],
+    "answer": 0,
+    "explanation": "The const function expression must be initialised before it is called.",
+    "hint": "Start with the const declaration.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "const double = n => {",
+      "  return n * 2;",
+      "};",
+      "console.log(double(4));"
+    ]
+  },
+  {
+    "id": "py-order-fn",
+    "title": "A Python function",
+    "kind": "order",
+    "language": "python",
+    "track": "python",
+    "topic": "Functions",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "def greet(name):",
+      "    return \"Hello \" + name",
+      "message = greet(\"Asha\")",
+      "print(message)"
+    ],
+    "answer": 0,
+    "explanation": "Define the function, call it, then print the returned message.",
+    "hint": "The return belongs under def.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "def greet(name):",
+      "    return \"Hello \" + name",
+      "message = greet(\"Asha\")",
+      "print(message)"
+    ]
+  },
+  {
+    "id": "js-order-filter",
+    "title": "Filter then display",
+    "kind": "order",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Arrays",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "const values = [1, 2, 3, 4];",
+      "const even = values.filter(n => n % 2 === 0);",
+      "const labels = even.map(n => \"Number \" + n);",
+      "console.log(labels);"
+    ],
+    "answer": 0,
+    "explanation": "Each declaration depends on the value created by the preceding line.",
+    "hint": "Find which names each line needs.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "const values = [1, 2, 3, 4];",
+      "const even = values.filter(n => n % 2 === 0);",
+      "const labels = even.map(n => \"Number \" + n);",
+      "console.log(labels);"
+    ]
+  },
+  {
+    "id": "py-order-list",
+    "title": "Transform a list",
+    "kind": "order",
+    "language": "python",
+    "track": "python",
+    "topic": "Lists",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "values = [1, 2, 3]",
+      "doubled = []",
+      "for value in values:",
+      "    doubled.append(value * 2)",
+      "print(doubled)"
+    ],
+    "answer": 0,
+    "explanation": "The input and result lists must exist before the loop. Print after the loop ends.",
+    "hint": "Put the unindented print last.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "values = [1, 2, 3]",
+      "doubled = []",
+      "for value in values:",
+      "    doubled.append(value * 2)",
+      "print(doubled)"
+    ]
+  },
+  {
+    "id": "js-order-branch",
+    "title": "Choose a message",
+    "kind": "order",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Conditions",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "const stock = 3;",
+      "let message;",
+      "if (stock > 0) { message = \"Available\"; }",
+      "else { message = \"Sold out\"; }",
+      "console.log(message);"
+    ],
+    "answer": 0,
+    "explanation": "The else must follow its if. The message is printed after a branch assigns it.",
+    "hint": "Keep if and else adjacent.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "const stock = 3;",
+      "let message;",
+      "if (stock > 0) { message = \"Available\"; }",
+      "else { message = \"Sold out\"; }",
+      "console.log(message);"
+    ]
+  },
+  {
+    "id": "py-order-error",
+    "title": "Handle a failed conversion",
+    "kind": "order",
+    "language": "python",
+    "track": "python",
+    "topic": "Exceptions",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "try:",
+      "    value = int(\"not-a-number\")",
+      "except ValueError:",
+      "    value = 0",
+      "print(value)"
+    ],
+    "answer": 0,
+    "explanation": "The except clause handles conversion failure and assigns the fallback before print.",
+    "hint": "The failing operation belongs inside try.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "try:",
+      "    value = int(\"not-a-number\")",
+      "except ValueError:",
+      "    value = 0",
+      "print(value)"
+    ]
+  },
+  {
+    "id": "js-order-object",
+    "title": "Update a record",
+    "kind": "order",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Objects",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "const user = {name: \"Asha\", points: 1};",
+      "const next = {...user, points: user.points + 1};",
+      "const message = next.name + \": \" + next.points;",
+      "console.log(message);"
+    ],
+    "answer": 0,
+    "explanation": "Create the original, copy with the changed field, then build the message from the copy.",
+    "hint": "next depends on user.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "const user = {name: \"Asha\", points: 1};",
+      "const next = {...user, points: user.points + 1};",
+      "const message = next.name + \": \" + next.points;",
+      "console.log(message);"
+    ]
+  },
+  {
+    "id": "py-order-sort",
+    "title": "Sort and take the first",
+    "kind": "order",
+    "language": "python",
+    "track": "python",
+    "topic": "Lists",
+    "code": "Arrange the blocks. Keep indentation as shown.",
+    "options": [
+      "scores = [8, 3, 5]",
+      "ordered = sorted(scores)",
+      "smallest = ordered[0]",
+      "print(smallest)"
+    ],
+    "answer": 0,
+    "explanation": "sorted returns a new list. Its first item is the smallest number.",
+    "hint": "Order must be established before reading the first result.",
+    "difficulty": "Beginner",
+    "minutes": 3,
+    "blocks": [
+      "scores = [8, 3, 5]",
+      "ordered = sorted(scores)",
+      "smallest = ordered[0]",
+      "print(smallest)"
+    ]
+  },
+  {
+    "id": "js-bug-assign",
+    "title": "Assignment inside filter",
+    "kind": "bug",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Arrays",
+    "code": "const available = phones.filter(phone => phone.inStock = true);",
+    "options": [
+      "The callback assigns true instead of testing stock.",
+      "filter cannot work with objects.",
+      "phones must be a string."
+    ],
+    "answer": 0,
+    "explanation": "Use phone.inStock or phone.inStock === true. Assignment changes every record and evaluates to true.",
+    "hint": "Look closely at the operator.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-bug-bound",
+    "title": "One step too far",
+    "kind": "bug",
+    "language": "python",
+    "track": "python",
+    "topic": "Loops",
+    "code": "values = [1, 2, 3]\nfor i in range(len(values) + 1):\n    print(values[i])",
+    "options": [
+      "print cannot access a list.",
+      "The loop reaches an index outside the list.",
+      "range starts at one."
+    ],
+    "answer": 1,
+    "explanation": "Valid indices end at len(values) - 1. Use range(len(values)) or iterate over values directly.",
+    "hint": "What happens when i equals len(values)?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-bug-return",
+    "title": "The missing result",
+    "kind": "bug",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Functions",
+    "code": "const double = n => { n * 2; };\nconsole.log(double(4));",
+    "options": [
+      "The function body is missing return.",
+      "Multiplication changes n.",
+      "Arrow functions cannot take numbers."
+    ],
+    "answer": 0,
+    "explanation": "A block arrow function needs return. Alternatively use n => n * 2.",
+    "hint": "A block body does not return its last expression automatically.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-bug-append",
+    "title": "The append result",
+    "kind": "bug",
+    "language": "python",
+    "track": "python",
+    "topic": "Lists",
+    "code": "values = [1, 2]\nvalues = values.append(3)\nprint(values)",
+    "options": [
+      "append returns a new list.",
+      "append returns None, which replaces values.",
+      "3 is not a valid list item."
+    ],
+    "answer": 1,
+    "explanation": "Call values.append(3) without assigning its result. It mutates the existing list and returns None.",
+    "hint": "Distinguish mutation from the returned value.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-bug-zero",
+    "title": "A zero gets replaced",
+    "kind": "bug",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Conditions",
+    "code": "const count = 0;\nconst shown = count || 10; // should preserve zero",
+    "options": [
+      "Use ?? because zero is falsy.",
+      "Change const to let.",
+      "Use count && 10."
+    ],
+    "answer": 0,
+    "explanation": "|| replaces all falsy values. ?? preserves zero and falls back only for null or undefined.",
+    "hint": "Is zero a valid value here?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-bug-key",
+    "title": "An optional field",
+    "kind": "bug",
+    "language": "python",
+    "track": "python",
+    "topic": "Dictionaries",
+    "code": "user = {\"name\": \"Asha\"}\nprint(user[\"city\"]) # city is optional",
+    "options": [
+      "Missing keys return an empty string.",
+      "The code raises KeyError; use get with a fallback.",
+      "All dictionaries need city."
+    ],
+    "answer": 1,
+    "explanation": "Indexing requires the key to exist. user.get(\"city\", \"Unknown\") handles a missing optional field.",
+    "hint": "What does direct indexing require?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-bug-sort",
+    "title": "Numbers in the wrong order",
+    "kind": "bug",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Arrays",
+    "code": "const values = [2, 10, 3];\nvalues.sort(); // expected 2, 3, 10",
+    "options": [
+      "Use sort((a, b) => a - b).",
+      "Use reverse() first.",
+      "sort never changes the array."
+    ],
+    "answer": 0,
+    "explanation": "Default sort compares string representations. A numeric comparator supplies numeric ordering.",
+    "hint": "How are \"10\" and \"2\" ordered as text?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-bug-indent",
+    "title": "A total that resets",
+    "kind": "bug",
+    "language": "python",
+    "track": "python",
+    "topic": "Loops",
+    "code": "for price in [5, 10, 15]:\n    total = 0\n    total += price\nprint(total)",
+    "options": [
+      "Move total = 0 before the loop.",
+      "Move print into the loop.",
+      "Replace += with =."
+    ],
+    "answer": 0,
+    "explanation": "Initialising inside the loop resets the accumulated value on each iteration.",
+    "hint": "Which line should happen only once?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "js-bug-mutate",
+    "title": "A copy that is not a copy",
+    "kind": "bug",
+    "language": "javascript",
+    "track": "javascript",
+    "topic": "Objects",
+    "code": "const original = {points: 1};\nconst copy = original;\ncopy.points = 2; // original should stay unchanged",
+    "options": [
+      "Use const copy = {...original}.",
+      "Use let copy = original.",
+      "Object assignment creates a deep copy."
+    ],
+    "answer": 0,
+    "explanation": "Assignment copies the reference. Spread creates a shallow copy suitable for this flat object.",
+    "hint": "Both variables currently point to the same object.",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "py-bug-condition",
+    "title": "An always-true condition",
+    "kind": "bug",
+    "language": "python",
+    "track": "python",
+    "topic": "Conditions",
+    "code": "status = \"pending\"\nif status == \"paid\" or \"shipped\":\n    print(\"Ready\")",
+    "options": [
+      "Compare status on both sides of or.",
+      "Use and instead of or.",
+      "Strings cannot be compared."
+    ],
+    "answer": 0,
+    "explanation": "The non-empty string \"shipped\" is truthy. Use status in (\"paid\", \"shipped\") or two explicit comparisons.",
+    "hint": "What value does the right side of or contain?",
+    "difficulty": "Beginner",
+    "minutes": 3
+  },
+  {
+    "id": "repair-stock",
+    "title": "Find the available products",
+    "kind": "repair",
+    "language": "javascript",
+    "track": "api-repair",
+    "topic": "API transformations",
+    "code": "function solve(rows) {\n  // Return the transformed result.\n  return rows;\n}",
+    "solution": "function solve(rows) {\n  return rows.filter(row => row.inStock);\n}",
+    "tests": [
+      {
+        "input": [
+          {
+            "model": "A",
+            "inStock": true
+          },
+          {
+            "model": "B",
+            "inStock": false
+          }
+        ],
+        "expected": [
+          {
+            "model": "A",
+            "inStock": true
+          }
+        ]
+      },
+      {
+        "input": [],
+        "expected": []
+      }
+    ],
+    "explanation": "filter keeps each record whose inStock field is true.",
+    "hint": "Read the input and expected result, then choose filter, map, reduce or sort.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "repair-total",
+    "title": "Repair a cart total",
+    "kind": "repair",
+    "language": "javascript",
+    "track": "api-repair",
+    "topic": "API transformations",
+    "code": "function solve(rows) {\n  // Return the transformed result.\n  return rows;\n}",
+    "solution": "function solve(rows) {\n  return rows.reduce((sum, row) => sum + row.price * row.quantity, 0);\n}",
+    "tests": [
+      {
+        "input": [
+          {
+            "price": 5,
+            "quantity": 2
+          },
+          {
+            "price": 3,
+            "quantity": 1
+          }
+        ],
+        "expected": 13
+      },
+      {
+        "input": [],
+        "expected": 0
+      }
+    ],
+    "explanation": "Multiply price by quantity before adding each line total.",
+    "hint": "Read the input and expected result, then choose filter, map, reduce or sort.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "repair-names",
+    "title": "Extract display names",
+    "kind": "repair",
+    "language": "javascript",
+    "track": "api-repair",
+    "topic": "API transformations",
+    "code": "function solve(rows) {\n  // Return the transformed result.\n  return rows;\n}",
+    "solution": "function solve(rows) {\n  return rows.map(row => row.name);\n}",
+    "tests": [
+      {
+        "input": [
+          {
+            "name": "Asha"
+          },
+          {
+            "name": "Ben"
+          }
+        ],
+        "expected": [
+          "Asha",
+          "Ben"
+        ]
+      },
+      {
+        "input": [],
+        "expected": []
+      }
+    ],
+    "explanation": "map transforms each record into its name.",
+    "hint": "Read the input and expected result, then choose filter, map, reduce or sort.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "repair-active",
+    "title": "Keep active accounts",
+    "kind": "repair",
+    "language": "javascript",
+    "track": "api-repair",
+    "topic": "API transformations",
+    "code": "function solve(rows) {\n  // Return the transformed result.\n  return rows;\n}",
+    "solution": "function solve(rows) {\n  return rows.filter(row => row.active);\n}",
+    "tests": [
+      {
+        "input": [
+          {
+            "id": 1,
+            "active": false
+          },
+          {
+            "id": 2,
+            "active": true
+          }
+        ],
+        "expected": [
+          {
+            "id": 2,
+            "active": true
+          }
+        ]
+      },
+      {
+        "input": [],
+        "expected": []
+      }
+    ],
+    "explanation": "A boolean predicate can be used directly.",
+    "hint": "Read the input and expected result, then choose filter, map, reduce or sort.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "repair-count",
+    "title": "Count completed tasks",
+    "kind": "repair",
+    "language": "javascript",
+    "track": "api-repair",
+    "topic": "API transformations",
+    "code": "function solve(rows) {\n  // Return the transformed result.\n  return rows;\n}",
+    "solution": "function solve(rows) {\n  return rows.filter(row => row.completed).length;\n}",
+    "tests": [
+      {
+        "input": [
+          {
+            "completed": true
+          },
+          {
+            "completed": false
+          },
+          {
+            "completed": true
+          }
+        ],
+        "expected": 2
+      },
+      {
+        "input": [],
+        "expected": 0
+      }
+    ],
+    "explanation": "Filter the completed records and read the resulting length.",
+    "hint": "Read the input and expected result, then choose filter, map, reduce or sort.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "repair-sort",
+    "title": "Sort prices without mutation",
+    "kind": "repair",
+    "language": "javascript",
+    "track": "api-repair",
+    "topic": "API transformations",
+    "code": "function solve(rows) {\n  // Return the transformed result.\n  return rows;\n}",
+    "solution": "function solve(rows) {\n  return [...rows].sort((a, b) => a.price - b.price);\n}",
+    "tests": [
+      {
+        "input": [
+          {
+            "price": 10
+          },
+          {
+            "price": 2
+          }
+        ],
+        "expected": [
+          {
+            "price": 2
+          },
+          {
+            "price": 10
+          }
+        ]
+      },
+      {
+        "input": [],
+        "expected": []
+      }
+    ],
+    "explanation": "Copy before sort because sort changes its array.",
+    "hint": "Read the input and expected result, then choose filter, map, reduce or sort.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "css-center",
+    "title": "Centre a welcome card",
+    "kind": "css",
+    "language": "html",
+    "track": "web",
+    "topic": "Layout",
+    "code": "/* Style the stage and card */\n.stage { min-height: 240px; }\n.card { padding: 24px; background: #fff; border-radius: 16px; }",
+    "solution": ".stage { min-height:240px; display:flex; justify-content:center; align-items:center; background:#edf2e6; }\n.card { padding:24px; background:#fff; border-radius:16px; }",
+    "goal": "Centre the card horizontally and vertically using flexbox.",
+    "checks": {
+      "display": "flex",
+      "justifyContent": "center",
+      "alignItems": "center"
+    },
+    "explanation": "Centre the card horizontally and vertically using flexbox. These checks verify layout properties, not a pixel-perfect score.",
+    "hint": "Inspect display, alignment, columns and gap on .stage.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "css-grid",
+    "title": "Build a two-column layout",
+    "kind": "css",
+    "language": "html",
+    "track": "web",
+    "topic": "Layout",
+    "code": ".stage { min-height:240px; }\n.card { padding:24px; background:#fff; border-radius:16px; }",
+    "solution": ".stage { min-height:240px; display:grid; grid-template-columns:1fr 1fr; gap:16px; background:#edf2e6; }\n.card { padding:24px; background:#fff; border-radius:16px; }",
+    "goal": "Make the stage a grid with two equal columns and a 16px gap.",
+    "checks": {
+      "display": "grid",
+      "gap": "16px",
+      "columns": 2
+    },
+    "explanation": "Make the stage a grid with two equal columns and a 16px gap. These checks verify layout properties, not a pixel-perfect score.",
+    "hint": "Inspect display, alignment, columns and gap on .stage.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "css-wrap",
+    "title": "Make a flexible row",
+    "kind": "css",
+    "language": "html",
+    "track": "web",
+    "topic": "Layout",
+    "code": ".stage { min-height:240px; }\n.card { min-width:120px; padding:24px; background:#fff; }",
+    "solution": ".stage { min-height:240px; display:flex; flex-wrap:wrap; gap:12px; background:#edf2e6; }\n.card { min-width:120px; padding:24px; background:#fff; border-radius:16px; }",
+    "goal": "Use a wrapping flex row with a 12px gap so cards can fit on narrow screens.",
+    "checks": {
+      "display": "flex",
+      "flexWrap": "wrap",
+      "gap": "12px"
+    },
+    "explanation": "Use a wrapping flex row with a 12px gap so cards can fit on narrow screens. These checks verify layout properties, not a pixel-perfect score.",
+    "hint": "Inspect display, alignment, columns and gap on .stage.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "sql-stock",
+    "title": "Which products are available?",
+    "kind": "sql",
+    "language": "sql",
+    "track": "sql",
+    "topic": "Query investigation",
+    "code": "-- Write one SELECT query below.\nSELECT * FROM products;",
+    "solution": "SELECT name FROM products WHERE stock > 0 ORDER BY id;",
+    "goal": "Return the name of each product with stock greater than zero, ordered by id.",
+    "expected": [
+      [
+        "Notebook"
+      ],
+      [
+        "Lamp"
+      ]
+    ],
+    "explanation": "Return the name of each product with stock greater than zero, ordered by id. Use WHERE to filter, ORDER BY to sort, and GROUP BY with SUM to aggregate.",
+    "hint": "Explore the sample tables, then select only the requested columns.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "sql-total",
+    "title": "Find the largest order",
+    "kind": "sql",
+    "language": "sql",
+    "track": "sql",
+    "topic": "Query investigation",
+    "code": "-- Write one SELECT query below.\nSELECT * FROM orders;",
+    "solution": "SELECT customer, total FROM orders ORDER BY total DESC LIMIT 1;",
+    "goal": "Return customer and total for the order with the highest total.",
+    "expected": [
+      [
+        "Asha",
+        80
+      ]
+    ],
+    "explanation": "Return customer and total for the order with the highest total. Use WHERE to filter, ORDER BY to sort, and GROUP BY with SUM to aggregate.",
+    "hint": "Explore the sample tables, then select only the requested columns.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  },
+  {
+    "id": "sql-group",
+    "title": "Total each customer’s orders",
+    "kind": "sql",
+    "language": "sql",
+    "track": "sql",
+    "topic": "Query investigation",
+    "code": "-- Write one SELECT query below.\nSELECT * FROM orders;",
+    "solution": "SELECT customer, SUM(total) AS total FROM orders GROUP BY customer ORDER BY customer;",
+    "goal": "Return customer and SUM(total) AS total, ordered by customer.",
+    "expected": [
+      [
+        "Asha",
+        100
+      ],
+      [
+        "Ben",
+        35
+      ]
+    ],
+    "explanation": "Return customer and SUM(total) AS total, ordered by customer. Use WHERE to filter, ORDER BY to sort, and GROUP BY with SUM to aggregate.",
+    "hint": "Explore the sample tables, then select only the requested columns.",
+    "difficulty": "Beginner",
+    "minutes": 5
+  }
+]
