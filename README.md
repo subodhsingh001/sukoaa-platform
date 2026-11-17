@@ -1,6 +1,6 @@
-Current release: v0.22.0. Read PORTAL-READY-SETUP.md and docs/30-SOURCE-AUDIT.md for the formatter, tokenizer repair and trust/security changes. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
+Current release: v0.22.2. Read PORTAL-READY-SETUP.md and docs/30-SOURCE-AUDIT.md for the formatter, tokenizer repair and trust/security changes. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
 
-# Sukoaa Platform — v0.22.0
+# Sukoaa Platform — v0.22.2
 
 A professional home for Sukoaa's browser, extensions and developer tools. This source release includes the frontend, Next.js backend routes, Supabase database migration, optional Redis integration, a code workspace, release distribution metadata and setup guides. **AI agents are disabled.**
 

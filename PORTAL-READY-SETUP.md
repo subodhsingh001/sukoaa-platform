@@ -1,4 +1,4 @@
-# Sukoaa v0.22.0
+# Sukoaa v0.22.2
 
 ## Run and deploy
 
@@ -11,7 +11,7 @@ npm run build
 npm run dev
 ```
 
-Open `/portal-ready` or Tools → Photo & Document Tools. The token counter is at `/tools/token-counter`. Both work without account credentials. Runtime preparation runs automatically during install and build; `npm run prepare:runtimes` rebuilds the self-hosted workers if needed.
+Open `/tools/portal-ready` or Tools → Photo & Document Tools. The token counter is at `/tools/token-counter`. Both work without account credentials. Runtime preparation runs automatically during install and build; `npm run prepare:runtimes` rebuilds the self-hosted workers if needed.
 
 For Vercel: push this complete source to your repository, use the Next.js preset, Node 24.x, install `npm ci --include=dev`, build `npm run build`, and leave Output Directory at its default. Keep package-lock.json committed. Set APP_ORIGIN and SITE_URL to `https://www.sukoaa.com`; enable SITE_INDEXING_ENABLED only for your production canonical deployment. Preview deployments should remain noindex. Redeploy after changing environment values. This ZIP does not itself update your personal GitHub or Vercel deployment.
 
@@ -30,3 +30,11 @@ Set SUPPORT_EMAIL and SECURITY_EMAIL to real, monitored addresses in Vercel. The
 Publish actual release records in Supabase or data/publicReleases.json only after checking artifact availability, exact version/platform and SHA256. An empty catalog intentionally shows an honest status; a repository link is not a verified installer.
 
 See docs/30-SOURCE-AUDIT.md for completed source fixes, evidence and remaining release requirements.
+
+## Layout update
+
+The formatter opens as a viewport-sized workspace. Desktop uses settings, preview and export columns. Template, framing, cleanup and optional stamp controls have separate buttons. Tablets and phones have Settings / Preview / Export navigation to preserve working room. The old /portal-ready and preset URLs permanently redirect to /tools/portal-ready and matching preset URLs. Canonicals, navigation, sitemap entries and offline scope use the new route.
+
+## Direct preview controls
+
+Drag the preview with the primary mouse button, a pen or one finger to move the image. Scroll over the preview to zoom toward the pointer; page scrolling outside the preview remains normal. Ctrl/Cmd-wheel keeps browser zoom. The existing sliders update with gestures. Focus the preview and use arrow keys to move (Shift for larger steps), +/− to zoom, or 0 for 100%. Moving or zooming invalidates the previous export; prepare it again before downloading. No new dependency is required.

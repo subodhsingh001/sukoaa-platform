@@ -1,1 +1,1 @@
-import {PortalPage,portalMetadata} from '@/components/portal-ready/PortalPage';export const metadata=portalMetadata();export default function Page(){return <PortalPage/>;}
+import {permanentRedirect} from 'next/navigation';export default function Page(){permanentRedirect('/tools/portal-ready');}

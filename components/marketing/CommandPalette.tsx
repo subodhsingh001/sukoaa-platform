@@ -5,7 +5,7 @@ import {isPubliclyReady,unavailableToolSlugs} from '@/lib/marketing/availability
 import './command-palette.css';
 type Item={label:string;hint:string;href:string;group:string};
 const extra:Item[]=[
- {label:'Portal Photo & PDF Fixer',hint:'Crop, resize, compress and exam checklist',href:'/portal-ready',group:'Photo & Document Tools'},
+ {label:'Portal Photo & PDF Fixer',hint:'Crop, resize, compress and exam checklist',href:'/tools/portal-ready',group:'Photo & Document Tools'},
  {label:'Online tools',hint:'All compilers and playgrounds',href:'/tools',group:'Pages'},
  {label:'Coding practice',hint:'JavaScript, Python, SQL, TypeScript, JSON',href:'/practice',group:'Practice'},
  {label:'JavaScript exercises',hint:'Practice',href:'/practice/javascript',group:'Practice'},
