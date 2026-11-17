@@ -1,3 +1,4 @@
+import './ai-tools.test';
 import './learning-stage.test';
 import './play.test';
 import './workspace-repair.test';
@@ -70,3 +71,6 @@ import "./notepad.test";
 import "./types-studio.test";
 
 import './demo-studio.test';
+
+import './portal-ready.test';
+import './trust-audit.test';

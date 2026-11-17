@@ -1,0 +1,12 @@
+import {sizeBounds,type PortalRule} from './rules';
+export type Compressed={blob:Blob;quality:number;compliant:boolean;reason:string;bytes:number};
+export async function searchCompression(encode:(quality:number)=>Promise<Blob>,limits:{min:number;max:number},signal?:AbortSignal):Promise<Compressed>{
+ if(limits.min<0||limits.max<limits.min)throw Error('Invalid file-size bounds.');let best:Compressed|undefined;const score=(bytes:number)=>bytes>limits.max?bytes-limits.max:bytes<limits.min?limits.min-bytes:0;
+ async function sample(q:number){signal?.throwIfAborted();const blob=await encode(q);signal?.throwIfAborted();const compliant=blob.size>=limits.min&&blob.size<=limits.max;const value={blob,quality:q,compliant,reason:'',bytes:blob.size};if(!best||score(value.bytes)<score(best.bytes)||compliant&&best.compliant&&q>best.quality)best=value;return value;}
+ const low=await sample(.08),high=await sample(1);let lo=.08,hi=1;
+ for(let i=0;i<12;i++){const q=(lo+hi)/2,r=await sample(q);if(r.bytes>limits.max)hi=q;else lo=q;}
+ const out=best!;out.reason=out.compliant?'File size is within the selected byte range.':out.bytes<limits.min?'Even maximum JPEG quality is below the minimum. This tool does not add fake padding. If your notice allows it, use larger custom dimensions or a more detailed original.':'The image remains above the maximum at the available quality. Crop unnecessary margins or use smaller dimensions only if your notice permits it.';return out;
+}
+export async function compressCanvas(canvas:HTMLCanvasElement,rule:PortalRule,signal?:AbortSignal){const bounds=sizeBounds(rule);const pdf=rule.format==='pdf'?await import('pdf-lib'):null;
+ const encode=async(q:number)=>{const jpeg=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('The browser could not encode this image.')),'image/jpeg',q));if(!pdf)return jpeg;signal?.throwIfAborted();const doc=await pdf.PDFDocument.create();doc.setProducer('Sukoaa Portal-Ready');const image=await doc.embedJpg(await jpeg.arrayBuffer());const page=doc.addPage([595.28,841.89]);const scale=Math.min(page.getWidth()/image.width,page.getHeight()/image.height);const width=image.width*scale,height=image.height*scale;page.drawImage(image,{x:(page.getWidth()-width)/2,y:(page.getHeight()-height)/2,width,height});return new Blob([new Uint8Array(await doc.save())],{type:'application/pdf'});};return searchCompression(encode,bounds,signal);
+}

@@ -4,6 +4,11 @@ COPY package.json package-lock.json ./
 # Runtime preparation uses source scripts; install without running scripts yet.
 RUN npm ci --ignore-scripts
 COPY . .
+# The sitemap, canonical URLs and share images are generated at build time, so these must be set here.
+ARG SITE_URL
+ARG APP_ORIGIN
+ARG SITE_INDEXING_ENABLED
+ENV SITE_URL=$SITE_URL APP_ORIGIN=$APP_ORIGIN SITE_INDEXING_ENABLED=$SITE_INDEXING_ENABLED
 RUN npm run prepare:runtimes && npm run build
 
 FROM node:24-bookworm-slim AS runtime

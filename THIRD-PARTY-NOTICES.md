@@ -36,4 +36,9 @@ Laravel 13.42.0 is MIT-licensed. Its bundled Composer dependencies retain vendor
 
 ## API Studio dependencies (v0.21)
 
-GraphQL.js 16.11.0 and yaml 2.8.1 are MIT licensed. Full license texts are included in docs/licenses/. Their sources are https://github.com/graphql/graphql-js and https://github.com/eemeli/yaml. Lockfiles pin the distributed builds. Sukoaa's generated datasets and SVG placeholders are fictional first-party examples.
+GraphQL.js 16.11.0 and yaml 2.9.1 are MIT licensed. Full license texts are included in docs/licenses/. Their sources are https://github.com/graphql/graphql-js and https://github.com/eemeli/yaml. Lockfiles pin the distributed builds. Sukoaa's generated datasets and SVG placeholders are fictional first-party examples.
+
+
+## Portal-Ready and tokenizer (v0.22)
+
+pdf-lib 1.17.1 (MIT) builds PDFs locally; its license is in docs/licenses/pdf-lib-LICENSE.txt. gpt-tokenizer 4.1.1 (MIT) supplies the two self-hosted encoding workers; license copies are in public/runtime/tokenizers/ and docs/licenses/. No AI inference, background-removal or face-detection package was added. DOMPurify is overridden to patched 3.4.18; preserve its upstream MPL-2.0/Apache-2.0 notices in dependency distributions. The lockfile records the exact dependency tree.

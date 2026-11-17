@@ -88,3 +88,5 @@ await import('./prepare-python-packages.mjs');
 
 // Separate learning assets; existing compiler preparation above is unchanged.
 await import('./prepare-learning-runtimes.mjs');
+
+await import('./prepare-tokenizers.mjs');

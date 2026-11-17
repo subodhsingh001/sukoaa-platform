@@ -6,3 +6,4 @@
 
 .learning-guide{display:grid;grid-template-columns:1.2fr 1fr;gap:35px}.learning-guide aside{background:#eef2e7;border-radius:14px;padding:24px}.learning-guide ol{padding-left:20px;line-height:1.8}.pl-lab-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.pl-lab-grid .pl-code-editor{min-height:360px}.pl-lab-grid .pl-panel{min-width:0}.pl-lab-grid>div>button{margin-top:12px}@media(max-width:850px){.learning-guide,.pl-lab-grid{grid-template-columns:minmax(0,1fr)}.pl-lab-grid .pl-code-editor{min-height:280px}}
 .pl-tracks h2{overflow-wrap:anywhere}
+.pl-more{display:flex;justify-content:center;margin:18px 0}.pl-more button{min-height:42px;padding:8px 22px;border-radius:10px;border:1px solid #cfd9c6;background:#fff;font-weight:600;cursor:pointer}.pl-more button:hover{background:#eef4e6}

@@ -1,0 +1,2 @@
+import {supportContacts} from '@/lib/platform/support';
+export function GET(){const {security}=supportContacts();if(!security)return new Response('Private security contact is not configured.',{status:404,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8'}});return new Response('Contact: mailto:'+security+'\nExpires: '+new Date(Date.now()+90*86400000).toISOString()+'\nPreferred-Languages: en\n',{headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'public, max-age=3600'}});}
