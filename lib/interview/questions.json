@@ -1,0 +1,2316 @@
+[
+  {
+    "id": "genai-tokens-and-context",
+    "track": "genai",
+    "slug": "tokens-and-context",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "LLM fundamentals",
+    "title": "What are tokens, and how do they affect a request?",
+    "minutes": 6,
+    "lesson": "A token is a model-specific text unit, not a word. A context limit covers the material the model can consider; billing and output limits are separate constraints.",
+    "example": "A short English word can be one token while an identifier or emoji can span several.",
+    "answer": "I would count the complete request using the provider's tokenizer, including system messages, history, retrieved passages and tool definitions. I would reserve space for the response and reject or trim inputs predictably rather than silently losing important context. I would explain that the same text can have different counts under different encodings. For a chat product, I would measure actual usage as well as the plain-text estimate because message formatting and model behavior add overhead.",
+    "hints": [
+      "Separate context capacity from price.",
+      "Include more than the latest user message."
+    ],
+    "rubric": [
+      "Explains model-specific units",
+      "Budgets history, tools and output",
+      "Checks usage instead of assuming words equal tokens"
+    ],
+    "mistakes": [
+      "Calling every token one word.",
+      "Treating an OpenAI encoding as Gemini's billing tokenizer."
+    ],
+    "followUps": [
+      "What would you trim first from a long conversation?",
+      "How would you preserve a critical instruction?"
+    ],
+    "exercise": "Compare an English sentence, a Bengali sentence and a code identifier under both encodings. Explain the differences without assuming a bug.",
+    "tool": "/tools/token-counter",
+    "sources": [
+      {
+        "title": "Tokenization reference",
+        "url": "https://github.com/openai/tiktoken"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-embeddings",
+    "track": "genai",
+    "slug": "embeddings",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Retrieval",
+    "title": "What does an embedding represent?",
+    "minutes": 7,
+    "lesson": "An embedding maps an input into a vector so a model's similarity function can help compare inputs. Similarity is useful evidence, not proof that two texts mean the same thing.",
+    "example": "A delivery question may retrieve a shipping policy even without exactly matching its words.",
+    "answer": "I would describe embeddings as learned representations that make semantic retrieval practical. Documents are embedded during indexing, and the question is embedded with a compatible model at query time. I would choose a similarity metric appropriate to that model, evaluate retrieval on labelled questions and keep the embedding model version with the index. Changing models can require re-embedding. I would also preserve lexical search for names and exact codes because vector proximity alone is not a reliable identifier lookup.",
+    "hints": [
+      "Think indexing time versus query time.",
+      "Similarity is not a probability of truth."
+    ],
+    "rubric": [
+      "Distinguishes vectors from source documents",
+      "Uses compatible embedding/index versions",
+      "Names a retrieval evaluation method"
+    ],
+    "mistakes": [
+      "Calling the highest similarity result a verified answer."
+    ],
+    "followUps": [
+      "What happens if document and query embeddings use different models?",
+      "When would keyword search be preferable?"
+    ],
+    "exercise": "In the RAG lab, compare a synonym question with an exact product-code question and inspect retrieved passages.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-prompt-structure",
+    "track": "genai",
+    "slug": "prompt-structure",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "LLM fundamentals",
+    "title": "How would you make a prompt predictable and testable?",
+    "minutes": 7,
+    "lesson": "A useful prompt separates the task, source material, constraints and expected output. Prompt wording is one system component and needs regression tests.",
+    "example": "A support summary must retain order IDs and distinguish a customer's claim from a confirmed refund.",
+    "answer": "I would state the task and constraints explicitly, label untrusted input and provide a small example where it resolves ambiguity. I would ask for a defined structure rather than decorative prose, then validate the response in application code. I would version the prompt and test normal, ambiguous, empty and adversarial inputs. I would not describe a prompt as a security boundary or guarantee that asking for JSON always produces a valid business object. Failures need a bounded retry or a clear fallback.",
+    "hints": [
+      "Which constraints can application code verify?",
+      "Consider an input that says to ignore your task."
+    ],
+    "rubric": [
+      "Defines task and output contract",
+      "Separates untrusted input",
+      "Versions prompts and validates failures"
+    ],
+    "mistakes": [
+      "Adding longer instructions without measuring their effect."
+    ],
+    "followUps": [
+      "How would you compare two prompt versions?",
+      "Which output checks must be deterministic?"
+    ],
+    "exercise": "Draft a prompt to summarise a support ticket without inventing refund eligibility. Add three failure cases.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-rag-or-finetuning",
+    "track": "genai",
+    "slug": "rag-or-finetuning",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "RAG architecture",
+    "title": "When would you choose RAG instead of fine-tuning?",
+    "minutes": 8,
+    "lesson": "Retrieval provides external evidence at request time. Fine-tuning changes model behavior through training; neither approach automatically solves every knowledge or reliability problem.",
+    "example": "A weekly changing returns policy needs current, permission-checked evidence.",
+    "answer": "I would first identify whether the problem is missing knowledge, inconsistent behavior or both. For changing private documents and source citations, I would prototype retrieval with access controls and a measured baseline. Fine-tuning may help a stable style or repeated task pattern, but does not replace an up-to-date document store or authorization. I would compare quality, operational cost and maintenance burden against a simple prompt baseline. A combined solution is possible, but I would add training only after establishing a specific benefit.",
+    "hints": [
+      "Is the information changing or is the behavior wrong?",
+      "A citation needs retrievable source material."
+    ],
+    "rubric": [
+      "Separates knowledge access and behavior",
+      "Discusses freshness and permissions",
+      "Proposes an evaluated baseline"
+    ],
+    "mistakes": [
+      "Claiming fine-tuning reliably memorizes every policy update."
+    ],
+    "followUps": [
+      "Could a simple database query solve the request?",
+      "When might both approaches be justified?"
+    ],
+    "exercise": "Write a decision table for policy Q&A, sentiment classification and a consistent writing style.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-chunking-basics",
+    "track": "genai",
+    "slug": "chunking-basics",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Chunking",
+    "title": "Why split a document into chunks?",
+    "minutes": 7,
+    "lesson": "Retrieval usually ranks passages rather than whole documents. A chunk should preserve enough meaning to answer a question while avoiding unrelated text and excessive context.",
+    "example": "Splitting a table between a fee and its product heading can make either fragment misleading.",
+    "answer": "I would explain that chunking balances retrieval specificity, contextual completeness and token cost. I would begin with document structure, retaining headings and metadata, then measure several sizes on representative questions. Overlap can keep boundary information together, but also duplicates tokens and evidence. Tables, code and lists may need special handling. I would not claim one chunk size is universally optimal, and I would inspect failure cases instead of relying only on an overall average score.",
+    "hints": [
+      "What information is lost at a boundary?",
+      "More overlap also has a cost."
+    ],
+    "rubric": [
+      "Explains specificity versus completeness",
+      "Preserves structure and metadata",
+      "Treats size and overlap as experiments"
+    ],
+    "mistakes": [
+      "Choosing a size only because a tutorial used it."
+    ],
+    "followUps": [
+      "How would you chunk a table?",
+      "How would you detect duplicated evidence?"
+    ],
+    "exercise": "Split a policy into two different chunk sizes in the RAG lab. Find a question whose evidence crosses a boundary.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-retrieval-ranking",
+    "track": "genai",
+    "slug": "retrieval-ranking",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Retrieval",
+    "title": "How do top-k retrieval and relevance thresholds differ?",
+    "minutes": 7,
+    "lesson": "Top-k limits how many results are returned. A threshold can reject weak matches, but similarity scores require calibration for the model, corpus and task.",
+    "example": "A query unrelated to every indexed policy still has a nearest vector.",
+    "answer": "I would retrieve candidates with a bounded top-k and evaluate which passages contain useful evidence. I would distinguish candidate recall from the quality of the final context. A threshold can support abstention, but I would tune it on held-out answerable and unanswerable questions instead of treating a similarity score as confidence. Metadata filters and a reranker can improve relevance. I would also measure whether increasing k adds useful evidence or only noise, latency and token cost.",
+    "hints": [
+      "A nearest result need not be a good result.",
+      "Thresholds depend on the scoring system."
+    ],
+    "rubric": [
+      "Distinguishes count limit and score gate",
+      "Includes unanswerable evaluation cases",
+      "Measures quality and cost together"
+    ],
+    "mistakes": [
+      "Calling cosine similarity a calibrated correctness probability."
+    ],
+    "followUps": [
+      "What if useful evidence ranks just below k?",
+      "How would a reranker change the pipeline?"
+    ],
+    "exercise": "Ask the RAG lab an unrelated question and observe why a nearest match is insufficient evidence.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-python-concurrency",
+    "track": "genai",
+    "slug": "python-concurrency",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "When does async Python help an LLM API workflow?",
+    "minutes": 8,
+    "lesson": "Async code can overlap waiting for I/O. It does not automatically accelerate CPU-bound work, and concurrency must respect quotas and cancellation.",
+    "example": "Several independent document requests can wait concurrently, but launching thousands can exhaust a provider quota.",
+    "answer": "I would use asynchronous I/O for independent network operations and bound concurrency with a semaphore or a worker pool. Each call needs a timeout, a cancellation path and explicit handling of provider limits. I would avoid blocking calls inside the event loop and choose a separate strategy for CPU-heavy parsing. I would also decide how partial failures are reported. Concurrency and batching are different: concurrency overlaps requests while a batch may combine work into a provider-supported operation.",
+    "hints": [
+      "Identify where the program waits.",
+      "Unlimited gather is not a quota strategy."
+    ],
+    "rubric": [
+      "Distinguishes I/O from CPU work",
+      "Bounds concurrency and timeouts",
+      "Handles cancellation and partial failure"
+    ],
+    "mistakes": [
+      "Calling blocking HTTP code inside an async function and expecting nonblocking execution."
+    ],
+    "followUps": [
+      "What should happen when one task fails?",
+      "How would you retry only safe operations?"
+    ],
+    "exercise": "Write two asyncio tasks using sleep and gather in Python. Then describe where you would add a concurrency limit for 100 requests.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "Python asyncio tasks",
+        "url": "https://docs.python.org/3/library/asyncio-task.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-structured-output",
+    "track": "genai",
+    "slug": "structured-output",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "How would you validate a model-generated tool argument?",
+    "minutes": 8,
+    "lesson": "A schema describes shape and constraints. Valid JSON is not equivalent to a valid command, an authorized action or a correct business decision.",
+    "example": "A syntactically valid refund amount can exceed the user's purchase or refer to another account.",
+    "answer": "I would parse the output as untrusted data, validate required fields, types, bounds and allowed values, then apply business rules and authorization on the server. I would reject unknown tools and prevent the model from choosing arbitrary network destinations. For state-changing actions I would require an appropriate confirmation or approval policy and idempotency. Validation failures should produce a clear error or a bounded correction attempt. I would never execute model-produced source code just because its surrounding JSON passed a schema.",
+    "hints": [
+      "Separate shape validation from authorization.",
+      "Think about a valid but dangerous value."
+    ],
+    "rubric": [
+      "Validates schema and business constraints",
+      "Checks ownership and allowed operations",
+      "Controls side effects and retries"
+    ],
+    "mistakes": [
+      "Treating a tool schema as a sandbox."
+    ],
+    "followUps": [
+      "How would you stop duplicate payments?",
+      "How would you record an audit trail without logging secrets?"
+    ],
+    "exercise": "Define a refund-request schema, then list three inputs that pass its types but must fail business validation.",
+    "tool": "/tools/tool-schema-generator",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-evaluation-baseline",
+    "track": "genai",
+    "slug": "evaluation-baseline",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Evaluation",
+    "title": "How would you know whether a GenAI prototype is improving?",
+    "minutes": 8,
+    "lesson": "A fixed evaluation set makes changes comparable. Useful evaluation includes success criteria and failures, not just impressive demonstrations.",
+    "example": "A chatbot can answer five demos well and still fail on unanswerable or outdated-policy questions.",
+    "answer": "I would define the user task and collect a small representative set of questions with expected evidence or scoring guidance. I would include easy, difficult, ambiguous and unanswerable cases. I would record a baseline, change one component at a time and inspect both aggregate metrics and failure categories. I would track latency and cost as well as answer quality. The development set helps iteration; a separate held-out set reduces overfitting to examples I have already examined.",
+    "hints": [
+      "What counts as a successful answer?",
+      "Keep some questions out of prompt tuning."
+    ],
+    "rubric": [
+      "Defines representative labelled cases",
+      "Separates development and holdout",
+      "Tracks quality, latency and cost"
+    ],
+    "mistakes": [
+      "Declaring improvement from one attractive answer."
+    ],
+    "followUps": [
+      "What would you do if average quality rises but safety cases worsen?",
+      "How do you version an evaluation set?"
+    ],
+    "exercise": "Create six evaluation cases for a returns-policy assistant, including two it should refuse to answer from missing evidence.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metrics reference",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-genai-vs-ml",
+    "track": "genai",
+    "slug": "genai-vs-ml",
+    "level": "foundation",
+    "round": "behavioural",
+    "topic": "Engineering judgement",
+    "title": "Why GenAI over classical ML?",
+    "minutes": 7,
+    "lesson": "Choose a method for the task and constraints, rather than assuming a newer model is automatically better. Rules and classical models remain useful baselines.",
+    "example": "A fixed numerical risk score and an open-ended document explanation have different requirements.",
+    "answer": "I would clarify the input, desired output, error cost and operational constraints first. Generative models can help with open-ended language tasks, but bring variability, latency and evaluation challenges. A rule, search query or supervised model may be cheaper and easier to validate for a narrow structured task. I would build a baseline and compare it with GenAI using task-specific evidence. In an interview I would explain one concrete decision and acknowledge alternatives rather than claiming GenAI should replace every existing ML system.",
+    "hints": [
+      "Start with task shape and error consequences.",
+      "Name a simpler baseline."
+    ],
+    "rubric": [
+      "Explains a task-specific reason",
+      "Compares simpler alternatives",
+      "Defines evidence that could change the decision"
+    ],
+    "mistakes": [
+      "Choosing GenAI only because it is popular."
+    ],
+    "followUps": [
+      "When would you remove the LLM entirely?",
+      "How would you estimate operating cost before launch?"
+    ],
+    "exercise": "Compare three possible solutions for ticket routing and free-text policy explanation.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-rag-pipeline",
+    "track": "genai",
+    "slug": "rag-pipeline",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "RAG architecture",
+    "title": "Walk me through your RAG pipeline end to end.",
+    "minutes": 10,
+    "lesson": "Separate the offline ingestion/indexing path from the online retrieval/answer path. Include failure handling and evidence at each boundary.",
+    "example": "A policy assistant ingests versioned documents and returns answers linked to passages the user is allowed to read.",
+    "answer": "I would start with the use case, data sources and access constraints. Offline, I would parse and clean documents, preserve structure and provenance, chunk them, compute embeddings and build searchable indexes. Online, I would authorize the user, retrieve and optionally rerank candidate evidence, build a bounded prompt and generate an answer with traceable citations. I would validate source links, handle missing evidence and capture redacted quality and latency signals. I would then discuss evaluation, freshness and failure recovery. If this is a prototype, I would say so instead of inventing production scale.",
+    "hints": [
+      "Draw two paths before naming libraries.",
+      "Where are permissions enforced?"
+    ],
+    "rubric": [
+      "Covers ingestion and online paths",
+      "Includes provenance, freshness and permissions",
+      "Explains evaluation and failure behavior"
+    ],
+    "mistakes": [
+      "Listing libraries without explaining data flow or ownership."
+    ],
+    "followUps": [
+      "How would you remove a deleted document from retrieval?",
+      "Which stage would you inspect after an unsupported answer?"
+    ],
+    "exercise": "Sketch your own pipeline and label every boundary, stored artifact and failure path.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-validate-chunking",
+    "track": "genai",
+    "slug": "validate-chunking",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Chunking",
+    "title": "How did you validate chunk size and overlap?",
+    "minutes": 10,
+    "lesson": "Treat chunking as an experiment with a frozen corpus and query set. Change one factor while keeping the rest of the retrieval configuration comparable.",
+    "example": "Compare a heading-aware splitter with two token sizes while keeping embeddings and test questions fixed.",
+    "answer": "I would identify answer-bearing passages for representative queries, then test candidate chunk sizes and overlaps with the same corpus, embedding model and retrieval budget. I would measure retrieval coverage and ranking, end-to-end answer quality, duplicate context, tokens and latency. I would inspect boundary failures and results by document type. I would select a setting using these trade-offs and confirm it on held-out queries. If I have not run that experiment, I would describe the experiment I would run rather than manufacture results.",
+    "hints": [
+      "What changes and what stays fixed?",
+      "Measure duplicated context as well as quality."
+    ],
+    "rubric": [
+      "Controls confounding variables",
+      "Measures retrieval and answer quality",
+      "Uses held-out cases and error analysis"
+    ],
+    "mistakes": [
+      "Reporting a size as optimal without a dataset or comparison."
+    ],
+    "followUps": [
+      "What if long policy documents and short FAQs prefer different sizes?",
+      "How would overlap affect the prompt budget?"
+    ],
+    "exercise": "Record results for three splitter settings and explain one failure each.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "Ragas metrics reference",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      },
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-exact-product-codes",
+    "track": "genai",
+    "slug": "exact-product-codes",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Retrieval",
+    "title": "Why does dense retrieval fail on exact product codes?",
+    "minutes": 8,
+    "lesson": "Semantic representations are not guaranteed to preserve exact character identity. An identifier lookup and a natural-language similarity search are different problems.",
+    "example": "AX-104 and AX-140 may look similar in language space but refer to different products.",
+    "answer": "I would reproduce the failure with exact, partial and mistyped identifiers. Dense retrieval may rank semantically similar passages while missing a rare code. I would normalize identifiers carefully, preserve them in indexed fields and combine exact or lexical retrieval with semantic candidates. A structured lookup can take priority when the query clearly contains a code. I would evaluate identifier accuracy separately and avoid normalization that merges distinct products. A reranker may help relevance, but it is not a substitute for exact identity checks.",
+    "hints": [
+      "What must match literally?",
+      "Normalization can also destroy meaning."
+    ],
+    "rubric": [
+      "Explains semantic versus exact matching",
+      "Proposes lexical/structured fallback",
+      "Tests near-identical identifiers separately"
+    ],
+    "mistakes": [
+      "Solving every exact-match failure by increasing vector top-k."
+    ],
+    "followUps": [
+      "How would you handle a code that is also a normal word?",
+      "When would fuzzy matching be unsafe?"
+    ],
+    "exercise": "Create three almost identical product codes and design a retrieval test that must distinguish them.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-bi-cross-encoder",
+    "track": "genai",
+    "slug": "bi-cross-encoder",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Retrieval",
+    "title": "Bi-encoder vs cross-encoder: what's the reranker latency cost?",
+    "minutes": 9,
+    "lesson": "A bi-encoder separately represents queries and documents, allowing indexed retrieval. A cross-encoder scores a query-document pair together and is often used on a smaller candidate set.",
+    "example": "Retrieve 30 candidates with an index, then rerank only those before sending a few passages to the generator.",
+    "answer": "I would explain why document embeddings can be precomputed for a bi-encoder, while a cross-encoder generally performs additional query-passage inference. The reranker cost depends on candidate count, sequence length, model, hardware and batching. I would measure p50 and p95 latency and quality under representative load instead of quoting a universal millisecond figure. I would compare a smaller candidate set, a smaller reranker or skipping reranking for exact lookups. The final decision is whether its measured quality gain justifies the added latency and cost.",
+    "hints": [
+      "Separate candidate retrieval from pair scoring.",
+      "Avoid a universal speed claim."
+    ],
+    "rubric": [
+      "Explains independent versus joint scoring",
+      "Identifies measurable latency drivers",
+      "Evaluates quality against a latency budget"
+    ],
+    "mistakes": [
+      "Claiming every reranker has the same latency."
+    ],
+    "followUps": [
+      "How would you handle a reranker timeout?",
+      "How would you choose the candidate count?"
+    ],
+    "exercise": "Draw a retrieval/reranking timeline and allocate a hypothetical latency budget. Label it as an estimate.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-missing-evidence",
+    "track": "genai",
+    "slug": "missing-evidence",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Grounding & safety",
+    "title": "The context doesn't have the answer. How do you stop hallucination?",
+    "minutes": 9,
+    "lesson": "Grounding needs retrieval checks, response constraints and evaluation. No prompt alone guarantees that unsupported claims will disappear.",
+    "example": "A user asks about a refund exception that is not in any authorized policy.",
+    "answer": "I would first distinguish retrieval failure from a genuinely absent answer. I would use calibrated evidence checks, possibly one bounded reformulation or alternate retrieval path, then ask for clarification or abstain when support is still missing. The generation instruction would require evidence-backed answers and make refusal acceptable. I would verify citations against the actual passages and evaluate unsupported-answer and false-refusal rates on separate cases. I would also design a useful escalation path rather than returning a confident guess or an endless retrieval loop.",
+    "hints": [
+      "An abstention is sometimes the correct outcome.",
+      "Measure false refusals too."
+    ],
+    "rubric": [
+      "Separates absent evidence from missed retrieval",
+      "Defines bounded fallback and abstention",
+      "Evaluates unsupported answers and false refusals"
+    ],
+    "mistakes": [
+      "Saying temperature zero eliminates hallucination."
+    ],
+    "followUps": [
+      "How would you check whether a citation supports a claim?",
+      "What if the document itself is wrong?"
+    ],
+    "exercise": "Write one answerable question and one unanswerable question for the same document. Draft the expected responses.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "Ragas metrics reference",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      },
+      {
+        "title": "RAG learning lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-rag-metrics",
+    "track": "genai",
+    "slug": "rag-metrics",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Evaluation",
+    "title": "Define faithfulness, answer relevance and context precision.",
+    "minutes": 10,
+    "lesson": "These metrics ask different questions about generation and retrieval. Their operational definitions depend on the evaluator, so state the implementation you use.",
+    "example": "An answer can faithfully repeat an irrelevant passage, or answer the question while adding an unsupported claim.",
+    "answer": "Faithfulness asks whether the answer's claims are supported by retrieved evidence; it is not a guarantee that the source is true. Answer relevance asks whether the response addresses the user's question. Context precision concerns the usefulness and, in rank-aware implementations such as Ragas, ordering of retrieved passages. I would distinguish it from context recall and cite the metric variant I used. I would inspect examples and human agreement because automated scores depend on models, prompts and references. I would not reduce all three metrics to one generic accuracy number.",
+    "hints": [
+      "One metric concerns claims, one the question and one retrieval.",
+      "Check whether ranking affects the implementation."
+    ],
+    "rubric": [
+      "Separates all three concepts",
+      "Distinguishes faithfulness from source truth",
+      "Names evaluator limitations and metric variants"
+    ],
+    "mistakes": [
+      "Treating context precision and context recall as interchangeable."
+    ],
+    "followUps": [
+      "Can an answer be relevant but unfaithful?",
+      "What labels would a context-precision evaluation need?"
+    ],
+    "exercise": "Create examples where each of the three metrics fails independently.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metrics reference",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-support-eval-pipeline",
+    "track": "genai",
+    "slug": "support-eval-pipeline",
+    "level": "practitioner",
+    "round": "system-design",
+    "topic": "Evaluation",
+    "title": "Design an eval pipeline for a customer-support RAG assistant.",
+    "minutes": 15,
+    "lesson": "An evaluation pipeline should identify where quality fails and block harmful regressions. Use stage-level diagnostics as well as an end-to-end view.",
+    "example": "A new retriever improves FAQ answers while returning outdated cancellation policies for a small customer group.",
+    "answer": "I would define support tasks and critical failures, then version representative queries, references, document snapshots and access labels. I would evaluate retrieval coverage, grounded answer quality, correct abstention and permission leakage separately. Deterministic checks would validate required fields and source IDs; calibrated human and model judgements would assess open-ended answers. I would compare changes on the same cases, review regressions by segment and enforce release gates for critical behavior. Latency, cost and redacted production feedback complete the loop. I would keep a held-out set and monitor dataset drift.",
+    "hints": [
+      "Which failures must block a release?",
+      "Separate retriever failures from generator failures."
+    ],
+    "rubric": [
+      "Defines versioned and representative evaluation data",
+      "Uses stage-level metrics and human calibration",
+      "Includes gates, slices and monitoring"
+    ],
+    "mistakes": [
+      "Relying only on an average judge score."
+    ],
+    "followUps": [
+      "How would you label an ambiguous customer question?",
+      "How do you avoid leaking private tickets into logs?"
+    ],
+    "exercise": "Write a six-case evaluation matrix with expected evidence, refusal behavior and a release-blocking case.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metrics reference",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-agents-and-workflows",
+    "track": "genai",
+    "slug": "agents-and-workflows",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Agents",
+    "title": "When would you choose an agent over a fixed workflow?",
+    "minutes": 10,
+    "lesson": "A fixed workflow has prescribed transitions. An agent can select actions dynamically, increasing flexibility and the need for controls and evaluation.",
+    "example": "A document summary has predictable steps; investigating an unfamiliar support incident may require conditional tool use.",
+    "answer": "I would start with the simplest workflow that can solve the task. I would introduce dynamic tool selection only if it produces a measurable benefit on tasks with genuinely variable steps. I would bound the number of steps, allowed tools, time and spend, keep state transitions observable and require authorization for side effects. I would evaluate task completion, invalid actions and recovery, not just answer fluency. If a fixed workflow is more predictable and cheaper, I would keep it. An agent label is not itself a product requirement.",
+    "hints": [
+      "Which decisions really need to be dynamic?",
+      "A loop needs an explicit stopping rule."
+    ],
+    "rubric": [
+      "Compares a fixed baseline",
+      "Bounds actions and resources",
+      "Evaluates task outcomes and recovery"
+    ],
+    "mistakes": [
+      "Giving a model unrestricted shell or database access for convenience."
+    ],
+    "followUps": [
+      "How would you detect a repeated-action loop?",
+      "Which actions need a human decision?"
+    ],
+    "exercise": "Design a support workflow and identify the single step, if any, that benefits from dynamic tool selection.",
+    "tool": "/tools/tool-schema-generator",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-production-failure",
+    "track": "genai",
+    "slug": "production-failure",
+    "level": "practitioner",
+    "round": "behavioural",
+    "topic": "Project defence",
+    "title": "Tell me about a production or demo failure.",
+    "minutes": 8,
+    "lesson": "A strong incident story shows your specific responsibility, evidence and learning. A demo failure is a valid example when described honestly.",
+    "example": "A prototype answered from an obsolete document after an indexing update silently failed.",
+    "answer": "I would describe the situation and user impact, identify my responsibility and explain the signals that helped isolate the failure. I would distinguish the immediate mitigation from the root fix and state how I checked recovery. I would finish with prevention and what I would change next time. If this happened only in a demo, I would say so and avoid invented production metrics. A convincing answer includes a concrete decision I made, a limitation I discovered and evidence that the corrective action worked.",
+    "hints": [
+      "Separate mitigation, cause and prevention.",
+      "Use your own actions, not only the team's actions."
+    ],
+    "rubric": [
+      "Describes scope and personal ownership",
+      "Explains diagnosis and recovery evidence",
+      "Shows prevention and honest limitations"
+    ],
+    "mistakes": [
+      "Blaming a provider without explaining your own controls."
+    ],
+    "followUps": [
+      "What did you communicate while the incident was active?",
+      "How would you detect recurrence earlier?"
+    ],
+    "exercise": "Write a real incident using Situation, Task, Action, Result and Learning. Mark every claim you can support with evidence.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-notice-and-expectations",
+    "track": "genai",
+    "slug": "notice-and-expectations",
+    "level": "practitioner",
+    "round": "behavioural",
+    "topic": "Career communication",
+    "title": "Notice period and expectations.",
+    "minutes": 5,
+    "lesson": "Logistics questions call for clear factual communication. Compensation discussion should reflect the role, location and your own situation, not fabricated competing offers.",
+    "example": "A candidate has a contractual notice period but cannot promise an earlier release until their employer agrees.",
+    "answer": "I would state my actual notice period, the earliest confirmed start date and whether any flexibility is still unconfirmed. I would ask about the role's scope and compensation range before discussing my own expectations where appropriate. I would distinguish fixed and variable components and explain any constraints plainly. I would not promise a joining date I cannot control or invent another offer. If I need time to review terms, I would say when I can respond and keep the discussion professional.",
+    "hints": [
+      "What is confirmed and what is negotiable?",
+      "Keep the answer concise and factual."
+    ],
+    "rubric": [
+      "Gives truthful notice and availability",
+      "Clarifies expectations and components",
+      "Avoids unsupported commitments"
+    ],
+    "mistakes": [
+      "Claiming immediate availability before obtaining a release."
+    ],
+    "followUps": [
+      "What would you say if asked to start earlier?",
+      "Which role details would affect your expectations?"
+    ],
+    "exercise": "Draft a 45-second factual answer with placeholders for your actual dates and expectations.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-llm-judge-reliability",
+    "track": "genai",
+    "slug": "llm-judge-reliability",
+    "level": "senior",
+    "round": "deep-dive",
+    "topic": "Evaluation",
+    "title": "How reliable is LLM-as-a-judge? Position bias, verbosity bias, human agreement.",
+    "minutes": 12,
+    "lesson": "A model judge is a measurement instrument that needs calibration. Agreement measured in one study does not guarantee reliability for your task or language.",
+    "example": "Two equally correct answers can receive different preferences after their display order is swapped.",
+    "answer": "I would define a task-specific rubric and compare judge decisions with independently labelled human examples. I would test answer-order swaps, irrelevant verbosity, repeated runs and difficult factual cases. I would blind model identities where possible and version the judge model and prompt. I would measure agreement and inspect disagreements by category rather than importing a published agreement number as a guarantee. High-impact or ambiguous cases need human review. The judge can scale evaluation, but it should not be the sole gate for correctness or sensitive decisions.",
+    "hints": [
+      "What happens when you swap A and B?",
+      "Agreement is task-dependent."
+    ],
+    "rubric": [
+      "Tests position and verbosity biases",
+      "Calibrates against human labels",
+      "Versions the judge and escalates high-impact cases"
+    ],
+    "mistakes": [
+      "Treating a model judge as objective ground truth."
+    ],
+    "followUps": [
+      "How would you resolve human disagreement?",
+      "Could the judge be manipulated by text inside an answer?"
+    ],
+    "exercise": "Write a judge rubric and two answer pairs: one with order bias risk and one with irrelevant verbosity.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "LLM-as-a-judge research",
+        "url": "https://arxiv.org/abs/2306.05685"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-two-point-gain",
+    "track": "genai",
+    "slug": "two-point-gain",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Statistical reasoning",
+    "title": "A 2-point gain on a 200-question eval set. Statistically real or luck?",
+    "minutes": 12,
+    "lesson": "Aggregate improvement alone is insufficient. The metric, paired outcomes, sampling design and repeated comparisons determine the uncertainty analysis.",
+    "example": "For binary accuracy, a two-percentage-point improvement is a net four additional correct answers out of 200, not proof of significance.",
+    "answer": "I would first clarify whether two points means percentage points or a score change. For the same 200 questions, I would keep paired outcomes and inspect wins and regressions. For binary correctness, a paired test such as McNemar's uses discordant pairs; for a mean score difference, a suitable paired bootstrap can estimate uncertainty. If cases are clustered, I would preserve that dependence when resampling. I would report effect size, an interval, slice regressions and practical value. I would account for repeated tuning and validate on held-out data before declaring a real improvement.",
+    "hints": [
+      "How many cases improved and how many regressed?",
+      "Preserve the pairing when estimating uncertainty."
+    ],
+    "rubric": [
+      "Clarifies metric and effect size",
+      "Uses paired outcomes and appropriate uncertainty",
+      "Considers dependence, repeated tests and practical impact"
+    ],
+    "mistakes": [
+      "Declaring significance from the net improvement alone."
+    ],
+    "followUps": [
+      "Why can two experiments with the same net gain have different uncertainty?",
+      "What would additional data resolve?"
+    ],
+    "exercise": "Build two fictional win/loss tables with the same net gain of four and explain why the missing paired information matters.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Paired bootstrap reference",
+        "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.bootstrap.html"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-tenant-isolation",
+    "track": "genai",
+    "slug": "tenant-isolation",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Security & architecture",
+    "title": "How would you prevent cross-customer document leakage in RAG?",
+    "minutes": 15,
+    "lesson": "Authorization must constrain retrieval and every downstream store or cache. A prompt that asks a model to respect tenancy is not an access-control system.",
+    "example": "A support user must never retrieve another company's internal contract even if it is the closest semantic match.",
+    "answer": "I would establish identity and tenant membership before retrieval, apply server-enforced filters and verify document permissions again before returning evidence. I would isolate caches, conversation state and indexes according to the risk model, and test malicious identifiers and stale memberships. Citations and logs can leak data too, so I would minimize them and enforce access on source downloads. I would evaluate cross-tenant negative tests as release blockers. The model would receive only authorized content; it would not decide which tenant the user may access.",
+    "hints": [
+      "List every location where document text can appear.",
+      "Caches need ownership boundaries too."
+    ],
+    "rubric": [
+      "Enforces permissions before model context",
+      "Includes caches, citations and logs",
+      "Defines cross-tenant negative tests"
+    ],
+    "mistakes": [
+      "Relying on a tenant name in the prompt."
+    ],
+    "followUps": [
+      "How would you revoke access after a role change?",
+      "What could a shared response cache leak?"
+    ],
+    "exercise": "Draw data boundaries for two tenants and write five cross-tenant requests that must fail.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-latency-cost-budget",
+    "track": "genai",
+    "slug": "latency-cost-budget",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Performance",
+    "title": "How would you reduce RAG latency without hiding a quality regression?",
+    "minutes": 12,
+    "lesson": "End-to-end latency includes retrieval, reranking, prompt processing and generation. Optimizing one stage can shift cost or harm answer quality elsewhere.",
+    "example": "Removing the reranker makes a demo faster but may increase irrelevant evidence on difficult queries.",
+    "answer": "I would instrument stage timings and establish p50 and p95 targets under representative load. I would inspect prompt size, candidate count, model selection, network time and output length. I would evaluate options such as bounded context, parallel independent retrieval and safe caching with correct authorization and freshness keys. Streaming can improve perceived responsiveness without reducing completion time. Each change would be tested on a fixed quality set and realistic traffic. I would report the measured trade-off and retain a fallback when a dependency exceeds its budget.",
+    "hints": [
+      "Separate first-token time from completion time.",
+      "What is your safe cache key?"
+    ],
+    "rubric": [
+      "Measures stage and tail latency",
+      "Protects quality and authorization",
+      "Distinguishes perceived speed from total work"
+    ],
+    "mistakes": [
+      "Claiming streaming makes the underlying model compute less."
+    ],
+    "followUps": [
+      "Which queries should bypass a cache?",
+      "How would you stop retries from amplifying an outage?"
+    ],
+    "exercise": "Create a hypothetical latency budget and identify the first experiment you would run.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-tool-side-effects",
+    "track": "genai",
+    "slug": "tool-side-effects",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Agents",
+    "title": "How would you safely let an assistant initiate a refund?",
+    "minutes": 15,
+    "lesson": "A language model can propose a command, but the application owns authorization, validation and execution. Side effects need a deliberate failure and duplicate-handling design.",
+    "example": "A client retry after a timeout must not refund the same order twice.",
+    "answer": "I would separate proposal, authorization and execution. The backend would verify identity, order ownership, eligibility and amount, then apply the product's confirmation policy. I would use an idempotency key and transactional state transition for execution, recording a minimal audit trail. Tool responses would report the actual state rather than let the model assume success. Timeouts would trigger a status check, not blind duplicate execution. I would restrict tools and destinations and test adversarial instructions in both user messages and retrieved documents.",
+    "hints": [
+      "What happens if execution succeeds but the response is lost?",
+      "The model never grants permissions."
+    ],
+    "rubric": [
+      "Separates proposal and execution",
+      "Uses authorization and idempotency",
+      "Handles uncertain outcomes and audit evidence"
+    ],
+    "mistakes": [
+      "Retrying a payment-changing action without checking its state."
+    ],
+    "followUps": [
+      "How would you support a human approval step?",
+      "What should the user see while the outcome is uncertain?"
+    ],
+    "exercise": "Design a refund state machine with proposed, approved, executing, succeeded and failed states.",
+    "tool": "/tools/tool-schema-generator",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-prompt-injection",
+    "track": "genai",
+    "slug": "prompt-injection",
+    "level": "senior",
+    "round": "deep-dive",
+    "topic": "Grounding & safety",
+    "title": "A retrieved document says to reveal secrets. What should happen?",
+    "minutes": 12,
+    "lesson": "Retrieved documents are untrusted input. Model instructions cannot replace permission boundaries, restricted tools or secret management.",
+    "example": "A malicious PDF includes instructions to send the conversation to an attacker-controlled URL.",
+    "answer": "I would keep secrets and unauthorized documents out of the model context and prevent arbitrary tool destinations. I would label retrieved material as data, constrain output and tool schemas, and apply deterministic authorization before any action. Detection and filtering can help, but I would not promise complete prevention from a keyword filter. I would test indirect injections, attempted exfiltration and misleading citations. Logging would avoid sensitive payloads, and the assistant would fail safely when an action cannot be justified by the user's authorized task.",
+    "hints": [
+      "What could the model access even if fooled?",
+      "Defend execution, not only wording."
+    ],
+    "rubric": [
+      "Treats retrieval as untrusted",
+      "Limits data and tool access deterministically",
+      "Tests indirect injection and exfiltration paths"
+    ],
+    "mistakes": [
+      "Putting API keys in a system prompt and asking the model not to reveal them."
+    ],
+    "followUps": [
+      "How could a tool response contain an injection?",
+      "Which controls still hold if the model follows it?"
+    ],
+    "exercise": "Threat-model one malicious document and list controls outside the model that stop data leaving the system.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-safe-rollout",
+    "track": "genai",
+    "slug": "safe-rollout",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Operations",
+    "title": "How would you release a new prompt or model safely?",
+    "minutes": 12,
+    "lesson": "A prompt or model change is a behavior change. Deployment needs repeatable evaluation and a way to revert the exact version.",
+    "example": "A new model improves summaries but breaks a structured field consumed by the support workflow.",
+    "answer": "I would version the prompt, model identifier, schema and retrieval settings together, run regression and security evaluations and compare latency and cost. I would review critical failures before rollout, then use a controlled canary with explicit stop criteria and minimal data logging. I would track schema violations, unsupported answers and user-visible errors, with a rollback to a known configuration. Shadow tests must respect data permissions and provider terms. I would not treat an alias update or a successful smoke test as proof of unchanged production behavior.",
+    "hints": [
+      "What exact artifact can you roll back?",
+      "Which signal stops the rollout?"
+    ],
+    "rubric": [
+      "Versions the complete behavior configuration",
+      "Uses regression gates and a controlled rollout",
+      "Defines monitoring and rollback criteria"
+    ],
+    "mistakes": [
+      "Switching all traffic to a new model after one demo."
+    ],
+    "followUps": [
+      "How would you detect a provider alias changing?",
+      "What would you do if rollback also fails?"
+    ],
+    "exercise": "Draft a release checklist with three measurable stop conditions and one rollback procedure.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-freshness-drift",
+    "track": "genai",
+    "slug": "freshness-drift",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Operations",
+    "title": "How would you detect stale knowledge and evaluation drift?",
+    "minutes": 12,
+    "lesson": "Documents, user queries and model behavior all change. Index freshness and evaluation representativeness are separate maintenance responsibilities.",
+    "example": "A policy update is in storage but the index still retrieves its superseded version.",
+    "answer": "I would store source IDs, versions and ingestion timestamps, monitor ingestion failures and verify updates and deletions end to end. Retrieval would prefer valid current evidence while retaining provenance for debugging. I would also sample new query categories and failures to improve a versioned evaluation set without repeatedly tuning to the holdout. I would watch changes in abstention, retrieval coverage and user segments. An index being recently rebuilt does not mean the underlying documents are current or the evaluation still represents today's users.",
+    "hints": [
+      "Separate source freshness from index freshness.",
+      "A healthy ingestion job can still index obsolete data."
+    ],
+    "rubric": [
+      "Tracks source versions and update/delete propagation",
+      "Monitors changing user query patterns",
+      "Maintains evaluation holdout discipline"
+    ],
+    "mistakes": [
+      "Equating a recent deployment timestamp with current knowledge."
+    ],
+    "followUps": [
+      "How would you handle conflicting policy versions?",
+      "When should old evaluation cases remain?"
+    ],
+    "exercise": "Design a freshness dashboard with source age, failed ingestions, stale-version retrieval and newly observed query categories.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metrics reference",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-two-year-direction",
+    "track": "genai",
+    "slug": "two-year-direction",
+    "level": "senior",
+    "round": "behavioural",
+    "topic": "Career communication",
+    "title": "Where do you see yourself in 2 years?",
+    "minutes": 7,
+    "lesson": "A credible career answer connects your interests with demonstrated progress and the role's needs. It need not promise a title you cannot control.",
+    "example": "An experienced frontend developer is learning Python and building a small evaluated RAG project.",
+    "answer": "I would explain the responsibilities I want to become capable of owning, the skills I am currently developing and how this role fits that direction. For a transition into GenAI, I would distinguish my existing engineering strengths from areas where I am still learning. I would give concrete near-term actions such as building an evaluated prototype and improving backend and deployment skills. I would avoid claiming existing production AI expertise that I do not have, and leave room for the company's actual opportunities and expectations.",
+    "hints": [
+      "Connect existing strengths to the next capability.",
+      "Use learning evidence, not only ambition."
+    ],
+    "rubric": [
+      "Gives a concrete learning direction",
+      "Separates existing and developing expertise",
+      "Connects goals to the role's responsibilities"
+    ],
+    "mistakes": [
+      "Promising senior AI leadership without evidence of applied work."
+    ],
+    "followUps": [
+      "What have you already built toward that goal?",
+      "Which skill gap would you address first?"
+    ],
+    "exercise": "Draft a truthful 60-second answer using one current strength, one gap and one project you will use as evidence.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      }
+    ],
+    "origin": "User-provided interview topic"
+  },
+  {
+    "id": "genai-defend-your-project",
+    "track": "genai",
+    "slug": "defend-your-project",
+    "level": "senior",
+    "round": "behavioural",
+    "topic": "Project defence",
+    "title": "Defend your own GenAI project to a skeptical interviewer.",
+    "minutes": 12,
+    "lesson": "Project depth comes from explaining requirements, alternatives, evidence and limitations. Naming a framework is not the same as understanding the system it assembled.",
+    "example": "A personal RAG prototype can be discussed deeply without pretending it serves production customers.",
+    "answer": "I would state the user problem, the project's real maturity and exactly what I implemented. I would trace one request, explain a difficult decision and compare an alternative I rejected. I would describe the evaluation I actually ran, one observed failure and the next experiment I would prioritize. For performance or accuracy claims I would identify the dataset, environment and measurement. If a component was copied from a tutorial, I would explain what I changed and what I still need to understand. Honest boundaries make the discussion more credible.",
+    "hints": [
+      "Trace one request rather than listing features.",
+      "Separate observed results from future plans."
+    ],
+    "rubric": [
+      "Explains personal ownership and architecture",
+      "Defends a decision with evidence",
+      "States limitations and next experiments"
+    ],
+    "mistakes": [
+      "Presenting a demo as a production system or inventing users and metrics."
+    ],
+    "followUps": [
+      "Which component could you rebuild without the framework?",
+      "What would fail first if usage grew?"
+    ],
+    "exercise": "Complete the project-defence worksheet, then answer its hardest follow-up without looking at the reference.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      },
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-closures",
+    "track": "frontend",
+    "slug": "closures",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "JavaScript",
+    "title": "What is a closure, and where does it cause UI bugs?",
+    "minutes": 7,
+    "lesson": "A function retains access to its lexical environment. In UI code, the important question is which value a callback observes when it eventually runs.",
+    "example": "An event handler schedules a timeout and the user changes state before that timeout fires.",
+    "answer": "I would explain a closure with a small function that returns another function using an outer variable. In React, an event handler belongs to a render and can observe that render's state snapshot later. I would identify whether the task needs the captured value, a functional state update or an explicitly maintained current reference. I would not call every delayed callback a bug: sometimes capturing the value at the moment of the click is intentional. I would reproduce the timing behavior before choosing a fix.",
+    "hints": [
+      "Ask which render created the callback.",
+      "Captured values can be intentional."
+    ],
+    "rubric": [
+      "Explains lexical scope",
+      "Connects timing to a concrete example",
+      "Chooses a fix based on intended behavior"
+    ],
+    "mistakes": [
+      "Saying a closure always contains the latest React state."
+    ],
+    "followUps": [
+      "How does a functional updater help an increment?",
+      "When would a ref hide a design mistake?"
+    ],
+    "exercise": "Write a closure-based counter in JavaScript, then predict a timeout's output before running it.",
+    "tool": "/tools/javascript",
+    "sources": [
+      {
+        "title": "MDN JavaScript guide",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+      },
+      {
+        "title": "React state snapshots",
+        "url": "https://react.dev/learn/state-as-a-snapshot"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-state-snapshot",
+    "track": "frontend",
+    "slug": "state-snapshot",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "React",
+    "title": "Why do three setCount(count + 1) calls not always add three?",
+    "minutes": 7,
+    "lesson": "State reads belong to a render snapshot. Queued replacement updates and functional updater functions represent different operations.",
+    "example": "Starting at zero, three count + 1 replacements from the same handler request the same next value.",
+    "answer": "I would distinguish reading state from scheduling an update. Each expression count + 1 uses the handler's existing snapshot, so repeating that replacement does not describe three successive increments. When the next value depends on the previous pending value, I would use setCount(value => value + 1). React can apply these updater functions in sequence. I would keep the updater pure and avoid side effects inside it. I would also test mixed replacements and updater functions instead of assuming every sequence behaves identically.",
+    "hints": [
+      "Evaluate each expression using the same current count.",
+      "An updater describes a transformation."
+    ],
+    "rubric": [
+      "Explains snapshot and queued updates",
+      "Uses a pure functional updater",
+      "Predicts the specific result before running"
+    ],
+    "mistakes": [
+      "Treating setState as an immediate variable assignment."
+    ],
+    "followUps": [
+      "What happens if an updater follows a replacement?",
+      "Why should updater functions be pure?"
+    ],
+    "exercise": "Start at zero and compare three replacement updates with three functional updates. Explain both outputs.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React state snapshots",
+        "url": "https://react.dev/learn/state-as-a-snapshot"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-immutable-updates",
+    "track": "frontend",
+    "slug": "immutable-updates",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "React",
+    "title": "How would you update one nested object without changing its siblings?",
+    "minutes": 8,
+    "lesson": "Immutability requires copying the changed path, not only the top-level object. Stable unchanged references can also help avoid unnecessary work.",
+    "example": "Rename passenger 2 in an array while preserving every other passenger and nested field.",
+    "answer": "I would use a functional state update, map the array and copy only the matching item. For a nested address change I would copy the parent object and that address before changing the field. I would preserve unrelated properties with spreads at the correct level and avoid mutating the original object. A shallow copy does not protect deeper values by itself. For complex updates I would consider a reducer or an immutability helper, while still testing the expected before and after data.",
+    "hints": [
+      "Copy each changed ancestor.",
+      "Match by a stable identifier."
+    ],
+    "rubric": [
+      "Updates only the intended item",
+      "Copies the complete changed path",
+      "Preserves unrelated values and references"
+    ],
+    "mistakes": [
+      "Spreading the entire parent into a nested address.",
+      "Comparing an object directly with an ID."
+    ],
+    "followUps": [
+      "What happens if the ID is missing?",
+      "When would a reducer improve clarity?"
+    ],
+    "exercise": "Rename one passenger with map, then update only their address pin. Check that the other passenger remains identical.",
+    "tool": "/tools/javascript",
+    "sources": [
+      {
+        "title": "React learning reference",
+        "url": "https://react.dev/learn"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-list-keys",
+    "track": "frontend",
+    "slug": "list-keys",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "React",
+    "title": "Why can an array-index key break an editable list?",
+    "minutes": 7,
+    "lesson": "Keys identify sibling elements between renders. A key tied to position can associate state with a different item after insertion or reordering.",
+    "example": "Insert a passenger above a row containing a partially edited name.",
+    "answer": "I would use an item's stable identity as its key, particularly when rows contain input state or can move. An array index identifies a position, so after insertion React may preserve the row instance for the wrong logical item. I would reproduce the bug by editing a row and reordering the list. I would also avoid generating random keys during rendering because that causes remounts and lost state. Keys are scoped to siblings and are not automatically passed as ordinary component props.",
+    "hints": [
+      "What should stay attached to an item after reordering?",
+      "A new random key forces a different identity."
+    ],
+    "rubric": [
+      "Connects keys to element identity",
+      "Explains insertion/reordering failure",
+      "Chooses a stable domain ID"
+    ],
+    "mistakes": [
+      "Using Math.random() as a render-time key."
+    ],
+    "followUps": [
+      "When might an index be acceptable?",
+      "Why would changing a key deliberately reset a form?"
+    ],
+    "exercise": "Build a three-row editable list and compare index keys with stable IDs after moving a row.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React learning reference",
+        "url": "https://react.dev/learn"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-effects",
+    "track": "frontend",
+    "slug": "effects",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "React",
+    "title": "When should you use an Effect rather than derive a value during render?",
+    "minutes": 8,
+    "lesson": "Effects synchronize a component with external systems. Values computed purely from current props and state usually do not need another state variable and an Effect.",
+    "example": "A full name can be derived from two input fields; a subscription needs setup and cleanup.",
+    "answer": "I would first ask whether any external system needs synchronization. A filtered list or full name can usually be derived directly, avoiding an extra render and inconsistent duplicated state. A subscription, timer or imperative widget may need an Effect with correct dependencies and cleanup. I would keep event-triggered work in the event handler where appropriate. I would not remove dependencies just to suppress reruns; I would restructure the code and test mount, dependency changes and unmount behavior.",
+    "hints": [
+      "Is there an external system?",
+      "What resource must cleanup release?"
+    ],
+    "rubric": [
+      "Distinguishes derivation from synchronization",
+      "Uses dependencies and cleanup correctly",
+      "Explains where event-driven work belongs"
+    ],
+    "mistakes": [
+      "Using an Effect to copy props into state without a requirement."
+    ],
+    "followUps": [
+      "Why does development mode expose missing cleanup?",
+      "How would you test subscription cleanup?"
+    ],
+    "exercise": "Replace a derived-state Effect with a render calculation, then implement a timer with cleanup.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React effect reference",
+        "url": "https://react.dev/reference/react/useEffect"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-typescript-boundaries",
+    "track": "frontend",
+    "slug": "typescript-boundaries",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "TypeScript",
+    "title": "Does a TypeScript interface validate an API response?",
+    "minutes": 8,
+    "lesson": "Type annotations help at compile time but do not inspect network bytes at runtime. Unknown external data needs explicit validation or narrowing.",
+    "example": "A response typed as User can still contain a missing email or an unexpected null.",
+    "answer": "I would receive untrusted data as unknown and validate the required shape before treating it as a domain object. A schema library or explicit guards can check types, required fields and useful business constraints. I would distinguish an assertion from validation: as User changes the compiler's view but does not repair or verify the value. I would handle malformed responses deliberately and keep optional and nullable fields clear. This also gives the UI a trustworthy error path instead of crashing deep inside rendering.",
+    "hints": [
+      "What code runs when you write as User?",
+      "Check null and missing fields."
+    ],
+    "rubric": [
+      "Distinguishes compile-time and runtime guarantees",
+      "Narrows or validates unknown data",
+      "Defines a malformed-response path"
+    ],
+    "mistakes": [
+      "Using any or a type assertion to hide an unvalidated boundary."
+    ],
+    "followUps": [
+      "What can a discriminated union represent?",
+      "Where would you place shared response validation?"
+    ],
+    "exercise": "Validate a successful and malformed user response without using any or a blind assertion.",
+    "tool": "/tools/typescript",
+    "sources": [
+      {
+        "title": "TypeScript narrowing",
+        "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-accessible-form",
+    "track": "frontend",
+    "slug": "accessible-form",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Accessibility",
+    "title": "What makes a form usable with a keyboard and screen reader?",
+    "minutes": 8,
+    "lesson": "Native semantics, meaningful labels and deliberate focus behavior provide a foundation. Accessibility is part of the interaction design, not a final visual patch.",
+    "example": "A required email field fails validation and the user needs to discover and correct it without a mouse.",
+    "answer": "I would start with native form controls and associated labels, then provide clear required-field and error information. Errors should be connected to the relevant input and announced appropriately without overwhelming the user. I would keep focus visible, preserve logical tab order and avoid keyboard traps. I would test submission, errors and recovery using only a keyboard and then a screen reader. Color alone would not convey a failure, and an icon-only button would need an accessible name.",
+    "hints": [
+      "Can the user identify and fix an error without seeing red?",
+      "Where does focus go after an error?"
+    ],
+    "rubric": [
+      "Uses semantics and associated labels",
+      "Communicates errors and focus predictably",
+      "Describes keyboard and assistive-technology testing"
+    ],
+    "mistakes": [
+      "Replacing buttons with clickable divs without equivalent behavior."
+    ],
+    "followUps": [
+      "How would you make a modal form accessible?",
+      "When is a live region appropriate?"
+    ],
+    "exercise": "Build a labelled email form with a text error message and test every action using the keyboard.",
+    "tool": "/tools/html-css",
+    "sources": [
+      {
+        "title": "MDN accessibility reference",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-responsive-layout",
+    "track": "frontend",
+    "slug": "responsive-layout",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "CSS",
+    "title": "How would you stop a two-column editor overflowing on mobile?",
+    "minutes": 8,
+    "lesson": "Layout containers and their children both need sensible minimum sizes. Long code, controls and fixed dimensions can force a grid wider than the viewport.",
+    "example": "An editor and console fit on desktop but a long unbroken line pushes the mobile page sideways.",
+    "answer": "I would inspect the overflowing element instead of immediately hiding horizontal overflow on the whole page. I would use flexible columns such as minmax(0, 1fr), allow flex or grid children to shrink and put necessary horizontal scrolling inside the code panel. At narrow widths I would stack panels or offer an accessible tab layout. Toolbars should wrap or expose a compact menu. I would verify realistic long text, zoom and touch targets at several widths rather than only one desktop screenshot.",
+    "hints": [
+      "Find the element that establishes the minimum width.",
+      "Some content needs local horizontal scrolling."
+    ],
+    "rubric": [
+      "Diagnoses the source of overflow",
+      "Uses responsive panel and toolbar behavior",
+      "Tests long content and multiple widths"
+    ],
+    "mistakes": [
+      "Hiding all overflow and making controls unreachable."
+    ],
+    "followUps": [
+      "How would you preserve the editor's height?",
+      "When would tabs be better than stacked panes?"
+    ],
+    "exercise": "Create a two-column code/output layout and test 390px, 768px and desktop widths with a very long code line.",
+    "tool": "/tools/html-css",
+    "sources": [
+      {
+        "title": "MDN accessibility reference",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-angular-signals",
+    "track": "frontend",
+    "slug": "angular-signals",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Angular",
+    "title": "How do Angular signal, computed and effect differ?",
+    "minutes": 8,
+    "lesson": "A writable signal holds reactive state. A computed signal derives a value from dependencies. An effect synchronizes reactive reads with an imperative side effect.",
+    "example": "Derive a cart total from cart items; persist a preference through a deliberately designed storage effect.",
+    "answer": "I would keep source state in writable signals and use computed for values derived from that state. Angular tracks signal reads in reactive contexts so dependent work can update. I would reserve effects for appropriate synchronization with non-signal systems rather than copying one derived value into another signal. I would keep updates immutable where necessary and understand cleanup for resource-owning work. Signals do not remove the need to design ownership, asynchronous boundaries or component contracts. I would check behavior against the Angular version used by the project.",
+    "hints": [
+      "Which value is the source of truth?",
+      "Derived state normally belongs in computed."
+    ],
+    "rubric": [
+      "Distinguishes state, derivation and side effects",
+      "Explains dependency tracking",
+      "Avoids effect-driven state propagation"
+    ],
+    "mistakes": [
+      "Using effects as a chain of setters for derived totals."
+    ],
+    "followUps": [
+      "How would you combine an Observable stream with component state?",
+      "Which effect would need cleanup?"
+    ],
+    "exercise": "Write a cart signal and computed total, then explain why no total-setting effect is necessary.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular signals reference",
+        "url": "https://angular.dev/guide/signals"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-event-loop",
+    "track": "frontend",
+    "slug": "event-loop",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "JavaScript",
+    "title": "How would you explain Promise callbacks versus setTimeout ordering?",
+    "minutes": 7,
+    "lesson": "Synchronous code runs first. Promise reactions use the microtask queue, while timer callbacks run in later tasks when eligible; a zero delay is not an immediate execution guarantee.",
+    "example": "Log A, schedule a zero-delay timer, schedule a resolved Promise callback, then log B.",
+    "answer": "I would trace the synchronous stack first, then the queued work rather than guessing from the numerical timer delay. In the simple example, A and B print before the resolved Promise reaction, and the eligible timer runs later. I would clarify that real applications also have rendering, I/O and other queued work, so timing is not a performance guarantee. Long synchronous work and a stream of microtasks can delay responsiveness. I would test a small reproduction and keep platform-specific event-loop details separate.",
+    "hints": [
+      "A delay of zero still schedules later work.",
+      "Trace the stack before the queues."
+    ],
+    "rubric": [
+      "Predicts the simple order correctly",
+      "Distinguishes tasks and microtasks",
+      "Connects long work to responsiveness"
+    ],
+    "mistakes": [
+      "Assuming setTimeout(fn, 0) interrupts the current function."
+    ],
+    "followUps": [
+      "How can microtasks delay rendering?",
+      "Would Node-specific phases change the explanation?"
+    ],
+    "exercise": "Predict console order for A, B, a Promise callback and a timer, then run the sample.",
+    "tool": "/tools/javascript",
+    "sources": [
+      {
+        "title": "MDN JavaScript guide",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-fetch-races",
+    "track": "frontend",
+    "slug": "fetch-races",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Async UI",
+    "title": "Search results sometimes show the previous query. How do you fix it?",
+    "minutes": 10,
+    "lesson": "Requests can complete in a different order from how they started. Debouncing reduces traffic but does not by itself make responses arrive in order.",
+    "example": "A slow request for react returns after a faster request for react hooks and replaces the newer results.",
+    "answer": "I would reproduce the race with controlled delays and ensure only the current request can commit results. I would use cancellation when supported and a request identity or ignore flag to guard stale responses. The guard must cover success, error and loading updates. I would represent empty, loading and failure states explicitly and clean up on unmount. A query library can manage much of this, but I would still understand its key and cancellation behavior. Debouncing is an optional traffic optimization, not the correctness mechanism.",
+    "hints": [
+      "Which response is still allowed to update state?",
+      "A stale error can be as harmful as stale data."
+    ],
+    "rubric": [
+      "Guards every stale state update",
+      "Uses cleanup/cancellation appropriately",
+      "Separates debouncing from correctness"
+    ],
+    "mistakes": [
+      "Only adding a debounce and assuming the race is fixed."
+    ],
+    "followUps": [
+      "What if the transport cannot really cancel?",
+      "How would you test out-of-order failures?"
+    ],
+    "exercise": "Simulate two responses completing in reverse order and write the assertion that the newest query remains visible.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React effect reference",
+        "url": "https://react.dev/reference/react/useEffect"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-complex-forms",
+    "track": "frontend",
+    "slug": "complex-forms",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Forms",
+    "title": "How would you design a multi-step form with conditional sections?",
+    "minutes": 12,
+    "lesson": "A complex form needs a clear state model, validation boundaries and rules for data that becomes irrelevant after an upstream choice changes.",
+    "example": "Changing a sample matrix invalidates previously selected analysis rows in a laboratory form.",
+    "answer": "I would model the form's domain data separately from the current step and define explicit transitions for dependent fields. Each step would validate what is needed to advance, while final submission would validate the complete payload on the server. I would decide whether hidden sections retain or clear values and test those rules. Draft restoration, back navigation and duplicate submission need deliberate behavior. I would keep the payload transformation centralized so the preview and submitted data do not disagree. Accessibility and clear field-level errors remain part of the design.",
+    "hints": [
+      "What should changing an upstream choice invalidate?",
+      "The server must validate the complete payload."
+    ],
+    "rubric": [
+      "Defines dependent-field transitions",
+      "Separates step and final validation",
+      "Covers restoration and duplicate submission"
+    ],
+    "mistakes": [
+      "Keeping stale dependent IDs in a hidden section."
+    ],
+    "followUps": [
+      "How would you version a saved draft after a schema change?",
+      "How would you keep preview and payload consistent?"
+    ],
+    "exercise": "Model one real multi-step form from your work. Write three transition tests for changing an earlier answer.",
+    "tool": "/tools/typescript",
+    "sources": [
+      {
+        "title": "TypeScript narrowing",
+        "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+      },
+      {
+        "title": "MDN accessibility reference",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-state-ownership",
+    "track": "frontend",
+    "slug": "state-ownership",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Architecture",
+    "title": "How would you choose local state, Context or a query cache?",
+    "minutes": 10,
+    "lesson": "Different state has different ownership and lifetimes. Server data, local interaction state and durable drafts should not automatically share one global store.",
+    "example": "A filter popup is local UI state; shared user settings and cached API results have different invalidation rules.",
+    "answer": "I would identify who reads and writes each value and how long it must live. I would keep transient interaction state near the component, lift state to the nearest shared owner and use Context for suitable cross-tree dependencies. Server data benefits from a query cache with keys, freshness and invalidation semantics. A reducer or external store can help complex client transitions, but I would not choose it simply because the app is large. I would avoid storing the same derived or server value in several independent places.",
+    "hints": [
+      "Who owns the source of truth?",
+      "Ask how the value becomes stale."
+    ],
+    "rubric": [
+      "Classifies UI, server and durable state",
+      "Explains ownership and invalidation",
+      "Avoids duplicated derived state"
+    ],
+    "mistakes": [
+      "Treating Context as an automatic replacement for server caching."
+    ],
+    "followUps": [
+      "How would you reset state after signing out?",
+      "What belongs in a URL rather than a store?"
+    ],
+    "exercise": "Categorize the state in a ticket-search page and choose an owner and reset rule for each field.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React learning reference",
+        "url": "https://react.dev/learn"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-react-performance",
+    "track": "frontend",
+    "slug": "react-performance",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Performance",
+    "title": "A React page feels slow. What would you measure before adding memoization?",
+    "minutes": 10,
+    "lesson": "Rendering is only one source of latency. Network work, parsing, layout and excessive JavaScript can dominate a slow interaction.",
+    "example": "A large filtered list triggers expensive calculation while an unrelated panel rerenders.",
+    "answer": "I would define the slow interaction and profile a realistic reproduction. I would separate network time, main-thread work, React rendering and layout, then identify the expensive operation. I might move state closer to its owner, reduce unnecessary work, virtualize a long list or split code before adding memoization. If memoization addresses a measured bottleneck, I would check dependency stability and correctness. I would compare before and after on representative devices and avoid presenting a lower render count as proof of a faster user experience.",
+    "hints": [
+      "Which user interaction is slow?",
+      "A rerender is not automatically expensive."
+    ],
+    "rubric": [
+      "Profiles before optimizing",
+      "Distinguishes rendering from other work",
+      "Validates an optimization with user-facing measurements"
+    ],
+    "mistakes": [
+      "Wrapping every component in memo without measuring."
+    ],
+    "followUps": [
+      "When could memoization make things worse?",
+      "How would you avoid blocking while filtering?"
+    ],
+    "exercise": "Record an interaction timeline for a long list and propose one measured experiment.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React learning reference",
+        "url": "https://react.dev/learn"
+      },
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-angular-streams",
+    "track": "frontend",
+    "slug": "angular-streams",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Angular",
+    "title": "How would you handle cancellable search in Angular with RxJS?",
+    "minutes": 10,
+    "lesson": "Observable composition can represent query changes and request lifecycles. Operator choice should match whether older work may be replaced or must finish.",
+    "example": "A search box should show the latest query, while a payment submission must not be casually restarted or duplicated.",
+    "answer": "I would normalize input, optionally debounce and remove repeated queries, then use switchMap for latest-query search behavior. Unsubscribing prevents the old inner stream from updating the subscriber, and Angular's HTTP integration can cancel the underlying request. I would place error handling so one failure does not permanently terminate future searches, and model loading and empty states. I would use framework-supported subscription cleanup. I would not reuse the same operator blindly for state-changing requests where every action needs delivery or duplicate protection.",
+    "hints": [
+      "What should happen to an older search?",
+      "Where could catchError terminate the outer stream?"
+    ],
+    "rubric": [
+      "Matches operator semantics to the task",
+      "Handles errors without killing future searches",
+      "Includes cleanup and mutation caveats"
+    ],
+    "mistakes": [
+      "Applying switchMap to every write request without considering side effects."
+    ],
+    "followUps": [
+      "When would concatMap or exhaustMap be more suitable?",
+      "How would you test a stale loading state?"
+    ],
+    "exercise": "Draw the observable timeline for two rapid queries and one failed response. Describe the visible state at each point.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular signals reference",
+        "url": "https://angular.dev/guide/signals"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-rendering-choices",
+    "track": "frontend",
+    "slug": "rendering-choices",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Next.js",
+    "title": "How would you choose CSR, SSR or static rendering for a page?",
+    "minutes": 10,
+    "lesson": "Rendering strategy depends on freshness, personalization, interaction and delivery constraints. A framework can mix strategies within one product.",
+    "example": "A public tutorial, a live account dashboard and a marketing page have different caching and privacy needs.",
+    "answer": "I would identify who needs the data, when it changes and whether the first response must contain useful HTML. Static rendering can fit reusable public content; request-time server rendering can support suitable dynamic needs; client rendering can fit highly interactive or browser-only work. I would discuss caching, hydration and error states rather than treating SSR as an automatic performance win. Personalized data needs strict cache boundaries. I would verify the relevant framework version and deployment behavior because rendering and caching configuration evolves.",
+    "hints": [
+      "Separate public reusable data from personal data.",
+      "What must be visible in the initial response?"
+    ],
+    "rubric": [
+      "Ties strategy to page requirements",
+      "Discusses hydration, caching and privacy",
+      "Acknowledges framework/version behavior"
+    ],
+    "mistakes": [
+      "Choosing one rendering strategy for every page without requirements."
+    ],
+    "followUps": [
+      "How would stale public content be refreshed?",
+      "Why can an SSR page still have a slow interaction?"
+    ],
+    "exercise": "Classify a tutorial, account page and local-only code editor. Explain the trade-off for each.",
+    "tool": "/tools/nextjs",
+    "sources": [
+      {
+        "title": "Next.js server/client boundaries",
+        "url": "https://nextjs.org/docs/app/getting-started/server-and-client-components"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-server-client-boundary",
+    "track": "frontend",
+    "slug": "server-client-boundary",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Next.js",
+    "title": "Where should the Server/Client Component boundary go?",
+    "minutes": 10,
+    "lesson": "The client directive creates a module boundary for interactive code. It does not make exposed client values secret or mean every component should become client-rendered.",
+    "example": "A server-fetched article contains an interactive bookmark button that only needs a small set of public props.",
+    "answer": "I would keep data access and secret-bearing operations on the server, then introduce a narrow client boundary where state, effects or browser APIs are needed. I would pass serializable props and avoid importing server-only code into a client dependency graph. A Client Component can still participate in initial server-rendered HTML, so I would not define it as code that never runs on the server. I would inspect bundle size and verify authorization at every server mutation rather than relying on a hidden button.",
+    "hints": [
+      "Follow the module dependency graph.",
+      "A hidden client control is not authorization."
+    ],
+    "rubric": [
+      "Keeps secrets and authorization server-side",
+      "Uses narrow serializable boundaries",
+      "Explains the client graph and initial rendering"
+    ],
+    "mistakes": [
+      "Adding use client to the root layout to fix one interactive button."
+    ],
+    "followUps": [
+      "Can a Server Component be passed as children?",
+      "What would happen if a browser API runs during initial rendering?"
+    ],
+    "exercise": "Split an article with a bookmark control into a server data boundary and a small interactive component.",
+    "tool": "/tools/nextjs",
+    "sources": [
+      {
+        "title": "Next.js server/client boundaries",
+        "url": "https://nextjs.org/docs/app/getting-started/server-and-client-components"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-testing-behavior",
+    "track": "frontend",
+    "slug": "testing-behavior",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Testing",
+    "title": "What tests would you write for a searchable editable list?",
+    "minutes": 10,
+    "lesson": "Valuable tests describe behavior and failure boundaries, not the exact arrangement of hooks or component internals.",
+    "example": "A user searches, edits a record and receives a server validation error without losing their input.",
+    "answer": "I would cover filtering, selecting the right record by stable ID, successful save and meaningful validation errors. I would simulate out-of-order requests, empty results and a failed save while checking that the user's draft survives. Unit tests can cover pure transformations; component tests can exercise accessible interactions; a small end-to-end path can check integration. I would avoid asserting private state or duplicating every implementation detail. I would prioritize risk and use a failing regression test when a real bug is fixed.",
+    "hints": [
+      "What user data could be lost?",
+      "Which race needs controlled response ordering?"
+    ],
+    "rubric": [
+      "Tests success and important failures",
+      "Uses behavior and accessible interactions",
+      "Chooses appropriate boundaries for each test"
+    ],
+    "mistakes": [
+      "Testing only that a button exists or a mocked callback was called."
+    ],
+    "followUps": [
+      "What should remain real in an integration test?",
+      "How would you make a flaky race test deterministic?"
+    ],
+    "exercise": "Write a test plan with one transformation test, three interaction tests and one end-to-end scenario.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-browser-security",
+    "track": "frontend",
+    "slug": "browser-security",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Security",
+    "title": "Why do CORS and a hidden API key not secure a backend?",
+    "minutes": 10,
+    "lesson": "CORS controls what browser scripts may read across origins; it is not general authentication. Anything shipped to a browser can be inspected by its user.",
+    "example": "A frontend bundle includes a provider key, and an attacker calls the provider directly without using your UI.",
+    "answer": "I would keep privileged keys on a trusted server and authenticate and authorize each protected operation. I would treat all incoming data as untrusted, validate it and apply suitable abuse controls. CORS can restrict browser-origin access but does not stop arbitrary HTTP clients. Cookie-based authentication also requires a deliberate CSRF strategy and secure cookie settings. I would avoid unsafe HTML rendering and review data exposure through responses and logs. The UI should reflect permissions, but the backend must enforce them independently.",
+    "hints": [
+      "Could curl call the endpoint?",
+      "Can a user inspect the downloaded JavaScript?"
+    ],
+    "rubric": [
+      "Distinguishes CORS and authentication",
+      "Keeps secrets off the client",
+      "Includes authorization and relevant browser threats"
+    ],
+    "mistakes": [
+      "Treating an allowed-origin check as user identity."
+    ],
+    "followUps": [
+      "How would you protect a cookie-authenticated mutation?",
+      "What data could a verbose error leak?"
+    ],
+    "exercise": "Threat-model a public contact form and a signed-in project-save endpoint separately.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-incident-story",
+    "track": "frontend",
+    "slug": "incident-story",
+    "level": "practitioner",
+    "round": "behavioural",
+    "topic": "Project defence",
+    "title": "Tell me about a UI incident you owned.",
+    "minutes": 8,
+    "lesson": "An incident answer should show a causal explanation and a decision you actually made. Performance, accessibility and data-loss incidents all count when described accurately.",
+    "example": "A conditional form retained obsolete IDs and submitted the wrong dependent choices.",
+    "answer": "I would explain the affected workflow, how the issue was detected and my own responsibility. I would describe the evidence that narrowed the cause, the mitigation and the root change, then explain how I tested both the original case and nearby edge cases. I would state the result using evidence I actually have. If I do not have numeric business impact, I would not invent it. I would finish with a prevention measure such as a transition test, better validation or a safer release procedure.",
+    "hints": [
+      "What changed your diagnosis?",
+      "Separate a visual symptom from the root cause."
+    ],
+    "rubric": [
+      "Shows personal ownership",
+      "Explains diagnosis and regression verification",
+      "Uses truthful outcomes and prevention"
+    ],
+    "mistakes": [
+      "Saying only we fixed a bug without explaining how."
+    ],
+    "followUps": [
+      "What alternative fix did you reject?",
+      "How would you catch it before users do?"
+    ],
+    "exercise": "Use a real project and write a five-part incident story with one supporting artifact for each technical claim.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-workspace-design",
+    "track": "frontend",
+    "slug": "workspace-design",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "System design",
+    "title": "Design a browser coding workspace for a large public audience.",
+    "minutes": 15,
+    "lesson": "Start with user journeys and trust boundaries before choosing libraries. Editing, execution, persistence and collaboration have different reliability and security requirements.",
+    "example": "An anonymous visitor runs a snippet while a signed-in user saves a project owned by their account.",
+    "answer": "I would clarify supported languages, file limits, execution model and persistence needs. I would separate editor state from execution workers or sandboxed previews, and keep untrusted code away from application secrets. Local drafts would work without an account; cloud saves would enforce server-side ownership. I would budget heavy runtime loading, mobile layout and cancellation, then add observability and abuse limits at remote boundaries. Collaboration would be a separate requirement with explicit conflict semantics. I would draw the smallest viable architecture first and identify what changes with scale.",
+    "hints": [
+      "Which component handles untrusted execution?",
+      "Which state needs server persistence?"
+    ],
+    "rubric": [
+      "Clarifies scope and trust boundaries",
+      "Separates editing, execution and persistence",
+      "Covers loading, cancellation and growth trade-offs"
+    ],
+    "mistakes": [
+      "Designing collaboration and remote execution as ordinary React state."
+    ],
+    "followUps": [
+      "How would you contain an infinite loop?",
+      "Which metrics identify a slow first run?"
+    ],
+    "exercise": "Draw the architecture of a real workspace you have used, then mark data ownership and execution boundaries.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-offline-conflicts",
+    "track": "frontend",
+    "slug": "offline-conflicts",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Data consistency",
+    "title": "How would you prevent an old tab overwriting a newer saved project?",
+    "minutes": 12,
+    "lesson": "Last-write-wins can silently lose work. Multi-tab and multi-device editing require a defined concurrency policy.",
+    "example": "Two tabs load revision 7 and each attempts to save different edits.",
+    "answer": "I would attach a revision or entity tag to the loaded record and make saves conditional on the version still matching. The backend would check and update atomically. A conflict would preserve the local draft and offer a reload, comparison or explicit merge rather than silently overwrite the newer record. I would distinguish this optimistic concurrency control from real-time collaborative editing. Offline work also needs durable local drafts, recovery and a clear synchronization status. Tests should force concurrent saves and verify ownership as well as version checks.",
+    "hints": [
+      "Where must comparison and update happen atomically?",
+      "Do not delete the unsaved local version."
+    ],
+    "rubric": [
+      "Uses atomic conditional writes",
+      "Preserves drafts and exposes conflicts",
+      "Distinguishes conflict handling from collaboration"
+    ],
+    "mistakes": [
+      "Checking a revision in the browser before an unconditional server update."
+    ],
+    "followUps": [
+      "How would you merge independent file edits?",
+      "How would deletion conflict with an offline edit?"
+    ],
+    "exercise": "Walk through both tabs saving revision 7 and write the exact expected result for each request.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-performance-budget",
+    "track": "frontend",
+    "slug": "performance-budget",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Performance",
+    "title": "How would you set and enforce a frontend performance budget?",
+    "minutes": 12,
+    "lesson": "A budget connects measurable user experience with engineering constraints. Lab tests and field measurements reveal different aspects of performance.",
+    "example": "A page loads a code editor and a Python runtime before the visitor chooses either tool.",
+    "answer": "I would identify important journeys and representative devices, then measure loading, responsiveness and layout stability. I would define budgets for critical JavaScript, heavy assets and key interaction timings, with both lab checks and suitable field signals. I would defer nonessential runtimes, split features and reserve space for late content. I would review regressions by user segment and set a release response when the budget is exceeded. One desktop benchmark or a high synthetic score is not sufficient evidence that every visitor has a fast experience.",
+    "hints": [
+      "Which assets are essential before the first task?",
+      "Measure on realistic devices."
+    ],
+    "rubric": [
+      "Defines user journeys and measurable budgets",
+      "Separates lab and field evidence",
+      "Connects loading decisions to release controls"
+    ],
+    "mistakes": [
+      "Optimizing only a Lighthouse score while ignoring slow user interactions."
+    ],
+    "followUps": [
+      "What would you do when third-party code exceeds the budget?",
+      "How would you diagnose layout shifts?"
+    ],
+    "exercise": "Audit one page and label each large dependency as critical now, needed later or unnecessary for the journey.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-design-system",
+    "track": "frontend",
+    "slug": "design-system",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Architecture",
+    "title": "How would you introduce a design system without slowing every team?",
+    "minutes": 12,
+    "lesson": "A design system is a maintained contract for reusable behavior and appearance. Adoption, accessibility and change management matter as much as component count.",
+    "example": "Several teams independently implement modals with inconsistent keyboard behavior and error styling.",
+    "answer": "I would identify repeated high-value patterns and define accessible primitives with clear APIs and tokens. I would document composition, interaction states and supported variations, then pilot them in real workflows before demanding broad migration. Versioning and deprecation rules would protect consumers from breaking changes. I would test keyboard behavior and visual regressions where valuable, and measure adoption and duplicated work rather than the number of exported components. Governance should make useful contributions possible while preserving a coherent contract.",
+    "hints": [
+      "Which repeated behavior is currently expensive or unsafe?",
+      "A component needs an adoption path."
+    ],
+    "rubric": [
+      "Defines accessible reusable contracts",
+      "Plans incremental adoption and versioning",
+      "Measures value rather than component count"
+    ],
+    "mistakes": [
+      "Building hundreds of abstractions before validating a real consumer."
+    ],
+    "followUps": [
+      "How would you handle a product-specific exception?",
+      "Which change deserves a major version?"
+    ],
+    "exercise": "Design a modal API with keyboard behavior, focus restoration and one documented escape hatch.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "MDN accessibility reference",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+      },
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-incremental-migration",
+    "track": "frontend",
+    "slug": "incremental-migration",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Delivery",
+    "title": "How would you modernize an older Angular or React application?",
+    "minutes": 12,
+    "lesson": "A migration is a product-risk exercise, not only a dependency upgrade. Functional behavior and delivery continuity need explicit protection.",
+    "example": "An older admin application has complex forms and weak automated coverage but must keep shipping changes.",
+    "answer": "I would inventory dependencies, critical journeys and unsupported assumptions, then establish a small safety net around the highest-risk workflows. I would define a target and choose an incremental migration boundary where old and new code can coexist. I would separate framework upgrades from unrelated redesigns and track regressions and bundle impact. Each step needs a rollback path and clear ownership. I would challenge a full rewrite unless its benefits and risks are supported, and would confirm version-specific migration instructions from the framework documentation.",
+    "hints": [
+      "What user workflow must survive every step?",
+      "Separate upgrade risk from redesign scope."
+    ],
+    "rubric": [
+      "Inventories risk and protects core workflows",
+      "Defines incremental boundaries",
+      "Includes measurements and rollback"
+    ],
+    "mistakes": [
+      "Rewriting the whole application before verifying current behavior."
+    ],
+    "followUps": [
+      "What would make a full rewrite justified?",
+      "How would you test compatibility across boundaries?"
+    ],
+    "exercise": "Create a three-step migration plan for a real form-heavy project, including a rollback signal for each step.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-personalized-cache",
+    "track": "frontend",
+    "slug": "personalized-cache",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Next.js",
+    "title": "How would you avoid leaking personalized data through a server cache?",
+    "minutes": 12,
+    "lesson": "Cache reuse must align with data ownership and freshness. Rendering a page on the server does not automatically make every cache entry safe to share.",
+    "example": "A dashboard response includes customer-specific prices and is mistakenly cached only by URL.",
+    "answer": "I would classify data as public, tenant-specific or user-specific and inspect every caching layer, including framework data caches, response caches and CDNs. Personalization and authorization must be reflected in a safe key or the response must bypass shared caching. I would test two users and changing permissions, not only one successful request. I would also check current framework defaults and invalidation behavior for the exact version and deployment. Sensitive values should not be exposed through static output, logs or an accidentally public endpoint.",
+    "hints": [
+      "Who may reuse this response?",
+      "A URL may not identify the current user."
+    ],
+    "rubric": [
+      "Classifies ownership at each cache layer",
+      "Uses safe keys or avoids shared caching",
+      "Tests cross-user and permission-change cases"
+    ],
+    "mistakes": [
+      "Assuming SSR disables shared caching automatically."
+    ],
+    "followUps": [
+      "How would sign-out affect cached client data?",
+      "What would an integration test for a cache leak look like?"
+    ],
+    "exercise": "Trace two accounts requesting the same URL and mark every cache that must distinguish them.",
+    "tool": "/tools/nextjs",
+    "sources": [
+      {
+        "title": "Next.js server/client boundaries",
+        "url": "https://nextjs.org/docs/app/getting-started/server-and-client-components"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-untrusted-preview",
+    "track": "frontend",
+    "slug": "untrusted-preview",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Security",
+    "title": "How would you safely preview user-supplied HTML and JavaScript?",
+    "minutes": 15,
+    "lesson": "A code preview is an execution boundary. Escaping strings, sanitizing HTML and isolating code solve different problems and must match the feature's needs.",
+    "example": "A playground snippet tries to read the parent page, navigate it or transmit data to an arbitrary host.",
+    "answer": "I would choose a deliberately isolated origin or appropriately restricted sandboxed frame and verify its allowed capabilities. I would avoid combining privileges that undo isolation, restrict network and navigation where the product requires it, and validate the shape and origin of cross-window messages. Parent secrets would never be sent to the preview. I would handle infinite loops through an execution design that can be terminated where possible and enforce separate limits for remote code. I would test actual boundary escapes and never run untrusted code directly in the application's main context.",
+    "hints": [
+      "Which capabilities does the preview truly need?",
+      "Messages are another untrusted input boundary."
+    ],
+    "rubric": [
+      "Defines origin/sandbox isolation",
+      "Limits capabilities and validates messages",
+      "Separates execution from parent secrets and resources"
+    ],
+    "mistakes": [
+      "Treating HTML escaping as complete JavaScript isolation."
+    ],
+    "followUps": [
+      "How would you let a preview call a permitted demo API?",
+      "What can and cannot be stopped inside an iframe?"
+    ],
+    "exercise": "Threat-model a snippet that attempts parent access, navigation and an outbound request. Define a test for each.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-observability",
+    "track": "frontend",
+    "slug": "observability",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Operations",
+    "title": "A release increases frontend errors for a small group. How do you investigate?",
+    "minutes": 12,
+    "lesson": "Averages can hide a broken browser, locale, route or account segment. Observability must be useful without collecting unnecessary personal data.",
+    "example": "A new editor works on desktop but fails on a mobile browser during runtime initialization.",
+    "answer": "I would correlate the change with release versions and examine error rate by route, browser and relevant non-sensitive environment information. I would reproduce the affected journey, inspect network and initialization signals and compare with a known working version. I would consider a rollback or feature disable based on impact while the root cause is investigated. Logs would avoid source code and secrets unless deliberately consented to and protected. After fixing the issue I would add a targeted regression check and verify recovery in the affected segment.",
+    "hints": [
+      "Which segment is hidden by the overall average?",
+      "Mitigation may come before a full diagnosis."
+    ],
+    "rubric": [
+      "Uses versioned and segmented evidence",
+      "Balances mitigation and root-cause work",
+      "Protects privacy and verifies recovery"
+    ],
+    "mistakes": [
+      "Logging complete user projects to debug a startup failure."
+    ],
+    "followUps": [
+      "How would you distinguish a provider outage from a browser regression?",
+      "What would trigger an automatic rollback?"
+    ],
+    "exercise": "Draft a minimal error report schema with diagnostic value and no source text, credentials or personal identifiers.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-technical-leadership",
+    "track": "frontend",
+    "slug": "technical-leadership",
+    "level": "senior",
+    "round": "behavioural",
+    "topic": "Leadership",
+    "title": "How do you handle disagreement about a technical design?",
+    "minutes": 9,
+    "lesson": "Senior judgement includes making assumptions explicit and learning from evidence. Authority alone is a weak substitute for a decision process.",
+    "example": "One teammate wants a global state store while another proposes local state plus a query cache.",
+    "answer": "I would clarify the user problem and constraints, ask each proposal to identify its benefits and failure modes, and separate reversible preferences from costly commitments. I would compare alternatives against agreed criteria and run a bounded experiment when uncertainty matters. I would document the decision, its owner and the conditions that would justify revisiting it. I would describe a real disagreement respectfully and explain what I learned, including cases where I changed my mind. I would avoid presenting disagreement as a contest I simply won.",
+    "hints": [
+      "What evidence could change your position?",
+      "Which decision is reversible?"
+    ],
+    "rubric": [
+      "Frames shared criteria and alternatives",
+      "Uses evidence and bounded experiments",
+      "Communicates respectfully and records the decision"
+    ],
+    "mistakes": [
+      "Claiming seniority makes further discussion unnecessary."
+    ],
+    "followUps": [
+      "What if the deadline prevents an experiment?",
+      "How would you support a decision you disagreed with?"
+    ],
+    "exercise": "Write a short decision record for one real disagreement, including the strongest argument against your preferred option.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      }
+    ],
+    "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-project-defence",
+    "track": "frontend",
+    "slug": "project-defence",
+    "level": "senior",
+    "round": "behavioural",
+    "topic": "Project defence",
+    "title": "Explain the hardest frontend system you personally delivered.",
+    "minutes": 12,
+    "lesson": "A senior project discussion should connect the user problem, architecture, ownership and results. Be explicit about work performed by other people or libraries.",
+    "example": "A shipping-admin platform has conditional rules, overlapping schedules and several teams consuming its APIs.",
+    "answer": "I would begin with the user workflow and the constraints that made the system difficult. I would trace the key state and API boundaries, explain my specific contribution and defend one important trade-off. I would describe a difficult bug or failure and the evidence used to fix it. I would give verified outcomes and acknowledge unmeasured areas instead of inventing percentages. Finally I would explain what I would improve with today's knowledge and how I would validate that improvement without disrupting existing users.",
+    "hints": [
+      "Choose one deep decision instead of a feature list.",
+      "Separate your work from the team's work."
+    ],
+    "rubric": [
+      "Explains requirements and concrete ownership",
+      "Defends architecture and a difficult trade-off",
+      "Uses verified evidence and reflection"
+    ],
+    "mistakes": [
+      "Listing technologies without a request or state-flow explanation."
+    ],
+    "followUps": [
+      "Which part would you simplify now?",
+      "What was the most important test you were missing?"
+    ],
+    "exercise": "Complete the project-defence worksheet for your own project and practise a two-minute architecture explanation.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Amazon Front-End Engineer preparation",
+        "url": "https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep"
+      },
+      {
+        "title": "Microsoft technical interview guidance",
+        "url": "https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html"
+      }
+    ],
+    "origin": "Sukoaa original"
+  }
+]

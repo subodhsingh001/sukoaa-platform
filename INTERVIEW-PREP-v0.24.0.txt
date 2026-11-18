@@ -1,0 +1,127 @@
+SUKOAA INTERVIEW PREPARATION — v0.24.0
+18 November 2026
+
+WHAT IS INCLUDED NOW
+60 complete questions: 30 GenAI and 30 Frontend.
+Each track has 10 Foundations, 10 Applied Practice and 10 System Design /
+Leadership questions. Each question has a mini lesson, a concrete illustrative
+example, a reference answer, two hints, a three-point self-review rubric,
+common mistakes, two follow-up questions, a practical task and reading links.
+
+All 13 distinct questions from the supplied screenshots are included:
+- RAG deep dive: 5 questions, 60-minute practice round.
+- LLM evaluation system design: 4 questions, 75-minute practice round.
+- Hiring manager + HR: 4 questions, 40-minute practice round.
+Round 1 was absent from the screenshots. The foundations round is new,
+Sukoaa-authored material, labelled accordingly. Frontend has four additional
+mock-round formats. A 15-minute mode selects three questions from the chosen
+subject and relevant-experience level.
+
+WHERE TO FIND IT
+Learn menu -> Interview preparation.
+Also discoverable from Home, Practice, search and the footer.
+Main route: /interview-prep
+Tracks: /interview-prep/genai and /interview-prep/frontend
+Mock rounds: /interview-prep/mock
+Project worksheet: /interview-prep/project
+Each question has a separate route, title, description and breadcrumb.
+Public lesson pages are included in the sitemap. Mock/worksheet pages use
+noindex because they contain local personal practice state.
+
+RUN LOCALLY
+1. Extract the full source ZIP into a clean folder.
+2. Open sukoaa-platform in a terminal.
+3. npm ci --include=dev
+4. npm run dev
+5. Open http://localhost:3000/interview-prep
+No AI key, database migration, Redis or account is needed for Interview Prep.
+The earlier Gemini wording feature retains its independent local-only setup.
+To put these changes on www.sukoaa.com, update your GitHub project and let
+Vercel build the new source. This ZIP does not itself update GitHub or Vercel.
+
+HOW TO USE IT FOR A GENAI TRANSITION
+Select GenAI -> Foundations even if you have many years of frontend work.
+Experience labels describe practice in this subject, not total years employed.
+Start with tokens, embeddings and prompting. Continue to RAG, Python async,
+structured outputs and evaluation. Work on the practical task, write an answer,
+then reveal the reference. Mark only the rubric points you actually covered.
+Save a self-review and a concrete improvement note. Revisit weak questions.
+Move to Applied Practice for the screenshot RAG questions. Move to System
+Design / Leadership for judge reliability, statistical uncertainty and controls.
+Use the worksheet to explain a personal project honestly. Do not invent
+production usage, results or ownership. Reference answers are examples, not
+scripts to memorize or official employer answer keys.
+
+QUESTION COUNTS AND EXPERIENCE
+The 60 questions are an initial focused library, not a complete hiring syllabus.
+Ten at each level let us cover the subject with explanations rather than pad
+it with superficial duplicates. There is no universal employer-required count.
+Editorial expansion targets per track, cumulatively:
+- Foundations: 50-75 well-covered questions plus practical exercises.
+- Independent delivery: 80-120 covering implementation, debugging and tests.
+- Senior ownership: 120-180 covering architecture, incidents and trade-offs.
+These are future Sukoaa planning targets, not extra questions already shipped.
+Senior frontend roles also require role-specific coding, algorithms, browser,
+architecture and leadership practice beyond this starting set. Use the target
+job description and recruiter guidance to fill gaps.
+
+PUBLIC EMPLOYER GUIDANCE CHECKED
+Amazon Front-End Engineer Interview Prep:
+https://www.amazon.jobs/content/en/how-we-hire/fee-interview-prep
+Microsoft Technical Interviewing:
+https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing.html
+Life at Google official technical-interview preparation video:
+https://www.youtube.com/watch?v=we7ba0slWrc
+
+Application of that guidance in this release:
+- Ask for assumptions and explain the reasoning, not only a definition.
+- Include implementation tasks, edge cases, tests and error conditions.
+- Follow an initial answer with trade-off and failure-mode questions.
+- Practise concrete project ownership and behavioural examples.
+These are public competency patterns. Sukoaa does not claim endorsement,
+confidential company question access or a guaranteed interview format.
+Individual questions are original educational material except the 13
+user-supplied question topics. Reference answers are Sukoaa-authored drafts
+with further-reading links, not independently certified company answer keys.
+
+CONTENT MAINTENANCE
+Question data: lib/interview/questions.json
+Track and experience definitions: lib/interview/types.ts
+Mock rounds, route discovery and employer links: lib/interview/catalog.ts
+UI: components/interview/
+Do not copy question IDs when adding a question: local progress keys depend on
+stable unique IDs. Follow the complete content structure and rerun tests.
+Review technical references when framework versions or provider behavior change.
+
+LOCAL DATA AND PRIVACY
+Answers, bookmarks, confidence, latest five review summaries per question,
+project worksheet and active mock state stay in browser localStorage.
+No interview answer is sent to AI or a server by this feature.
+Cloud sync, automatic grading, voice recording and an AI interviewer are not
+included. Confidence and coverage are explicitly self-reported.
+Export a backup before clearing browser data or moving to another device.
+Backups contain your writing in plain text. Restore validates the file before
+asking to replace interview progress. Other Sukoaa feature data is untouched.
+Previous answer texts are not versioned; only current drafts and five recent
+review summaries are retained. Export snapshots if you need answer history.
+If another tab changes progress, autosaving pauses rather than silently
+replacing it. Export the current work and reload the saved version.
+Single-question timers reset on reload. Mock deadlines and pause state persist;
+a running timer continues while the page is closed and never deletes answers.
+
+VERIFICATION
+269 automated tests passed, including eight new interview tests covering
+content completeness, source-question mapping, selection, backups and timers.
+TypeScript checking and the production Next.js build passed.
+Browser workflow checks covered lessons, hints, drafts, self-review persistence,
+experience filters, search, paused mock recovery and backup export/restore.
+Responsive checks use the actual prerendered Next.js HTML and compiled client
+assets in a static review copy. Account APIs are not part of that static review.
+
+Suggested git commit:
+feat: add GenAI and frontend interview preparation with local progress
+
+Responsive result: dashboard and question views were checked at 390px and
+768px frame widths and the desktop viewport with no horizontal overflow.
+A tablet footer overflow was corrected with interview-scoped styles.
+The project worksheet can be edited locally and exported as text.

@@ -5,6 +5,9 @@ import {isPubliclyReady,unavailableToolSlugs} from '@/lib/marketing/availability
 import './command-palette.css';
 type Item={label:string;hint:string;href:string;group:string};
 const extra:Item[]=[
+ {label:'Interview preparation',hint:'GenAI, React, Angular, mock rounds and project defence',href:'/interview-prep',group:'Learn'},
+ {label:'GenAI interview preparation',hint:'RAG, evaluation, agents and engineering judgement',href:'/interview-prep/genai',group:'Learn'},
+ {label:'Frontend interview preparation',hint:'JavaScript, React, Angular, TypeScript and system design',href:'/interview-prep/frontend',group:'Learn'},
  {label:'Tool Schema Generator',hint:'Draft, edit and validate function schemas locally',href:'/tools/tool-schema-generator',group:'AI & LLM'},
  {label:'Portal Photo & PDF Fixer',hint:'Crop, resize, compress and exam checklist',href:'/tools/portal-ready',group:'Photo & Document Tools'},
  {label:'Online tools',hint:'All compilers and playgrounds',href:'/tools',group:'Pages'},

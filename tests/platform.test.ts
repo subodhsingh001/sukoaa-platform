@@ -78,3 +78,5 @@ import './trust-audit.test';
 import './tool-schema.test';
 
 import './token-wording.test';
+
+import './interview.test';

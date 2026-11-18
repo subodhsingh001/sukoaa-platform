@@ -126,3 +126,7 @@ Use Node.js 24 for installation, testing and builds. GitHub CI now selects Node 
 ## Local Gemini wording trial (v0.23.1)
 
 The token counter now includes an optional Gemini rewrite action in local development only. Counting stays in the browser. AI requests require consent and server-only environment configuration. Production cannot enable this endpoint. See [GEMINI-WORDING-LOCAL-SETUP.txt](GEMINI-WORDING-LOCAL-SETUP.txt). Extracted interview questions are in [GENAI-INTERVIEW-TOPICS.txt](GENAI-INTERVIEW-TOPICS.txt).
+
+## Interview preparation (v0.24.0)
+
+Open Learn → Interview preparation or `/interview-prep`. The release includes 60 complete GenAI and Frontend questions, experience levels, screenshot-based GenAI rounds, timed self-guided mocks, local answers and reviews, backups and a project-defence worksheet. No AI call or database setup is needed. See [INTERVIEW-PREP-v0.24.0.txt](INTERVIEW-PREP-v0.24.0.txt) for coverage, public interview-guidance sources and setup.
