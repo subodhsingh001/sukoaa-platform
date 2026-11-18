@@ -7,8 +7,10 @@ export type Question = {
   hints: string[]; rubric: string[]; mistakes: string[]; followUps: string[];
   exercise: string; tool: string; sources: {title: string; url: string}[];
   origin: 'Sukoaa original' | 'User-provided interview topic';
+  addedIn?: '0.25.0';
+  code?: {language: 'python' | 'javascript'; source: string; expected: string};
 };
-export type QuestionSummary = Pick<Question, 'id' | 'track' | 'slug' | 'level' | 'round' | 'topic' | 'title' | 'minutes'>;
+export type QuestionSummary = Pick<Question, 'id' | 'track' | 'slug' | 'level' | 'round' | 'topic' | 'title' | 'minutes' | 'addedIn'>;
 export const levels: {id: Level; name: string; description: string}[] = [
   {id: 'foundation', name: 'Foundations', description: 'New to this subject · roughly 0–1 year of relevant practice'},
   {id: 'practitioner', name: 'Applied practice', description: 'Building independently · roughly 1–3 years of relevant practice'},

@@ -1,6 +1,6 @@
-Current release: v0.23.0. Read TOOL-SCHEMA-GENERATOR.md for the new browser-local schema studio. Read PORTAL-READY-SETUP.md and docs/30-SOURCE-AUDIT.md for the formatter, tokenizer repair and trust/security changes. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
+Current release: v0.25.0. Read INTERVIEW-PREP-v0.25.0.txt for the expanded 100-question library. Read TOOL-SCHEMA-GENERATOR.md for the new browser-local schema studio. Read PORTAL-READY-SETUP.md and docs/30-SOURCE-AUDIT.md for the formatter, tokenizer repair and trust/security changes. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
 
-# Sukoaa Platform — v0.23.0
+# Sukoaa Platform — v0.25.0
 
 A professional home for Sukoaa's browser, extensions and developer tools. This source release includes the frontend, Next.js backend routes, Supabase database migration, optional Redis integration, a code workspace, release distribution metadata and setup guides. **AI agents are disabled.**
 
@@ -127,6 +127,6 @@ Use Node.js 24 for installation, testing and builds. GitHub CI now selects Node 
 
 The token counter now includes an optional Gemini rewrite action in local development only. Counting stays in the browser. AI requests require consent and server-only environment configuration. Production cannot enable this endpoint. See [GEMINI-WORDING-LOCAL-SETUP.txt](GEMINI-WORDING-LOCAL-SETUP.txt). Extracted interview questions are in [GENAI-INTERVIEW-TOPICS.txt](GENAI-INTERVIEW-TOPICS.txt).
 
-## Interview preparation (v0.24.0)
+## Interview preparation (v0.25.0)
 
-Open Learn → Interview preparation or `/interview-prep`. The release includes 60 complete GenAI and Frontend questions, experience levels, screenshot-based GenAI rounds, timed self-guided mocks, local answers and reviews, backups and a project-defence worksheet. No AI call or database setup is needed. See [INTERVIEW-PREP-v0.24.0.txt](INTERVIEW-PREP-v0.24.0.txt) for coverage, public interview-guidance sources and setup.
+Open Learn → Interview preparation or `/interview-prep`. The release includes 100 complete questions: 50 GenAI and 50 Frontend, with topic and release filters and 12 copyable code examples, experience levels, screenshot-based GenAI rounds, timed self-guided mocks, local answers and reviews, backups and a project-defence worksheet. No AI call or database setup is needed. See [INTERVIEW-PREP-v0.25.0.txt](INTERVIEW-PREP-v0.25.0.txt) for coverage, public interview-guidance sources and setup.

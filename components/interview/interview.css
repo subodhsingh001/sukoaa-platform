@@ -13,3 +13,19 @@
 
 .interview-prep-site .product-footer nav{flex-wrap:wrap;min-width:0}.interview-prep-site .product-footer nav a{white-space:normal}
 @media(min-width:761px) and (max-width:850px){.ip-hero{grid-template-columns:minmax(0,1fr)}.ip-hero-aside{max-width:100%}.ip-sample-question h2{font-size:25px}.ip-hero h1{font-size:46px}}
+
+/* Expanded question library: filters and optional standalone examples. */
+.ip .ip-filters{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.ip .ip-filters .ip-search{grid-column:1/-1}
+.ip .ip-filters>label{min-width:0}
+.ip .ip-library-note{color:var(--ip-muted);font-size:12px;margin:-8px 0 22px}
+.ip-card-meta .ip-new{background:#e9e2f1;color:#6a507f;padding:1px 7px;border-radius:4px;font-weight:600}
+.ip-code-example{min-width:0;max-width:100%;padding:22px;border:1px solid var(--ip-line);border-radius:11px;margin:25px 0;background:#f5f5ed}
+.ip-code-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:15px}
+.ip-code-heading strong{font-size:14px;font-weight:500}
+.ip-code-example pre{display:block;max-width:100%;overflow:auto;white-space:pre;padding:20px;background:#213c30;color:#e6eedc;border:1px solid #395442;border-radius:8px;font:13px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}
+.ip-code-example code{font:inherit;color:inherit;background:none;padding:0}
+.ip-code-example details{padding:8px 0 16px;border:0;font-size:13px}
+.ip-code-example summary{cursor:pointer;line-height:1.8}
+.ip-code-example .ip-muted{margin-bottom:0}
+@media(max-width:760px){.ip .ip-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.ip-code-example{padding:16px}.ip-code-example pre{padding:15px;font-size:12px}.ip-code-heading .ip-btn{font-size:12px}}

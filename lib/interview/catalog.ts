@@ -1,7 +1,7 @@
 import raw from './questions.json';
 import type {Question, QuestionSummary, TrackId} from './types';
 export const questions = raw as Question[];
-export const questionSummaries: QuestionSummary[] = questions.map(({id, track, slug, level, round, topic, title, minutes}) => ({id, track, slug, level, round, topic, title, minutes}));
+export const questionSummaries: QuestionSummary[] = questions.map(({id, track, slug, level, round, topic, title, minutes, addedIn}) => ({id, track, slug, level, round, topic, title, minutes, ...(addedIn ? {addedIn} : {})}));
 export const questionHref = (q: Pick<Question, 'track' | 'slug'>) => `/interview-prep/${q.track}/${q.slug}`;
 export const interviewPaths = ['/interview-prep', '/interview-prep/genai', '/interview-prep/frontend', ...questions.map(questionHref)];
 export function isTrack(value: string): value is TrackId {return value === 'genai' || value === 'frontend';}

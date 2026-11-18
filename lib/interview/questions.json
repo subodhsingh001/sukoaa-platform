@@ -381,6 +381,274 @@
     "origin": "User-provided interview topic"
   },
   {
+    "id": "genai-python-copying",
+    "track": "genai",
+    "slug": "python-copying",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "Why did changing a copied Python request alter the original?",
+    "minutes": 8,
+    "lesson": "Assignment creates another binding to the same object. A shallow copy makes a new outer container but preserves references to nested objects, which matters when requests share mutable metadata.",
+    "example": "Two document jobs share a nested tags list after one request dictionary is copied with dict.copy().",
+    "answer": "I would draw the object references before changing the code. A shallow dictionary copy isolates assignments to top-level keys, but a nested list can still be shared. I would copy the specific mutable path I intend to change or use a deliberately chosen deep copy when the object supports it and the cost is appropriate. I would avoid a blanket deepcopy of clients, connections or very large payloads. I would also check mutable default arguments and reused templates, then test that concurrent jobs cannot alter each other's request metadata.",
+    "hints": [
+      "Compare outer identity with nested identity.",
+      "Decide which mutable path actually needs isolation."
+    ],
+    "rubric": [
+      "Explains reference sharing and shallow copies",
+      "Copies only appropriate mutable data",
+      "Tests request isolation without copying live clients"
+    ],
+    "mistakes": [
+      "Assuming dict.copy() recursively isolates every nested value."
+    ],
+    "followUps": [
+      "Why can a mutable function default leak state between calls?",
+      "When would copying an entire payload be unnecessarily expensive?"
+    ],
+    "exercise": "Run the copy example, predict all three printed lists, then change the code to isolate tags before adding a new tag.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "Python shallow and deep copying",
+        "url": "https://docs.python.org/3/library/copy.html"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "python",
+      "source": "from copy import deepcopy\noriginal = {\"tags\": [\"draft\"]}\nshallow = original.copy()\nisolated = deepcopy(original)\nshallow[\"tags\"].append(\"shared\")\nisolated[\"tags\"].append(\"private\")\nprint(original[\"tags\"])\nprint(shallow[\"tags\"])\nprint(isolated[\"tags\"])",
+      "expected": "['draft', 'shared']\n['draft', 'shared']\n['draft', 'private']"
+    }
+  },
+  {
+    "id": "genai-python-json-boundary",
+    "track": "genai",
+    "slug": "python-json-boundary",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "What can go wrong when a Python result crosses a JSON API boundary?",
+    "minutes": 8,
+    "lesson": "Python values and JSON values are not identical. Dates, sets, non-finite floats and very large inputs need a deliberate serialization and validation policy.",
+    "example": "A model-extraction response includes a datetime object, a set of tags and a NaN confidence value.",
+    "answer": "I would define the wire contract rather than serialize arbitrary Python objects implicitly. I would convert dates to an agreed textual format, represent sets as an ordered list when order matters and reject non-finite numbers for strict JSON. I would distinguish a missing field from an explicit null and validate incoming structure and size. I would not use default=str as a universal fix because it can hide an unintended type. A round-trip test should check meaning and types, including Unicode, instead of only whether json.dumps returned a string.",
+    "hints": [
+      "Separate a Python object from the wire representation.",
+      "A successful dump can still violate the API contract."
+    ],
+    "rubric": [
+      "Defines conversions and null semantics",
+      "Rejects unsupported or non-finite values",
+      "Tests Unicode and round-trip meaning"
+    ],
+    "mistakes": [
+      "Converting every unknown object to a string and calling the contract valid."
+    ],
+    "followUps": [
+      "How would you represent an absent date?",
+      "Why should the request body have a size limit?"
+    ],
+    "exercise": "Run the JSON example, then add a date field with an explicit ISO-format contract and a test for a missing value.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "Python JSON encoding and decoding",
+        "url": "https://docs.python.org/3/library/json.html"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "python",
+      "source": "import json\npayload = {\"name\": \"Subo\", \"active\": True, \"note\": None}\nencoded = json.dumps(payload, ensure_ascii=False)\nprint(encoded)\nprint(json.loads(encoded)[\"note\"] is None)\ntry:\n    json.dumps({\"score\": float(\"nan\")}, allow_nan=False)\nexcept ValueError:\n    print(\"Rejected non-finite number\")",
+      "expected": "{\"name\": \"Subo\", \"active\": true, \"note\": null}\nTrue\nRejected non-finite number"
+    }
+  },
+  {
+    "id": "genai-python-exception-boundaries",
+    "track": "genai",
+    "slug": "python-exception-boundaries",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "Which errors should an API workflow catch, retry or report?",
+    "minutes": 8,
+    "lesson": "Error categories have different recovery policies. A validation failure, authorization failure, provider limit and network timeout should not collapse into the same generic success response.",
+    "example": "An extraction worker receives malformed local data, then a provider timeout while processing a different valid record.",
+    "answer": "I would classify failures at clear boundaries and catch the specific exceptions I can handle. Invalid input usually needs correction, not repeated network calls. A transient dependency failure may qualify for a bounded retry, while an authorization failure requires configuration or permission changes. I would preserve useful exception context internally and return a safe, actionable error to the caller. Cleanup belongs in a context manager or finally block. I would not catch every exception and return an empty answer, because that makes failed work look like a valid result and damages evaluation.",
+    "hints": [
+      "What action could make each failure succeed?",
+      "Failure and an empty valid result are different states."
+    ],
+    "rubric": [
+      "Classifies input, permission and transient failures",
+      "Preserves failure context and releases resources",
+      "Returns explicit errors instead of false success"
+    ],
+    "mistakes": [
+      "Catching Exception and silently returning an empty dictionary."
+    ],
+    "followUps": [
+      "What should a batch do when only one record is invalid?",
+      "Which error details must stay out of a public response?"
+    ],
+    "exercise": "Run the missing-field example. Add separate handling for a malformed record and an unavailable provider without pretending either succeeded.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "Python errors and exceptions",
+        "url": "https://docs.python.org/3/tutorial/errors.html"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "python",
+      "source": "def read_name(record):\n    try:\n        return record[\"name\"]\n    except KeyError:\n        return \"Missing name\"\n\nprint(read_name({\"name\": \"Subo\"}))\nprint(read_name({}))\ntry:\n    read_name(None)\nexcept TypeError:\n    print(\"Wrong input type remains visible\")",
+      "expected": "Subo\nMissing name\nWrong input type remains visible"
+    }
+  },
+  {
+    "id": "genai-coroutine-task-lifecycle",
+    "track": "genai",
+    "slug": "coroutine-task-lifecycle",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "What is the difference between a coroutine object and a running task?",
+    "minutes": 9,
+    "lesson": "Calling an async function creates a coroutine object; awaiting it or scheduling it drives execution. Task ownership determines who waits, cancels and observes failures.",
+    "example": "A developer creates several async document requests but forgets to await them before the program exits.",
+    "answer": "I would distinguish declaring an async function, creating a coroutine and scheduling a task in a running event loop. I would keep an owner that awaits completion and handles errors and cancellation. I would choose gather or structured task management based on the required failure behavior, checking the Python version and the documented semantics. I would not assume gather cancels every sibling after one failure. I would also avoid swallowing cancellation exceptions and would release owned resources. Unobserved background tasks are not a reliable job queue or a persistence strategy.",
+    "hints": [
+      "Has execution actually been scheduled?",
+      "Who owns cleanup if the caller disappears?"
+    ],
+    "rubric": [
+      "Distinguishes creation, scheduling and awaiting",
+      "Explains failure and cancellation ownership",
+      "Avoids unobserved fire-and-forget work"
+    ],
+    "mistakes": [
+      "Calling an async function without awaiting or scheduling its result."
+    ],
+    "followUps": [
+      "What changes when one task raises?",
+      "When does a workflow need a durable job queue instead?"
+    ],
+    "exercise": "Run the task example and explain why the printed result order is not evidence of completion order. Then add a deliberate exception and inspect it.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "Python coroutines, tasks and cancellation",
+        "url": "https://docs.python.org/3/library/asyncio-task.html"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "python",
+      "source": "import asyncio\n\nasync def work(name):\n    await asyncio.sleep(0)\n    return name\n\nasync def main():\n    tasks = [asyncio.create_task(work(name)) for name in [\"research\", \"coding\"]]\n    results = await asyncio.gather(*tasks)\n    print(results)\n\nasyncio.run(main())",
+      "expected": "['research', 'coding']"
+    }
+  },
+  {
+    "id": "genai-http-response-contract",
+    "track": "genai",
+    "slug": "http-response-contract",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "Why is a successful HTTP connection not necessarily a successful model request?",
+    "minutes": 8,
+    "lesson": "Transport completion, HTTP success, valid JSON and a valid business result are separate checks. Error handling should preserve this distinction at every API boundary.",
+    "example": "A provider sends HTTP 200 with an incomplete response, or an error response contains HTML instead of the JSON your client expected.",
+    "answer": "I would check the HTTP status, then parse the response defensively and validate the expected result shape. I would handle empty, blocked or truncated model outputs as explicit non-success states even if the connection worked. I would distinguish authentication problems, validation errors and rate limits from transient outages. The user should get a clear next action without raw credentials or provider internals. I would test non-JSON and oversized responses, not just the happy path. Network success alone must never make a failed extraction look like an accurate empty answer.",
+    "hints": [
+      "Which layer is reporting success?",
+      "An empty answer may be a failure, not a valid result."
+    ],
+    "rubric": [
+      "Separates transport, HTTP, parsing and business validity",
+      "Handles malformed and incomplete responses",
+      "Returns safe actionable errors"
+    ],
+    "mistakes": [
+      "Calling response.json() on every response without considering its status or content."
+    ],
+    "followUps": [
+      "How would you handle HTTP 204?",
+      "When should a 429 response be retried?"
+    ],
+    "exercise": "Run the offline response-classification example. Add a case where HTTP 200 has an invalid payload and describe the expected API error.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "HTTP response status codes",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status"
+      },
+      {
+        "title": "Python JSON encoding and decoding",
+        "url": "https://docs.python.org/3/library/json.html"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "python",
+      "source": "# Synthetic statuses: no network requests are made.\ndef classify(status):\n    if 200 <= status < 300:\n        return \"check payload\"\n    if status == 429:\n        return \"consider bounded retry\"\n    if status in (401, 403):\n        return \"check access; do not blindly retry\"\n    return \"handle explicit failure\"\n\nfor status in [200, 403, 429, 500]:\n    print(status, classify(status))",
+      "expected": "200 check payload\n403 check access; do not blindly retry\n429 consider bounded retry\n500 handle explicit failure"
+    }
+  },
+  {
+    "id": "genai-streaming-batches",
+    "track": "genai",
+    "slug": "streaming-batches",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Python & APIs",
+    "title": "How would you process a large document stream without loading it all into memory?",
+    "minutes": 9,
+    "lesson": "Iterators can produce records incrementally. Batching bounds the working set, but batch size must also respect payload limits, provider quotas and output handling.",
+    "example": "An ingestion job has many document records but can only send a small bounded batch to an embedding service at a time.",
+    "answer": "I would consume the source incrementally and form bounded batches, validating the batch size and processing the final partial batch. I would avoid converting the entire input iterator to a list before batching. I would distinguish the count of records from their byte or token size and apply whichever limit is reached first. Results need stable IDs and incremental persistence so a failure does not require restarting all completed work. I would test empty input, an exact multiple, a partial batch and an oversized record, and measure actual memory use on representative inputs.",
+    "hints": [
+      "A record count is not a byte budget.",
+      "Do not materialize the whole source before batching."
+    ],
+    "rubric": [
+      "Uses lazy consumption and bounded batches",
+      "Handles partial batches and oversized records",
+      "Tracks progress by stable record identity"
+    ],
+    "mistakes": [
+      "Building list(all_documents) and only then splitting it into chunks."
+    ],
+    "followUps": [
+      "How would you resume after batch seven fails?",
+      "How would you handle one record larger than the provider limit?"
+    ],
+    "exercise": "Run the batching helper for empty input, five records and an invalid size. Explain which memory remains bounded and which output collection grows.",
+    "tool": "/tools/python",
+    "sources": [
+      {
+        "title": "Python iterator tools",
+        "url": "https://docs.python.org/3/library/itertools.html"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "python",
+      "source": "from itertools import islice\n\ndef batches(iterable, size):\n    if isinstance(size, bool) or not isinstance(size, int) or size < 1:\n        raise ValueError(\"size must be a positive integer\")\n    items = iter(iterable)\n    while True:\n        batch = list(islice(items, size))\n        if not batch:\n            return\n        yield batch\n\nprint(list(batches(range(5), 2)))\nprint(list(batches([], 2)))\ntry:\n    list(batches(range(3), 0))\nexcept ValueError:\n    print(\"Rejected invalid size\")",
+      "expected": "[[0, 1], [2, 3], [4]]\n[]\nRejected invalid size"
+    }
+  },
+  {
     "id": "genai-rag-pipeline",
     "track": "genai",
     "slug": "rag-pipeline",
@@ -769,6 +1037,318 @@
     "origin": "User-provided interview topic"
   },
   {
+    "id": "genai-retry-backoff",
+    "track": "genai",
+    "slug": "retry-backoff",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Python & APIs",
+    "title": "How would you retry an LLM API call without creating a retry storm?",
+    "minutes": 11,
+    "lesson": "Retries consume time and quota and can amplify an outage. A safe policy considers failure category, total deadline, backoff, concurrency and whether the operation can be repeated.",
+    "example": "A shared worker pool receives HTTP 429 responses and every worker immediately sends the same request again.",
+    "answer": "I would classify retryable conditions and use a bounded attempt count within an overall deadline. I would honor a valid Retry-After hint when practical, apply backoff with jitter and coordinate concurrency rather than let every worker retry at once. Authentication and invalid-input errors would not be blindly retried. If an operation can cause a side effect, I would require an idempotency or reconciliation strategy. I would measure retry volume and final outcomes separately from initial failures. A retry policy needs a stop condition and a clear user-visible failure when its budget is exhausted.",
+    "hints": [
+      "A per-attempt timeout is not an overall deadline.",
+      "Could repeating this call change external state twice?"
+    ],
+    "rubric": [
+      "Bounds attempts, time and concurrency",
+      "Uses failure-aware backoff and provider hints",
+      "Handles duplicate side effects and final failure"
+    ],
+    "mistakes": [
+      "Retrying every non-200 response immediately and forever."
+    ],
+    "followUps": [
+      "How would cancellation interrupt a backoff delay?",
+      "What signal would make you stop retries during an outage?"
+    ],
+    "exercise": "Write a retry-policy table for 400, 401, 429, 503 and a network timeout. Add a total deadline and an explicit non-retryable action.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "HTTP 429 and Retry-After",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/429"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-paginated-ingestion",
+    "track": "genai",
+    "slug": "paginated-ingestion",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Python & APIs",
+    "title": "How would you resume a paginated ingestion job safely after a crash?",
+    "minutes": 12,
+    "lesson": "Fetching pages and processing records are different progress boundaries. Resume state must describe completed work without skipping failures or duplicating harmful effects.",
+    "example": "A process stores the next-page cursor before all records from the current page have been indexed, then crashes.",
+    "answer": "I would use stable source IDs and record which source version has been successfully processed. I would persist a checkpoint only after the corresponding work is durable, with idempotent upserts or deduplication to make replay safe. I would inspect whether cursors expire and whether the source can change while paging. A retry should not silently skip a failed record because its page was already marked complete. I would keep a bounded error queue and test crashes between fetch, processing and checkpoint writes. A cursor alone does not establish exactly-once processing.",
+    "hints": [
+      "What was durable when the checkpoint was written?",
+      "Replay should be safe."
+    ],
+    "rubric": [
+      "Separates fetch and durable processing checkpoints",
+      "Uses stable IDs and replay-safe writes",
+      "Tests source changes and crash boundaries"
+    ],
+    "mistakes": [
+      "Advancing a cursor before the page's records have been durably handled."
+    ],
+    "followUps": [
+      "What if a cursor expires overnight?",
+      "What if an updated document reuses the same source ID?"
+    ],
+    "exercise": "Draw the fetch, index and checkpoint sequence. Inject a crash after each step and state which records are replayed.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "HTTP response status codes",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-retrieval-failure-trace",
+    "track": "genai",
+    "slug": "retrieval-failure-trace",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "RAG debugging",
+    "title": "A known answer is in the corpus but absent from the response. Where do you investigate?",
+    "minutes": 11,
+    "lesson": "A RAG request passes through multiple lossy steps. A failure trace should show the transition where the correct evidence disappeared, rather than immediately changing the prompt.",
+    "example": "A policy passage exists in storage but is filtered out before reranking, so the generator never receives it.",
+    "answer": "I would use a reproducible question and identify the expected source passage first. I would then inspect parsing and chunk boundaries, index membership, query normalization, permission filters, candidate ranks, reranker output and final prompt construction. I would keep each stage's input and output identifiers, redacting sensitive text. I would check truncation and version freshness before blaming the generator. Only after locating the loss would I change one component and rerun a targeted regression case. The final answer alone cannot tell me whether retrieval or generation caused the failure.",
+    "hints": [
+      "Find the expected passage's identifier first.",
+      "Inspect the final prompt, not only the candidate list."
+    ],
+    "rubric": [
+      "Traces evidence across every lossy stage",
+      "Separates retrieval, filtering and generation failure",
+      "Makes one testable change and adds a regression case"
+    ],
+    "mistakes": [
+      "Replacing the model before checking whether it saw the relevant passage."
+    ],
+    "followUps": [
+      "What if the correct passage reaches the prompt but is ignored?",
+      "Which trace fields can you retain without storing private document text?"
+    ],
+    "exercise": "Build a stage-by-stage trace for one failing query in the RAG lab. Record the first stage that loses the expected evidence.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "Sukoaa RAG lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-hybrid-rank-fusion",
+    "track": "genai",
+    "slug": "hybrid-rank-fusion",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Retrieval experiments",
+    "title": "How would you combine lexical and vector search when their scores have different scales?",
+    "minutes": 11,
+    "lesson": "Raw scores from different retrieval systems may not be directly comparable. Rank fusion combines positions, while score calibration is a separate design choice.",
+    "example": "Keyword search ranks an exact product identifier first, while vector search retrieves a useful explanation with a much smaller numeric score.",
+    "answer": "I would avoid simply adding raw BM25 and cosine scores without understanding their distributions. I would evaluate a rank-based method such as reciprocal rank fusion against single-retriever baselines. I would define candidate limits, missing-result handling, duplicate identities and any weighting, then tune on representative queries. I would separately inspect exact identifiers, paraphrases and multi-part questions. Rank fusion helps combine candidate evidence but does not prove source correctness or fix missing documents. I would measure recall, ranking, latency and downstream quality before selecting a fusion policy.",
+    "hints": [
+      "Is a lexical score of ten comparable to a cosine score of point eight?",
+      "Combine stable document identities, not duplicated copies."
+    ],
+    "rubric": [
+      "Distinguishes rank fusion from raw-score addition",
+      "Defines candidate and duplicate handling",
+      "Compares hybrid retrieval with appropriate baselines"
+    ],
+    "mistakes": [
+      "Treating unrelated score scales as interchangeable probabilities."
+    ],
+    "followUps": [
+      "What happens if a document appears in only one result list?",
+      "Could one retriever dominate after weighting?"
+    ],
+    "exercise": "Construct two short ranked lists, combine them using a documented reciprocal-rank formula and explain how a shared result benefits.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Reciprocal Rank Fusion reference",
+        "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-ranking"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-duplicate-evidence",
+    "track": "genai",
+    "slug": "duplicate-evidence",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "RAG debugging",
+    "title": "Why can overlapping chunks make five retrieved results behave like one source?",
+    "minutes": 10,
+    "lesson": "Several high-ranked chunks may repeat the same information. Diversity and source identity matter because duplicate context can consume the prompt budget without improving evidence coverage.",
+    "example": "The top five passages all repeat a returns-policy paragraph while the exception table is pushed out.",
+    "answer": "I would inspect source IDs, offsets and overlap to determine how much evidence is duplicated. I would measure coverage of distinct required facts, not only the number of retrieved chunks. I might deduplicate exact content, group neighboring passages or introduce a diversity-aware selection policy, preserving enough context for interpretation. I would test whether the change loses legitimately complementary passages from one document. Repeated text should not be treated as independent corroboration. Any improvement should be checked on queries requiring multiple sources as well as simple single-passage questions.",
+    "hints": [
+      "Count distinct facts and sources, not only chunks.",
+      "Removing every same-document passage can also lose useful detail."
+    ],
+    "rubric": [
+      "Detects overlap and repeated evidence",
+      "Balances deduplication with contextual completeness",
+      "Evaluates multi-source coverage and prompt cost"
+    ],
+    "mistakes": [
+      "Counting repeated copies as independent evidence of truth."
+    ],
+    "followUps": [
+      "When should adjacent chunks be merged?",
+      "How would you preserve a heading while deduplicating its repeated text?"
+    ],
+    "exercise": "Create a retrieval list with three overlapping passages and two distinct facts. Design a smaller final context that preserves both facts.",
+    "tool": "/tools/rag-playground",
+    "sources": [
+      {
+        "title": "Sukoaa RAG lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-metadata-filter-recall",
+    "track": "genai",
+    "slug": "metadata-filter-recall",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "RAG debugging",
+    "title": "How can a correct permission filter still cause a retrieval-quality problem?",
+    "minutes": 11,
+    "lesson": "Authorization filters are mandatory boundaries, but their placement and the search engine's filtering semantics can affect candidate coverage. Quality fixes must preserve the security policy.",
+    "example": "A broad top-k search returns mostly unauthorized documents; filtering them afterward leaves no useful authorized passages.",
+    "answer": "I would verify the authorization policy first and then inspect how the retrieval engine applies filters. Post-filtering a small global candidate list can reduce authorized recall, while a supported prefiltered or partitioned search may find better authorized candidates. I would test narrow tenants, sparse categories and combinations of metadata conditions with the actual engine. I would never remove the filter to improve a score. I would also distinguish missing source data from insufficient search candidates and evaluate authorized recall and cross-tenant rejection as separate release requirements.",
+    "hints": [
+      "Was filtering applied before or after candidate selection?",
+      "Security and recall need independent tests."
+    ],
+    "rubric": [
+      "Preserves mandatory authorization",
+      "Explains filtering placement and engine behavior",
+      "Tests sparse authorized candidate sets"
+    ],
+    "mistakes": [
+      "Temporarily disabling access filters to make retrieval look better."
+    ],
+    "followUps": [
+      "What happens when a user's membership changes?",
+      "How would you measure authorized recall?"
+    ],
+    "exercise": "Draw a ten-document example where filtering a global top-three list misses an authorized answer. Propose a policy-preserving alternative.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Sukoaa RAG lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-context-budget-order",
+    "track": "genai",
+    "slug": "context-budget-order",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Retrieval experiments",
+    "title": "What if the retriever finds the evidence but prompt truncation removes it?",
+    "minutes": 11,
+    "lesson": "Retrieval success and context delivery are different measurements. Prompt construction must reserve output capacity and select complete evidence within a model-specific budget.",
+    "example": "A long chat history pushes the last retrieved passage, containing the crucial policy exception, out of the final request.",
+    "answer": "I would inspect the actual serialized prompt and account for system instructions, history, tool definitions, evidence and response capacity. I would select passages using task relevance and completeness rather than concatenate until a string-length limit is reached. I would preserve important headings, source IDs and conditions and test how ordering affects answer quality. Summaries introduce their own loss and should be evaluated. I would track whether required evidence survives prompt assembly, because a high retriever score is misleading if the generator never receives the passage that matters.",
+    "hints": [
+      "Count the complete request in the correct encoding.",
+      "A partial exception clause can reverse a policy's meaning."
+    ],
+    "rubric": [
+      "Measures the actual final prompt budget",
+      "Preserves complete evidence and provenance",
+      "Evaluates truncation and ordering separately"
+    ],
+    "mistakes": [
+      "Trimming the last characters without checking which evidence was removed."
+    ],
+    "followUps": [
+      "Which history turns can be summarized safely?",
+      "How would you test a query needing two distant passages?"
+    ],
+    "exercise": "Allocate a hypothetical prompt budget, then choose which context to retain for a question requiring a policy and its exception.",
+    "tool": "/tools/token-counter",
+    "sources": [
+      {
+        "title": "Sukoaa RAG lab",
+        "url": "/tools/rag-playground"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-evaluation-leakage",
+    "track": "genai",
+    "slug": "evaluation-leakage",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Evaluation practice",
+    "title": "How can repeated prompt tuning make an evaluation score misleading?",
+    "minutes": 11,
+    "lesson": "A test set stops being a clean holdout when its cases repeatedly guide implementation choices. Related or duplicated documents can leak across a split too.",
+    "example": "After reviewing every failing test question, a team adds answer-specific prompt examples and reports the same set as unseen performance.",
+    "answer": "I would separate development cases from a protected evaluation set and document how each is used. I would group related cases or documents when splitting so near-duplicates do not create an easy shortcut. I would version prompts, references and corpus snapshots and record the number of comparisons made. A new failure may become a development regression case, but I would obtain fresh held-out evidence before claiming generalization. I would inspect results by query category and report limitations rather than present a tuned benchmark score as an unbiased production estimate.",
+    "hints": [
+      "Did a supposedly unseen answer influence the prompt?",
+      "Related examples may need to remain in the same split."
+    ],
+    "rubric": [
+      "Separates tuning and holdout usage",
+      "Prevents duplicate or related-case leakage",
+      "Reports repeated comparisons and validation limits"
+    ],
+    "mistakes": [
+      "Calling a heavily inspected development set a fresh test set."
+    ],
+    "followUps": [
+      "How would you add a new production failure to evaluation?",
+      "Who should be allowed to edit held-out labels?"
+    ],
+    "exercise": "Design a development/holdout split for questions derived from ten policy documents, including a rule for duplicate policies.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metric definitions",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
     "id": "genai-llm-judge-reliability",
     "track": "genai",
     "slug": "llm-judge-reliability",
@@ -1151,6 +1731,244 @@
       }
     ],
     "origin": "Sukoaa original"
+  },
+  {
+    "id": "genai-correctness-vs-grounding",
+    "track": "genai",
+    "slug": "correctness-vs-grounding",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Evaluation practice",
+    "title": "Can an answer be faithful to retrieved evidence and still be wrong?",
+    "minutes": 12,
+    "lesson": "Grounding and factual correctness are separate properties. A response can accurately follow an obsolete or incorrect source, so evaluating only faithfulness leaves a significant blind spot.",
+    "example": "An assistant quotes an old cancellation policy perfectly even though a current authoritative policy supersedes it.",
+    "answer": "I would distinguish support by the supplied context from correctness against an authoritative reference and the current task. I would evaluate source validity and freshness, claim support and answer correctness separately. A faithful response to an incorrect source should expose a source-quality failure rather than be counted as a complete success. I would maintain provenance and temporal requirements, include conflicting-source cases and define how uncertainty or escalation is handled. I would also calibrate human and automated labels, because different judges may silently use different definitions of correct and supported.",
+    "hints": [
+      "Ask what the metric treats as ground truth.",
+      "A citation can support an outdated statement."
+    ],
+    "rubric": [
+      "Separates claim support from external correctness",
+      "Evaluates authoritative source versions",
+      "Defines handling of conflicts and metric disagreement"
+    ],
+    "mistakes": [
+      "Treating a high faithfulness score as proof of factual truth."
+    ],
+    "followUps": [
+      "What if two authorized sources disagree?",
+      "How would you label a historically correct answer to a current-policy question?"
+    ],
+    "exercise": "Create two examples: faithful but incorrect, and correct but unsupported. State which pipeline component should be fixed in each case.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metric definitions",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-evaluation-slices",
+    "track": "genai",
+    "slug": "evaluation-slices",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Evaluation practice",
+    "title": "Overall accuracy rose, but a small customer segment got worse. Would you release?",
+    "minutes": 12,
+    "lesson": "An aggregate metric can hide a serious regression in a small or high-impact segment. A release decision needs effect size, uncertainty and explicit minimum requirements for critical behavior.",
+    "example": "Common FAQ questions improve while a minority-language group receives more unsupported answers.",
+    "answer": "I would inspect sample counts and uncertainty for each relevant slice and compare paired outcomes where possible. I would define critical slices and release gates before looking for a favorable aggregate. Low sample sizes may require more data rather than a confident claim either way. I would consider the severity of regressions, not only their frequency, and distinguish a practical harm from metric noise. A controlled rollout or a targeted fallback may be appropriate, but I would not override a critical safety or access-control failure because the overall average improved.",
+    "hints": [
+      "Which failures have disproportionate consequences?",
+      "A small slice needs its sample size reported."
+    ],
+    "rubric": [
+      "Inspects slices, counts and uncertainty",
+      "Uses predefined critical release requirements",
+      "Considers severity and a defensible rollout decision"
+    ],
+    "mistakes": [
+      "Choosing only the metric or segment that makes a change look successful."
+    ],
+    "followUps": [
+      "How would you avoid inventing slices after seeing results?",
+      "What would you do if the critical slice has only five cases?"
+    ],
+    "exercise": "Build a fictional two-segment result table where the overall score rises but one segment falls. Propose a release decision with explicit missing evidence.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "Ragas metric definitions",
+        "url": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-agent-checkpoint-recovery",
+    "track": "genai",
+    "slug": "agent-checkpoint-recovery",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Agent operations",
+    "title": "An agent crashes after a tool succeeds. How should it resume?",
+    "minutes": 15,
+    "lesson": "Durable state and external side effects are not automatically atomic. A checkpoint must distinguish a planned operation, an executed operation and an uncertain outcome after a crash.",
+    "example": "An assistant creates a support ticket, loses the network response and restarts from the preceding step.",
+    "answer": "I would assign stable operation IDs and record intent and observed outcomes in durable workflow state. A retried side-effecting tool should support idempotency or a reconciliation lookup that can establish whether it already completed. I would not let the model infer success from an incomplete transcript. Resume logic would restore authorization context and validate that any pending approval is still applicable. I would test crashes before execution, after execution and before checkpoint persistence. Where exactly-once effects cannot be guaranteed, I would state the limitation and provide a safe reconciliation or human-review path.",
+    "hints": [
+      "A timeout leaves an uncertain outcome.",
+      "What durable key links intent to the external operation?"
+    ],
+    "rubric": [
+      "Models intent, outcome and uncertainty explicitly",
+      "Uses idempotency or reconciliation",
+      "Tests crash boundaries and renewed authorization"
+    ],
+    "mistakes": [
+      "Replaying a successful external action just because no response was saved."
+    ],
+    "followUps": [
+      "What if the tool has no idempotency support?",
+      "Can an approval from yesterday authorize a changed request today?"
+    ],
+    "exercise": "Draw a checkpoint timeline for ticket creation and mark where recovery must query external state instead of repeating the action.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "OWASP guidance for LLM applications",
+        "url": "https://genai.owasp.org/llmrisk/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-agent-resource-budgets",
+    "track": "genai",
+    "slug": "agent-resource-budgets",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Agent operations",
+    "title": "How would you stop an agent that keeps trying without making progress?",
+    "minutes": 12,
+    "lesson": "Per-call limits are not enough for a multi-step workflow. A run needs total budgets, explicit termination conditions and a product-level definition of useful progress.",
+    "example": "Each tool call finishes within its timeout, but the assistant cycles between search and reformulation for many minutes.",
+    "answer": "I would set an overall deadline, maximum steps, allowed tools, spend or token budget and bounded retries, with cancellation propagated to in-flight work. I would track repeated states or equivalent actions and define task progress beyond generating another message. A supervisor would enforce these limits outside the model and return a clear incomplete outcome when they are exhausted. I would preserve useful partial results and trace the stopping reason. I would evaluate tasks that naturally loop or fail, because a successful demo does not show whether resource use remains bounded under adverse inputs.",
+    "hints": [
+      "Which process enforces the total budget?",
+      "A different-looking prompt may repeat the same action."
+    ],
+    "rubric": [
+      "Enforces run-level resource budgets outside the model",
+      "Defines progress and loop detection",
+      "Preserves partial results and explicit stopping reasons"
+    ],
+    "mistakes": [
+      "Relying only on a prompt that says do not loop."
+    ],
+    "followUps": [
+      "How would parallel tools share a remaining budget?",
+      "Which task outcomes justify asking the user for help?"
+    ],
+    "exercise": "Specify a run policy for a research assistant with three tools. Include deadlines, retry rules, a repeated-action condition and the final incomplete response.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "OWASP guidance for LLM applications",
+        "url": "https://genai.owasp.org/llmrisk/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-agent-trace-evaluation",
+    "track": "genai",
+    "slug": "agent-trace-evaluation",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Agent evaluation",
+    "title": "How would you evaluate an agent that produces the right answer using an unsafe action?",
+    "minutes": 14,
+    "lesson": "Final-answer quality is only one dimension of an agent's behavior. Tool choice, arguments, authorization, side effects and recovery must also be evaluated from an execution trace.",
+    "example": "A support agent eventually answers correctly but attempts to read another customer's record during the process.",
+    "answer": "I would define expected task outcomes and prohibited actions, then collect a redacted, versioned trace of decisions, tool calls, validated arguments and actual effects. Deterministic checks would enforce tool permissions, ownership and resource budgets; rubric-based review would assess reasoning and unnecessary work. An unauthorized attempt should fail a critical gate even if the last answer is correct. I would include denied actions, partial tool failures and misleading observations in the evaluation set. Traces should minimize personal information, and model-generated explanations should not substitute for evidence of what the application actually executed.",
+    "hints": [
+      "Correct output does not excuse a forbidden action.",
+      "Trust executed tool records over the model's summary."
+    ],
+    "rubric": [
+      "Evaluates trace-level actions and final outcomes",
+      "Uses deterministic critical gates",
+      "Includes adversarial cases and privacy-safe evidence"
+    ],
+    "mistakes": [
+      "Grading only the last message and ignoring the attempted actions."
+    ],
+    "followUps": [
+      "How would you evaluate a legitimately different valid action sequence?",
+      "What trace fields should be redacted?"
+    ],
+    "exercise": "Write a trace rubric for a support task and a counterexample that reaches the right answer through an unauthorized call.",
+    "tool": "/tools/tool-schema-generator",
+    "sources": [
+      {
+        "title": "OWASP guidance for LLM applications",
+        "url": "https://genai.owasp.org/llmrisk/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "genai-provider-contract-release",
+    "track": "genai",
+    "slug": "provider-contract-release",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Deployment & contracts",
+    "title": "How would you handle a provider model change that breaks a working integration?",
+    "minutes": 13,
+    "lesson": "A provider response is an external contract that can evolve independently of your UI. Deployment readiness includes model access, output parsing and failure handling, not only prompt quality.",
+    "example": "A model alias changes behavior or becomes unavailable, and a previously accepted tool definition is rejected.",
+    "answer": "I would pin or explicitly configure the intended model where possible and maintain contract tests for the exact request and response shapes my application depends on. I would verify access and representative calls in the deployment environment, including blocked, truncated and quota-limited responses. A fallback would be separately evaluated and enabled deliberately rather than silently switch to a potentially incompatible or more expensive model. I would version adapters, keep keys server-side and expose safe errors. Rollback must restore a known working integration, while recognizing that an external provider can remove a dependency I cannot restore myself.",
+    "hints": [
+      "Does a local mock prove production model access?",
+      "A fallback is a new behavior and cost decision."
+    ],
+    "rubric": [
+      "Tests actual external contract boundaries",
+      "Versions adapters and deliberate fallbacks",
+      "Handles unavailable models with safe errors"
+    ],
+    "mistakes": [
+      "Automatically switching to any available paid model when a request fails."
+    ],
+    "followUps": [
+      "Which tests can run without credentials?",
+      "How would you stop repeated quota errors from consuming your own server resources?"
+    ],
+    "exercise": "Design a release checklist covering schema acceptance, model access, non-JSON errors, quota responses and explicit fallback approval.",
+    "tool": "/tools/notepad",
+    "sources": [
+      {
+        "title": "HTTP response status codes",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status"
+      },
+      {
+        "title": "OWASP guidance for LLM applications",
+        "url": "https://genai.owasp.org/llmrisk/"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
   },
   {
     "id": "frontend-closures",
@@ -1536,6 +2354,250 @@
       }
     ],
     "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-controlled-inputs",
+    "track": "frontend",
+    "slug": "controlled-inputs",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "React fundamentals",
+    "title": "When would you choose a controlled or uncontrolled form input?",
+    "minutes": 8,
+    "lesson": "A controlled input gets its current value from React state and reports edits through an event handler. An uncontrolled input keeps its current value in the DOM, which can be read when needed.",
+    "example": "A search field needs live validation, while a simple upload form only needs its values when the user submits.",
+    "answer": "I would decide who needs to own the current value. Controlled state is useful for live validation, dependent fields and reflecting changes elsewhere in the UI. For a simple form, an uncontrolled input with a default value and form submission may need less state. I would not switch an input between undefined and a controlled string after mounting. In either approach I would label fields, preserve user edits, handle reset deliberately and validate again at the server boundary. I would measure performance before optimizing away straightforward state.",
+    "hints": [
+      "Who must react to each edit?",
+      "defaultValue is an initial value, not continuous control."
+    ],
+    "rubric": [
+      "Distinguishes state ownership",
+      "Handles initialization and resets consistently",
+      "Includes accessible labels and server validation"
+    ],
+    "mistakes": [
+      "Assuming an uncontrolled field needs no validation."
+    ],
+    "followUps": [
+      "How would a late network response avoid overwriting current edits?",
+      "How would you reset a file input?"
+    ],
+    "exercise": "Build a labelled search input with controlled state, then implement an uncontrolled version that reads FormData on submit. Compare when each value becomes available.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React input reference",
+        "url": "https://react.dev/reference/react-dom/components/input"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-render-purity",
+    "track": "frontend",
+    "slug": "render-purity",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "React fundamentals",
+    "title": "Why should rendering avoid mutating props or external state?",
+    "minutes": 9,
+    "lesson": "React may run rendering more than once or abandon work before committing it. A render calculation should derive UI from its inputs without changing data owned elsewhere.",
+    "example": "A component sorts its props array in place, changing the order seen by a sibling even before the user clicks anything.",
+    "answer": "I would keep rendering pure and create a new array before sorting or transforming shared input. An event handler can initiate an action, and an effect can synchronize a committed component with an external system when that is necessary. A ref can hold mutable information that does not drive rendering, but changing it is not a substitute for state updates. I would test with frozen inputs and development checks to catch accidental mutation. Repeated rendering should compute the same result from the same inputs without producing extra writes or subscriptions.",
+    "hints": [
+      "Does the calculation modify data it did not create?",
+      "A repeated render should not repeat a side effect."
+    ],
+    "rubric": [
+      "Derives output without mutating shared inputs",
+      "Places actions and synchronization at appropriate boundaries",
+      "Verifies repeatability and input preservation"
+    ],
+    "mistakes": [
+      "Disabling development checks to hide duplicate side effects."
+    ],
+    "followUps": [
+      "Why can writing a ref during render still be unsafe?",
+      "Would useMemo make an impure calculation safe?"
+    ],
+    "exercise": "Write a pure helper that sorts products by price without mutating its input. Run it twice and verify that the original order remains unchanged.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React render purity",
+        "url": "https://react.dev/reference/rules/components-and-hooks-must-be-pure"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "javascript",
+      "source": "// Standalone helper: run in JavaScript; apply the idea in React.\nconst products = [{ id: 1, price: 20 }, { id: 2, price: 10 }];\nconst byPrice = items => [...items].sort((a, b) => a.price - b.price);\nconsole.log(JSON.stringify(byPrice(products).map(p => p.id)));\nconsole.log(JSON.stringify(byPrice(products).map(p => p.id)));\nconsole.log(JSON.stringify(products.map(p => p.id)));",
+      "expected": "[2,1]\n[2,1]\n[1,2]"
+    }
+  },
+  {
+    "id": "frontend-angular-service-lifetimes",
+    "track": "frontend",
+    "slug": "angular-service-lifetimes",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Angular fundamentals",
+    "title": "Why do two Angular components receive different instances of one service?",
+    "minutes": 9,
+    "lesson": "Angular dependency injection resolves a token through an injector hierarchy. Providing a service at a component boundary can create an instance with a narrower lifetime than a root-provided service.",
+    "example": "Two independent editors provide the same draft service locally so their current drafts do not overwrite each other.",
+    "answer": "I would inspect where the token is provided, not only where it is injected. A root-provided service is commonly shared through the root environment, while a component provider can create a separate instance for that component subtree. I would choose the lifetime to match ownership and clean up subscriptions or resources when their scope ends. Shared state must be deliberate, especially when opening multiple editors. I would test identity and state isolation across sibling instances and avoid depending on a service being global when a local provider shadows it.",
+    "hints": [
+      "Which injector owns this instance?",
+      "A component provider can shadow a broader provider."
+    ],
+    "rubric": [
+      "Explains hierarchical resolution and provider scope",
+      "Matches lifetime to state ownership",
+      "Tests isolation and cleanup between component instances"
+    ],
+    "mistakes": [
+      "Assuming every service is a singleton merely because it uses Injectable."
+    ],
+    "followUps": [
+      "When would a shared cache belong in a broader scope?",
+      "How could a test accidentally use a different provider from production?"
+    ],
+    "exercise": "Create two independent counter panels with component-scoped services, then move the provider to a shared scope and describe how the behavior changes.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular hierarchical dependency injection",
+        "url": "https://angular.dev/guide/di/hierarchical-dependency-injection"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-angular-list-identity",
+    "track": "frontend",
+    "slug": "angular-list-identity",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "Angular fundamentals",
+    "title": "What should an Angular @for block track when a list can reorder?",
+    "minutes": 9,
+    "lesson": "A list's tracking expression describes the identity of each item across updates. Stable identity lets Angular associate DOM and component state with the same logical record after reordering.",
+    "example": "A user edits the second row, then a new record is inserted at the top. Tracking the position can associate that edit with the wrong record.",
+    "answer": "I would track a stable unique record ID for a dynamic list. An index may be appropriate for a genuinely static list, but not as a general identity for editable or reorderable records. I would ensure newly created unsaved rows also have stable local IDs and would not generate new random keys during rendering. Tests should insert, remove and reorder rows while checking focus and local field state. Tracking helps preserve identity; it does not replace validation or make duplicate record IDs acceptable.",
+    "hints": [
+      "Is this the same position or the same record?",
+      "A key must remain stable across renders."
+    ],
+    "rubric": [
+      "Chooses stable unique record identity",
+      "Tests insertions, reordering and focus",
+      "Handles unsaved rows without generating render-time keys"
+    ],
+    "mistakes": [
+      "Tracking array position for a list whose order changes."
+    ],
+    "followUps": [
+      "What happens if the API returns duplicate IDs?",
+      "When would deliberately resetting a row component be useful?"
+    ],
+    "exercise": "Render an editable list using stable IDs and insert an item at the beginning. Verify that a draft and keyboard focus remain associated with the original record.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular template control flow",
+        "url": "https://angular.dev/guide/templates/control-flow"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-typescript-state-unions",
+    "track": "frontend",
+    "slug": "typescript-state-unions",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "TypeScript & testing",
+    "title": "How can a discriminated union prevent impossible UI states?",
+    "minutes": 9,
+    "lesson": "A discriminant such as status lets TypeScript narrow a union to a specific state shape. This makes required data available only in states where it actually exists.",
+    "example": "Separate loading, error and data booleans permit a screen that is simultaneously loading, failed and showing an unrelated success result.",
+    "answer": "I would model distinct idle, loading, success and error variants with a literal status property. Success would require its data and error would require an error message. Rendering can switch on status and use an exhaustive check to catch a newly added variant at compile time. This improves internal correctness but does not validate data arriving from JSON; that boundary still needs runtime checks. I would test transitions and error rendering as user behavior, and avoid type assertions that bypass the guarantees the union is meant to provide.",
+    "hints": [
+      "Which properties are valid only after success?",
+      "Compile-time narrowing does not parse an HTTP payload."
+    ],
+    "rubric": [
+      "Models valid variants with a discriminant",
+      "Checks exhaustive handling",
+      "Separates internal types from runtime validation"
+    ],
+    "mistakes": [
+      "Casting unvalidated network data to the desired union."
+    ],
+    "followUps": [
+      "How would you represent refreshing while keeping old results visible?",
+      "What changes when a new cancelled state is introduced?"
+    ],
+    "exercise": "Define a request-state union and render every variant. Add a cancelled variant and use the compiler to locate handling that is no longer exhaustive.",
+    "tool": "/tools/typescript",
+    "sources": [
+      {
+        "title": "TypeScript discriminated unions",
+        "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-batching-edge-cases",
+    "track": "frontend",
+    "slug": "batching-edge-cases",
+    "level": "foundation",
+    "round": "foundations",
+    "topic": "TypeScript & testing",
+    "title": "How would you implement and test an array batching helper?",
+    "minutes": 9,
+    "lesson": "A batching helper splits an input into ordered groups without changing the input. Defining the size contract prevents zero or negative sizes from creating a loop that never progresses.",
+    "example": "A list of five IDs with size two should become groups of two, two and one, while an empty list produces no groups.",
+    "answer": "I would clarify whether the helper accepts only arrays and positive integer sizes, and whether groups contain the same item references. I would return new group arrays without mutating the original, reject invalid sizes and test empty input, size one, a partial final batch and a size larger than the input. The total work is linear in the number of items copied. For a stream too large to hold in memory, I would choose an iterator-based design instead of promising that batching an already-loaded array solves memory pressure.",
+    "hints": [
+      "What happens when size is zero?",
+      "A new array does not necessarily deep-copy its items."
+    ],
+    "rubric": [
+      "Defines size, order and mutation contracts",
+      "Tests empty, partial and invalid inputs",
+      "Explains linear copying and memory limits"
+    ],
+    "mistakes": [
+      "Using a non-positive increment in the batching loop."
+    ],
+    "followUps": [
+      "How would you handle a lazy input stream?",
+      "Would mutating an object inside a returned batch affect the original object?"
+    ],
+    "exercise": "Implement batches without external dependencies and write edge-case assertions. Compare the original array before and after each test to verify preservation.",
+    "tool": "/tools/javascript",
+    "sources": [
+      {
+        "title": "MDN JavaScript guide",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "javascript",
+      "source": "function batches(items, size) {\n  if (!Array.isArray(items)) throw new TypeError('items must be an array');\n  if (!Number.isInteger(size) || size < 1) throw new RangeError('positive integer required');\n  const output = [];\n  for (let i = 0; i < items.length; i += size) output.push(items.slice(i, i + size));\n  return output;\n}\nconst input = [1, 2, 3, 4, 5];\nconsole.log(JSON.stringify(batches(input, 2)));\nconsole.log(JSON.stringify(batches([], 2)));\nconsole.log(JSON.stringify(input));\ntry { batches(input, 0); } catch (error) { console.log(error.name); }",
+      "expected": "[[1,2],[3,4],[5]]\n[]\n[1,2,3,4,5]\nRangeError"
+    }
   },
   {
     "id": "frontend-fetch-races",
@@ -1926,6 +2988,336 @@
     "origin": "Sukoaa original"
   },
   {
+    "id": "frontend-reducer-transitions",
+    "track": "frontend",
+    "slug": "reducer-transitions",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "React state & reliability",
+    "title": "When does a reducer make a multi-step UI easier to reason about?",
+    "minutes": 10,
+    "lesson": "A reducer expresses state transitions as a function of previous state and an action. It is useful when several fields must change together to preserve a business invariant.",
+    "example": "A submission starts, clears an old error and locks editing. Success stores a receipt; failure restores an editable state with a message.",
+    "answer": "I would list the valid UI states and events before choosing an implementation. A reducer can update related fields together and make impossible combinations easier to prevent. It should remain pure; network calls belong outside the reducer and dispatch results with enough identity to reject stale responses. I would test meaningful transitions, including duplicate clicks and late responses, rather than assert every internal field assignment. A reducer is not automatically better for a single independent toggle, and an overly generic action system can make a small component harder to understand.",
+    "hints": [
+      "Which fields must change atomically?",
+      "A reducer calculates the next state; it does not send the request."
+    ],
+    "rubric": [
+      "Models valid transitions and invariants",
+      "Keeps side effects outside the reducer",
+      "Tests duplicate and stale-result behavior"
+    ],
+    "mistakes": [
+      "Starting HTTP calls from inside the reducer."
+    ],
+    "followUps": [
+      "How would you prevent an old request from completing a newer submission?",
+      "When is ordinary useState clearer?"
+    ],
+    "exercise": "Model idle, saving, success and error states for a save button. Add a request ID and show which completion events should be ignored.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React useReducer",
+        "url": "https://react.dev/reference/react/useReducer"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "javascript",
+      "source": "// Standalone transition helper; network work belongs outside it.\nfunction reducer(state, action) {\n  if (action.type === 'start') return { status: 'saving', requestId: action.id };\n  if (action.type === 'success' && state.status === 'saving' && state.requestId === action.id) {\n    return { status: 'success', receipt: action.receipt };\n  }\n  return state;\n}\nlet state = reducer({ status: 'idle' }, { type: 'start', id: 2 });\nstate = reducer(state, { type: 'success', id: 1, receipt: 'stale' });\nconsole.log(state.status);\nstate = reducer(state, { type: 'success', id: 2, receipt: 'saved' });\nconsole.log(state.status, state.receipt);",
+      "expected": "saving\nsuccess saved"
+    }
+  },
+  {
+    "id": "frontend-react-error-boundaries",
+    "track": "frontend",
+    "slug": "react-error-boundaries",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "React state & reliability",
+    "title": "Why did an error boundary fail to catch a rejected fetch?",
+    "minutes": 10,
+    "lesson": "Error boundaries contain certain rendering failures in a descendant tree. They are not a universal handler for every event callback, timer or asynchronous operation.",
+    "example": "A component has a boundary around its results view, but a request rejected inside an onClick handler still needs explicit error handling.",
+    "answer": "I would first identify where the exception occurs. A boundary can present a fallback for a descendant rendering failure, but an asynchronous request normally needs its own rejection handling and application error state. I would distinguish an expected API failure from a programming error, give users a useful recovery action and report safe diagnostic context. Boundaries should be placed around meaningful UI regions so one failure does not erase unrelated work. Reset behavior must clear the relevant failed state; an automatic retry loop can repeatedly trigger the same fault.",
+    "hints": [
+      "Is the failure happening during render or in an asynchronous action?",
+      "Choose a recovery boundary that preserves unrelated work."
+    ],
+    "rubric": [
+      "Describes the scope of error boundaries",
+      "Handles asynchronous rejection explicitly",
+      "Defines useful fallback, reset and safe reporting"
+    ],
+    "mistakes": [
+      "Wrapping the whole app once and assuming every exception is handled."
+    ],
+    "followUps": [
+      "How would you retain an unsaved editor draft when preview rendering fails?",
+      "Which failures should users be allowed to retry?"
+    ],
+    "exercise": "Build a deliberately failing results component with a boundary, then reject an event-handler request and handle it separately. Explain the different recovery paths.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React error boundaries",
+        "url": "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-external-store-snapshots",
+    "track": "frontend",
+    "slug": "external-store-snapshots",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "React state & reliability",
+    "title": "What makes an external-store subscription safe for React rendering?",
+    "minutes": 11,
+    "lesson": "An external store needs a subscription and a snapshot that changes identity when its data changes while remaining stable when nothing changes. A server snapshot must also support consistent initial hydration.",
+    "example": "A getSnapshot function returns a new object every time, causing repeated updates even though the store value has not changed.",
+    "answer": "I would use useSyncExternalStore for an actual external source rather than hand-build a render-time subscription. The subscription must return cleanup, and getSnapshot must return an immutable, cached value until the underlying data changes. I would avoid mutating a previously returned snapshot. For server rendering I would define a compatible server snapshot or keep the feature intentionally client-only. Tests should cover subscribe, unsubscribe, unchanged reads and changes between rendering and subscription. For state owned entirely by one component, regular React state is usually simpler than introducing a separate store.",
+    "hints": [
+      "Are two unchanged snapshot reads referentially equal?",
+      "Can an old snapshot change after being returned?"
+    ],
+    "rubric": [
+      "Uses stable immutable snapshots and cleanup",
+      "Accounts for server and client initialization",
+      "Tests unchanged reads and subscription lifecycle"
+    ],
+    "mistakes": [
+      "Returning a fresh object from getSnapshot for every read."
+    ],
+    "followUps": [
+      "How would you adapt a mutable third-party store?",
+      "Why might localStorage alone need an additional same-tab notification?"
+    ],
+    "exercise": "Implement a tiny immutable store with getSnapshot and subscribe. Verify that unchanged reads share identity and that unsubscribe stops future notifications.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React external-store subscriptions",
+        "url": "https://react.dev/reference/react/useSyncExternalStore"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "javascript",
+      "source": "// Standalone store core; a React UI would subscribe with useSyncExternalStore.\nfunction createStore() {\n  let snapshot = Object.freeze({ count: 0 });\n  const listeners = new Set();\n  return {\n    getSnapshot: () => snapshot,\n    subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); },\n    increment() { snapshot = Object.freeze({ count: snapshot.count + 1 }); for (const fn of listeners) fn(); }\n  };\n}\nconst store = createStore();\nconst before = store.getSnapshot();\nconsole.log(before === store.getSnapshot());\nlet calls = 0;\nconst unsubscribe = store.subscribe(() => calls++);\nstore.increment();\nunsubscribe();\nstore.increment();\nconsole.log(before.count, store.getSnapshot().count, calls);\nconsole.log(before === store.getSnapshot());",
+      "expected": "true\n0 2 1\nfalse"
+    }
+  },
+  {
+    "id": "frontend-angular-typed-form-array",
+    "track": "frontend",
+    "slug": "angular-typed-form-array",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Angular forms & HTTP",
+    "title": "How would you model a typed Angular form with a dynamic list of addresses?",
+    "minutes": 11,
+    "lesson": "A FormArray models a variable number of controls or groups. Typed reactive forms make the intended value structure explicit, while validation and nullable or disabled fields still require deliberate handling.",
+    "example": "A checkout form lets users add and remove addresses and validates that the selected delivery address is complete.",
+    "answer": "I would use a typed group for each address and a FormArray for the collection. I would define nullability, default values and validation at the appropriate control or group level. I would decide explicitly whether disabled controls belong in the submitted payload, since value and getRawValue have different purposes. Adding or removing a row must also update any selected-address reference safely. I would map server validation errors back to visible fields, retain entered values and test empty arrays, invalid rows, disabled controls and removal of the selected address.",
+    "hints": [
+      "Which validation involves multiple controls?",
+      "Does the server need values from disabled controls?"
+    ],
+    "rubric": [
+      "Models dynamic typed groups with deliberate nullability",
+      "Handles group validation and submission mapping",
+      "Tests row removal, disabled values and server errors"
+    ],
+    "mistakes": [
+      "Assuming a TypeScript form type proves the submitted data is valid."
+    ],
+    "followUps": [
+      "How would an async validator avoid acting on an outdated value?",
+      "What should happen to selection when an address is removed?"
+    ],
+    "exercise": "Build a typed address FormArray with add and remove actions. Write submission examples for an empty list, an invalid row and a disabled field.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular reactive forms",
+        "url": "https://angular.dev/guide/forms/reactive-forms"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-angular-http-interceptors",
+    "track": "frontend",
+    "slug": "angular-http-interceptors",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Angular forms & HTTP",
+    "title": "What belongs in an Angular HTTP interceptor, and what should remain local?",
+    "minutes": 11,
+    "lesson": "An interceptor can handle cross-cutting request or response behavior. Request cloning, interceptor order and the destination of sensitive headers matter when centralizing that behavior.",
+    "example": "An authentication interceptor must attach a token only to the application's trusted API, not every third-party request made by a feature.",
+    "answer": "I would keep shared concerns such as approved API headers or request tracing in an interceptor and leave feature-specific validation and user messaging near the feature. I would clone immutable request objects when changing them, scope credentials to trusted destinations and understand the order of the interceptor chain. Automatic retries require an explicit policy for safe methods and idempotent mutations. I would test matching and non-matching URLs, existing headers, error propagation and cancellation. A centralized interceptor should not swallow failures or turn every response into a misleading success.",
+    "hints": [
+      "Which destinations may receive this header?",
+      "Is replaying this request safe?"
+    ],
+    "rubric": [
+      "Scopes shared headers and clones requests correctly",
+      "Preserves errors and deliberate retry semantics",
+      "Tests chain behavior and third-party exclusions"
+    ],
+    "mistakes": [
+      "Attaching an application access token to all outgoing URLs."
+    ],
+    "followUps": [
+      "How would concurrent unauthorized responses avoid repeated refresh attempts?",
+      "Where should a field-level validation message be handled?"
+    ],
+    "exercise": "Implement and test a trusted-API header interceptor. Include a third-party request that must receive no credential and a failing response that must reach the caller.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular HTTP interceptors",
+        "url": "https://angular.dev/guide/http/interceptors"
+      },
+      {
+        "title": "Angular HTTP testing",
+        "url": "https://angular.dev/guide/http/testing"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-angular-observable-sharing",
+    "track": "frontend",
+    "slug": "angular-observable-sharing",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Angular forms & HTTP",
+    "title": "Why did subscribing twice trigger two HTTP requests in Angular?",
+    "minutes": 12,
+    "lesson": "HttpClient observables are cold: subscribing starts work. Sharing or caching can avoid repeated work, but requires decisions about subscribers, cancellation, invalidation and the lifetime of retained data.",
+    "example": "Two view regions subscribe to the same unshared request observable and each starts a separate network request.",
+    "answer": "I would confirm the subscription paths before changing the API. If the result should be shared, I would define the desired cache lifetime and choose explicit sharing behavior appropriate to the installed RxJS version. I would not assume shareReplay automatically creates a correct permanent cache. I would consider reference counting, errors, completion and invalidation after a mutation or account change. Tests should count requests and cover late subscribers, destroyed views and refetching after invalidation. For one consumer, removing an unnecessary second subscription may be clearer than adding caching machinery.",
+    "hints": [
+      "How many subscriptions are active?",
+      "Sharing a request and retaining a result indefinitely are different policies."
+    ],
+    "rubric": [
+      "Explains cold subscriptions and duplicate requests",
+      "Defines cache lifetime and invalidation",
+      "Tests subscriber lifecycle and request counts"
+    ],
+    "mistakes": [
+      "Adding shareReplay everywhere without a logout or mutation invalidation policy."
+    ],
+    "followUps": [
+      "When should a new subscriber trigger a new request?",
+      "How would you keep user-specific cached data from crossing account changes?"
+    ],
+    "exercise": "Use Angular HTTP testing to observe two subscriptions, then implement a documented sharing policy and verify both duplicate suppression and explicit invalidation.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular HTTP testing",
+        "url": "https://angular.dev/guide/http/testing"
+      },
+      {
+        "title": "RxJS shareReplay reference",
+        "url": "https://rxjs.dev/api/operators/shareReplay"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-next-hydration-determinism",
+    "track": "frontend",
+    "slug": "next-hydration-determinism",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Next.js delivery",
+    "title": "Why can a Next.js page show a hydration mismatch only in production?",
+    "minutes": 11,
+    "lesson": "Hydration expects the initial client render to match the server-generated markup. Time, random values, browser-only storage, invalid nesting and environment differences can produce different initial trees.",
+    "example": "A component formats the current time in the browser's locale while its server markup used another timezone.",
+    "answer": "I would compare the first server and client outputs and identify the first nondeterministic value. I would pass a stable initial value from the server or intentionally render browser-dependent information after mounting, with reserved space where needed. I would check HTML nesting and extensions before blaming the framework. Suppressing the warning does not repair an incorrect tree, and making an entire page client-only can discard useful server rendering. I would reproduce the production configuration, locale and timezone and test both fresh navigation and direct loading.",
+    "hints": [
+      "Which value differs before the first effect runs?",
+      "Server and browser clocks or locales may differ."
+    ],
+    "rubric": [
+      "Identifies initial-render divergence",
+      "Uses deterministic initial data or deliberate client enhancement",
+      "Reproduces production and avoids blanket suppression"
+    ],
+    "mistakes": [
+      "Adding suppressHydrationWarning to every mismatched subtree."
+    ],
+    "followUps": [
+      "How would you show a user's local date without moving surrounding content?",
+      "Why might direct loading fail while client navigation works?"
+    ],
+    "exercise": "Create a small time-dependent mismatch, then repair it with a deterministic initial label and an explicit browser enhancement. Test with different timezone settings.",
+    "tool": "/tools/nextjs",
+    "sources": [
+      {
+        "title": "Next.js hydration error guide",
+        "url": "https://nextjs.org/docs/messages/react-hydration-error"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-next-mutation-flow",
+    "track": "frontend",
+    "slug": "next-mutation-flow",
+    "level": "practitioner",
+    "round": "deep-dive",
+    "topic": "Next.js delivery",
+    "title": "How would you build a reliable save flow with a Next.js Server Action?",
+    "minutes": 12,
+    "lesson": "A server-side mutation remains a request boundary: its inputs, identity and ownership must be validated. Pending UI and cache updates must reflect what the server actually committed.",
+    "example": "A user changes a project title, receives a validation failure and expects the edited title to remain available for correction.",
+    "answer": "I would validate the submitted data and authenticate and authorize the specific mutation on the server. I would return structured expected errors, preserve editable values and show pending feedback without treating a disabled button as a security control. After a successful commit I would refresh the affected data using the cache behavior supported by the installed Next.js configuration. I would address duplicate submissions and failures independently of the happy path, and test that one user cannot modify another user's record. Unexpected errors would be logged safely and exposed as an appropriate recovery message.",
+    "hints": [
+      "Who owns the record being changed?",
+      "A successful response must correspond to a committed mutation."
+    ],
+    "rubric": [
+      "Validates and authorizes at the server boundary",
+      "Preserves input and accessible pending/error feedback",
+      "Updates affected data after a committed change"
+    ],
+    "mistakes": [
+      "Trusting a hidden owner ID or a disabled button as authorization."
+    ],
+    "followUps": [
+      "How would you avoid a duplicate charge from a repeated submission?",
+      "Which failures should be returned as field errors?"
+    ],
+    "exercise": "Sketch a title-edit action and UI covering invalid input, unauthorized ownership, pending state and successful revalidation. Explain how you would test each branch.",
+    "tool": "/tools/nextjs",
+    "sources": [
+      {
+        "title": "Next.js data mutations",
+        "url": "https://nextjs.org/docs/app/getting-started/mutating-data"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
     "id": "frontend-workspace-design",
     "track": "frontend",
     "slug": "workspace-design",
@@ -2312,5 +3704,249 @@
       }
     ],
     "origin": "Sukoaa original"
+  },
+  {
+    "id": "frontend-react-transition-priority",
+    "track": "frontend",
+    "slug": "react-transition-priority",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "React performance",
+    "title": "How would you keep typing responsive while a large results view updates?",
+    "minutes": 13,
+    "lesson": "Transitions mark some state updates as non-urgent so urgent interaction can remain responsive. They do not move arbitrary JavaScript work to a background thread or make a synchronous loop cheaper.",
+    "example": "A search field updates immediately, while rendering a large filtered result view can be interrupted and replaced by a newer query.",
+    "answer": "I would profile the actual bottleneck and keep the controlled input update urgent. A transition or deferred value can let an expensive result render lag behind while I communicate pending state. If filtering itself blocks the main thread, I would reduce that work, index data or move suitable computation to a worker; merely wrapping the loop in a transition does not parallelize it. I would manage network cancellation and stale results independently. I would test fast typing, assistive technology and slow devices, ensuring the UI never presents old results as current without explanation.",
+    "hints": [
+      "Separate input updates, computation, rendering and networking.",
+      "Priority is different from parallel execution."
+    ],
+    "rubric": [
+      "Keeps urgent input responsive with explicit pending state",
+      "Targets the measured source of blocking",
+      "Handles stale data and accessible feedback"
+    ],
+    "mistakes": [
+      "Assuming startTransition moves every expensive calculation off the main thread."
+    ],
+    "followUps": [
+      "Would list virtualization address a different part of the problem?",
+      "How would you measure whether interaction actually improved?"
+    ],
+    "exercise": "Profile a large searchable list. Compare rendering fewer items with marking result updates non-urgent, and document which part of the interaction each change improves.",
+    "tool": "/tools/react",
+    "sources": [
+      {
+        "title": "React useTransition",
+        "url": "https://react.dev/reference/react/useTransition"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-angular-zoneless-readiness",
+    "track": "frontend",
+    "slug": "angular-zoneless-readiness",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Angular rendering",
+    "title": "What would you verify before moving an Angular application to zoneless rendering?",
+    "minutes": 13,
+    "lesson": "Zoneless rendering relies on supported notifications that tell Angular when views need checking. Code that depended on an implicit notification after any asynchronous callback may expose stale UI.",
+    "example": "A third-party callback mutates a plain component field, but the view does not update because the integration does not notify Angular appropriately.",
+    "answer": "I would check the installed Angular version and its documented zoneless configuration, then inventory asynchronous integrations, forms and third-party widgets. I would prefer supported mechanisms such as template-read signals, AsyncPipe and explicit change notifications at integration boundaries. I would test real user behavior and delayed callbacks without a test setup that accidentally hides missing notifications. Migration should be incremental with profiling and regression coverage, not a claim that removing Zone.js alone improves every workload. I would also confirm library compatibility and preserve accessible loading and error feedback.",
+    "hints": [
+      "What actually notifies Angular that this value changed?",
+      "A test can mask a missing production notification."
+    ],
+    "rubric": [
+      "Uses version-appropriate supported notifications",
+      "Audits third-party asynchronous integrations",
+      "Measures migration and tests stale-view failures"
+    ],
+    "mistakes": [
+      "Removing Zone.js and assuming all existing callbacks will refresh the view."
+    ],
+    "followUps": [
+      "How would you diagnose a widget that updates only after a later click?",
+      "Which tests could give false confidence during migration?"
+    ],
+    "exercise": "Find one asynchronous integration and describe its view notification path. Test completion without another click or a manual test-only refresh.",
+    "tool": "/tools/angular",
+    "sources": [
+      {
+        "title": "Angular zoneless change detection",
+        "url": "https://angular.dev/guide/zoneless"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-next-cache-invalidation",
+    "track": "frontend",
+    "slug": "next-cache-invalidation",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Next.js architecture",
+    "title": "How do you choose the scope and timing of cache invalidation after a mutation?",
+    "minutes": 14,
+    "lesson": "Cache behavior depends on the Next.js version and configuration. A useful policy distinguishes data shared by many pages from user-specific views and defines whether a writer needs immediate fresh data.",
+    "example": "Editing a product should update its detail view and relevant listings without evicting every unrelated cached page or sharing a private draft.",
+    "answer": "I would first identify which caches actually exist in the installed version, including whether Cache Components is enabled. I would map a mutation to affected data and routes and choose supported tag or path invalidation with deliberate freshness semantics. If the writer needs read-your-own-writes behavior, I would use an appropriate immediate-update mechanism rather than assume stale-while-revalidate guarantees it. Private data needs correct ownership and cache boundaries before invalidation is considered. Tests should include concurrent readers, related listings, failed mutations and deployment changes, with a fallback that avoids serving another user's data.",
+    "hints": [
+      "Which readers need immediate freshness?",
+      "Do not mix examples from incompatible cache configurations."
+    ],
+    "rubric": [
+      "Maps dependencies to narrow invalidation",
+      "Uses version-appropriate freshness semantics",
+      "Protects personalized data and tests concurrent readers"
+    ],
+    "mistakes": [
+      "Copying a cache recipe without checking Next.js version or configuration."
+    ],
+    "followUps": [
+      "When is a path invalidation broader than necessary?",
+      "How would you test that a failed mutation leaves cached data consistent?"
+    ],
+    "exercise": "Draw the affected data for a product edit, a listing and a private draft. Specify freshness requirements and one verification case for each reader.",
+    "tool": "/tools/nextjs",
+    "sources": [
+      {
+        "title": "Next.js cache revalidation",
+        "url": "https://nextjs.org/docs/app/getting-started/revalidating"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-api-contract-tests",
+    "track": "frontend",
+    "slug": "api-contract-tests",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Testing & architecture",
+    "title": "How would you catch a backend response change before it breaks the frontend?",
+    "minutes": 14,
+    "lesson": "A client mock can remain green while the actual API changes. Contract tests and runtime boundary validation connect assumptions in the UI to the payloads and errors the backend really provides.",
+    "example": "A backend changes a paginated response from items to results, but a hand-written frontend fixture still uses the old shape.",
+    "answer": "I would document the consumed request and response contract, including optional fields, nullability, pagination and error shapes. I would validate external data at runtime and test the consumer against representative provider responses or a verified schema in CI. Important integration tests should cover authentication failures, empty results and backward-compatible additions as well as success. I would avoid making every UI test depend on a live remote service, while ensuring mocks are checked against the contract instead of becoming an independent fiction. Rollout coordination and compatibility policy matter when clients cannot update atomically.",
+    "hints": [
+      "Who verifies that the mock still represents the provider?",
+      "Additive fields and changed required fields have different compatibility risks."
+    ],
+    "rubric": [
+      "Defines consumed success and error contracts",
+      "Checks mocks against provider evidence",
+      "Combines boundary validation with focused integration coverage"
+    ],
+    "mistakes": [
+      "Treating a passing test against an outdated fixture as API compatibility proof."
+    ],
+    "followUps": [
+      "How would you roll out a renamed required field safely?",
+      "Which contract checks belong in client CI versus provider CI?"
+    ],
+    "exercise": "Write a small response contract and three fixtures: valid, compatible extra field and missing required field. Describe the release gate that would reject the breaking provider change.",
+    "tool": "/tools/json",
+    "sources": [
+      {
+        "title": "TypeScript discriminated unions",
+        "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0"
+  },
+  {
+    "id": "frontend-cursor-pagination-table",
+    "track": "frontend",
+    "slug": "cursor-pagination-table",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Testing & architecture",
+    "title": "How would you paginate an editable table whose records change during browsing?",
+    "minutes": 15,
+    "lesson": "Stable cursor pagination needs a deterministic ordering and a tie-breaker, but its guarantees also depend on how concurrent inserts and updates affect that ordering.",
+    "example": "Many records share the same created time; sorting only by that value can skip or repeat records across page boundaries.",
+    "answer": "I would clarify whether browsing needs a consistent snapshot or may reflect live changes. I would define a stable total order, such as creation time plus unique ID, and have the server validate the cursor and authorization for every page. Updates that change sort keys require an explicit policy because a record can move between pages. On the client I would retain selection by record ID, handle deleted rows and avoid implying that the loaded page contains the entire dataset. Tests should cover tied keys, empty pages, concurrent changes and returning after an edit.",
+    "hints": [
+      "Is the sort order total and deterministic?",
+      "A cursor alone does not create a snapshot."
+    ],
+    "rubric": [
+      "Defines stable ordering and concurrency guarantees",
+      "Preserves record identity and server authorization",
+      "Tests tied keys, mutations and incomplete loaded data"
+    ],
+    "mistakes": [
+      "Assuming cursor pagination automatically prevents all skips during concurrent edits."
+    ],
+    "followUps": [
+      "When would an immutable snapshot token be needed?",
+      "How should select-all work when only one page is loaded?"
+    ],
+    "exercise": "Design a cursor for records ordered by created time and ID. Walk through tied timestamps and an edit that moves a row, stating the user-visible policy.",
+    "tool": "/tools/postgresql",
+    "sources": [
+      {
+        "title": "MDN JavaScript guide",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "javascript",
+      "source": "// In-memory fixed snapshot only; a real API validates its cursor and ownership.\nconst rows = [{ time: 10, id: 2 }, { time: 9, id: 3 }, { time: 10, id: 1 }];\nconst ordered = [...rows].sort((a, b) => a.time - b.time || a.id - b.id);\nconst cursor = { time: 10, id: 1 };\nconst next = ordered.filter(r => r.time > cursor.time || (r.time === cursor.time && r.id > cursor.id));\nconsole.log(JSON.stringify(ordered.map(r => r.id)));\nconsole.log(JSON.stringify(next.map(r => r.id)));",
+      "expected": "[3,1,2]\n[2]"
+    }
+  },
+  {
+    "id": "frontend-realtime-event-order",
+    "track": "frontend",
+    "slug": "realtime-event-order",
+    "level": "senior",
+    "round": "system-design",
+    "topic": "Testing & architecture",
+    "title": "How would you keep a real-time UI correct after duplicate or out-of-order events?",
+    "minutes": 15,
+    "lesson": "A transport delivering messages does not by itself define application ordering or recovery. Versioned records and a resynchronization protocol help the client identify stale events and missing state.",
+    "example": "The UI receives version five of a record and then version four after reconnecting. Applying both in arrival order rolls the display backward.",
+    "answer": "I would define event identity, record versioning and deletion semantics with the backend. The client would apply only valid newer updates and deduplicate repeats, while detecting gaps according to the actual protocol. Reconnection needs a supported resume cursor or an authoritative refetch rather than assuming a socket restores missed state automatically. Local optimistic edits need reconciliation with server-confirmed versions. I would test duplicated, reversed and missing events, account changes and expired resume tokens. Observability should reveal repeated resynchronization without exposing sensitive payloads in client logs.",
+    "hints": [
+      "Does arrival order equal record version order?",
+      "A deleted record must not reappear from a late update."
+    ],
+    "rubric": [
+      "Defines event and record-version semantics",
+      "Recovers missed state on reconnect",
+      "Tests stale updates, deletion and optimistic conflicts"
+    ],
+    "mistakes": [
+      "Treating a reopened WebSocket as proof that missed events were recovered."
+    ],
+    "followUps": [
+      "When should a version gap trigger a refetch?",
+      "How would a deletion tombstone prevent resurrection?"
+    ],
+    "exercise": "Write a pure version-merge helper and feed it repeated and reversed updates. Then specify which missing-event case requires authoritative resynchronization rather than guessing.",
+    "tool": "/tools/javascript",
+    "sources": [
+      {
+        "title": "WebSocket API",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API"
+      }
+    ],
+    "origin": "Sukoaa original",
+    "addedIn": "0.25.0",
+    "code": {
+      "language": "javascript",
+      "source": "// Complete record events with monotonic versions; not a resume protocol.\nfunction apply(current, event) {\n  if (current && event.version <= current.version) return current;\n  return Object.freeze({ ...event });\n}\nlet state = apply(null, { version: 5, value: 'current', deleted: false });\nstate = apply(state, { version: 4, value: 'stale', deleted: false });\nconsole.log(state.version, state.value);\nstate = apply(state, { version: 6, value: null, deleted: true });\nstate = apply(state, { version: 5, value: 'late', deleted: false });\nconsole.log(state.version, state.deleted);",
+      "expected": "5 current\n6 true"
+    }
   }
 ]

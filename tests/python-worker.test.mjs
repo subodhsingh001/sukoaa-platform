@@ -107,3 +107,14 @@ test('requests timeout and offline errors are catchable using the real library e
  const timeout=await execute(source,'',async()=>({ok:false,kind:'timeout',error:'Timed out'}));assert.ok(timeout.some(m=>m.line==='API request timed out'),JSON.stringify(timeout));
  const offline=await execute(source);assert.ok(offline.some(m=>m.line==='API error: API access is off.'),JSON.stringify(offline));
 });
+
+// These trusted lesson fixtures run through the actual prepared browser worker.
+const interviewQuestions = JSON.parse(await readFile(new URL('../lib/interview/questions.json', import.meta.url), 'utf8'));
+for (const q of interviewQuestions.filter(q => q.code?.language === 'python')) {
+ test('interview Python example produces its published output: ' + q.slug, async () => {
+  const messages = await execute(q.code.source);
+  assert.ok(!messages.some(m => m.diagnostic), JSON.stringify(messages));
+  assert.equal(messages.filter(m => typeof m.line === 'string').map(m => m.line).join('\n'), q.code.expected);
+  assert.equal(messages.at(-1).done, true);
+ });
+}

@@ -1,13 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import previousHashes from './fixtures/interview-v024-question-hashes.json';
+import {filterQuestions, type LibraryFilters} from '../lib/interview/filter';
 import {questions, questionSummaries, interviewPaths, getQuestion, mockRounds} from '../lib/interview/catalog';
 import {emptyEntry, emptyProgress, pauseSession, recordAttempt, selectShortSession, timeLeft, validateProgress, type MockSession} from '../lib/interview/progress';
 import {publicPaths, pageMetadata} from '../lib/marketing/site';
 
-test('interview catalog contains 60 unique complete questions, 10 per subject level', () => {
-  assert.equal(questions.length, 60); assert.equal(new Set(questions.map(q => q.id)).size, 60);
+test('interview catalog contains 100 complete questions with 50 per track and 16/18/16 level coverage', () => {
+  assert.equal(questions.length, 100); assert.equal(new Set(questions.map(q => q.id)).size, 100);
   assert.equal(new Set(interviewPaths).size, interviewPaths.length);
-  for (const track of ['genai', 'frontend']) for (const level of ['foundation', 'practitioner', 'senior']) assert.equal(questions.filter(q => q.track === track && q.level === level).length, 10);
+  for (const track of ['genai', 'frontend']) {
+    assert.equal(questions.filter(q => q.track === track).length, 50);
+    for (const [level, count] of [['foundation', 16], ['practitioner', 18], ['senior', 16]] as const) assert.equal(questions.filter(q => q.track === track && q.level === level).length, count);
+  }
   for (const q of questions) {
     assert.ok(q.lesson.length > 100, q.id); assert.ok(q.answer.split(/\s+/).length >= 60, q.id);
     assert.ok(q.example.length > 40, q.id); assert.equal(q.rubric.length, 3, q.id);
@@ -69,3 +76,56 @@ test('learning pages are discoverable and private-state mock/worksheet pages sta
     assert.deepEqual(pageMetadata('Question', 'Learn', interviewPaths[3]).robots, {index: true, follow: true});
   } finally {for (const [key, value] of Object.entries(previous)) {if (value === undefined) delete process.env[key]; else process.env[key] = value;}}
 });
+
+test('all original question IDs, URLs and complete content remain unchanged', () => {
+  const stable = (value: unknown): unknown => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b, 'en')).map(([k, v]) => [k, stable(v)])) : value;
+  assert.equal(Object.keys(previousHashes).length, 60);
+  for (const [id, expected] of Object.entries(previousHashes)) {
+    const q = questions.find(q => q.id === id);
+    assert.ok(q, id);
+    assert.equal(createHash('sha256').update(JSON.stringify(stable(q))).digest('hex'), expected, id);
+  }
+});
+test('the 40 new questions cover the agreed subject split and include 12 runnable examples', () => {
+  const added = questions.filter(q => q.addedIn === '0.25.0');
+  assert.equal(added.length, 40);
+  assert.equal(added.filter(q => q.track === 'genai' && q.topic === 'Python & APIs').length, 8);
+  assert.equal(added.filter(q => q.track === 'genai' && ['RAG debugging', 'Retrieval experiments', 'Evaluation practice'].includes(q.topic)).length, 8);
+  assert.equal(added.filter(q => q.track === 'genai' && ['Agent operations', 'Agent evaluation', 'Deployment & contracts'].includes(q.topic)).length, 4);
+  assert.equal(added.filter(q => q.track === 'frontend' && q.topic.startsWith('React')).length, 6);
+  assert.equal(added.filter(q => q.track === 'frontend' && q.topic.startsWith('Angular')).length, 6);
+  assert.equal(added.filter(q => q.track === 'frontend' && !/^(React|Angular)/.test(q.topic)).length, 8);
+  assert.equal(questions.filter(q => q.code?.language === 'python').length, 6);
+  assert.equal(questions.filter(q => q.code?.language === 'javascript').length, 6);
+});
+test('backups from the 60-question release keep answers, bookmarks and an active mock under the larger catalog', () => {
+  const p = emptyProgress();
+  const originalIds = Object.keys(previousHashes);
+  for (const id of originalIds) p.records[id] = {...emptyEntry(), draft: 'Existing answer for ' + id, bookmarked: true, notes: 'Revisit my example', checked: [0], review: 'revisit', attempts: [{at: 123, covered: 1, total: 3}]};
+  p.project = {name: 'My existing project', ownership: 'I wrote the frontend.'};
+  p.session = {ids: originalIds.slice(0, 3), index: 1, title: 'Existing mock', remaining: 600000, deadline: 123456789, ended: false};
+  const restored = validateProgress(JSON.parse(JSON.stringify(p)), questionSummaries);
+  assert.deepEqual(restored, p);
+  assert.equal(Object.keys(restored.records).length, 60);
+  assert.ok(questions.filter(q => q.addedIn).every(q => !restored.records[q.id]));
+});
+test('library filters compose topic, release, search and local progress without mixing tracks or levels', () => {
+  const base: LibraryFilters = {track: 'genai', level: 'foundation', query: '', round: 'all', topic: 'all', progress: 'all', release: 'all'};
+  assert.equal(filterQuestions(questionSummaries, base, {}).length, 16);
+  assert.equal(filterQuestions(questionSummaries, {...base, release: '0.25.0'}, {}).length, 6);
+  assert.equal(filterQuestions(questionSummaries, {...base, topic: 'Python & APIs'}, {}).length, 8);
+  const target = getQuestion('genai', 'python-copying')!;
+  const records = {[target.id]: {...emptyEntry(), bookmarked: true, review: 'revisit' as const, attempts: [{at: 1, covered: 1, total: 3}]}};
+  const filters = {...base, topic: 'Python & APIs', release: '0.25.0' as const, query: '  copied python  ', progress: 'bookmarked' as const};
+  assert.deepEqual(filterQuestions(questionSummaries, filters, records).map(q => q.id), [target.id]);
+  assert.equal(filterQuestions(questionSummaries, {...filters, progress: 'unreviewed'}, records).length, 0);
+  assert.equal(filterQuestions(questionSummaries, {...filters, level: 'senior'}, records).length, 0);
+  assert.equal(filterQuestions(questionSummaries, {...base, track: 'frontend', topic: 'Python & APIs'}, {}).length, 0);
+});
+for (const q of questions.filter(q => q.code?.language === 'javascript')) {
+  test(`interview JavaScript example produces its published output: ${q.slug}`, () => {
+    const result = spawnSync(process.execPath, ['--input-type=module', '-e', q.code!.source], {encoding: 'utf8', timeout: 5000});
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stdout.trim(), q.code!.expected);
+  });
+}

@@ -1,0 +1,97 @@
+SUKOAA INTERVIEW PREP — v0.25.0
+18 November 2026
+
+WHAT IS INCLUDED
+100 complete questions: 50 GenAI Engineer and 50 Frontend Engineer.
+Each track has 16 Foundations, 18 Applied practice, and 16 System design & leadership questions.
+Levels describe relevant subject experience, not total years in software.
+
+The 40 additions follow this split:
+GenAI: 8 Python/API questions, 8 RAG debugging/evaluation questions,
+       4 agent reliability/security/deployment questions.
+Frontend: 6 React, 6 Angular, 8 Next.js/TypeScript/testing/architecture questions.
+
+Every question includes a mini lesson, concrete example, practical task,
+two hints, a reference answer, a three-point self-review rubric,
+common mistakes, two follow-ups and further-reading links.
+12 new lessons include copyable runnable examples: 6 Python standard-library
+examples and 6 standalone JavaScript helpers, with expected output.
+These are educational examples, not full framework applications or automated grading.
+
+WHERE TO FIND IT
+Learn menu -> Interview preparation
+Home -> Interview Preparation card
+Practice -> Explore Interview Prep
+
+Routes after deployment:
+https://www.sukoaa.com/interview-prep
+https://www.sukoaa.com/interview-prep/genai
+https://www.sukoaa.com/interview-prep/frontend
+
+The local route is http://localhost:3000/interview-prep after npm run dev.
+Downloading this release does not change the live site automatically.
+
+HOW TO USE THE NEW CONTENT
+1. Choose GenAI Engineer or Frontend Engineer.
+2. Choose Foundations, Applied practice or System design & leadership.
+3. Use Topic, Round, Progress and Release filters together.
+   Release -> New in this release shows additions within the selected level.
+4. Open a question and read Learn the concept.
+5. For one of the 12 code examples, choose Copy example, open the indicated
+   Python or JavaScript playground in a new tab, paste and Run.
+   Expand Show expected output when ready to compare.
+6. Write your own answer before revealing the reference answer.
+7. Use the rubric, save a self-review and revisit weaker explanations.
+
+PERSONAL STUDY SUGGESTION
+If you are learning GenAI after frontend development, start at GenAI Foundations.
+Try Python/API examples, then explain retrieval and evaluate failure cases.
+Practise a few questions deeply and defend a real project rather than
+memorizing all 100 reference answers. Employer interview processes differ.
+The questions are Sukoaa educational material, not leaked employer questions.
+
+EXISTING WORK IS PRESERVED
+The original 60 questions retain their IDs, URLs and full content.
+The 13 supplied screenshot questions and 8 full mock formats remain intact.
+The browser storage key and backup format remain sukoaa.interview.v1 / version 1.
+Existing answers, notes, bookmarks, self-reviews, project worksheet and mock
+sessions can be read without resetting progress. The 40 additions start unreviewed.
+Short three-question mocks can select from the expanded level pools.
+
+Answers and progress stay in this browser on this origin. Localhost, a private
+preview and www.sukoaa.com have separate browser storage. Use Export backup /
+Restore backup to transfer interview progress. Clearing site data removes local
+progress. Backups are plain text; keep sensitive employer information out.
+No new AI calls, credentials, cloud tables or backend services are required.
+Existing compilers, schema-generator fix and optional local-only wording setup
+remain included in this full release.
+
+UPDATE YOUR PROJECT / DEPLOY
+1. Export an interview backup before updating if you have local study progress.
+2. Extract the FULL ZIP into a clean folder. It contains sukoaa-platform/.
+3. Preserve your own .env.local separately; never commit credentials.
+4. Use Node.js 24.x. In sukoaa-platform run:
+   npm ci --include=dev
+   npm test
+   npm run typecheck
+   npm run build
+5. For a local review run npm run dev and open /interview-prep.
+6. Commit the updated source and package-lock.json to your own GitHub branch.
+   Review the diff, then merge/push to the branch used by Vercel.
+7. Keep the existing Vercel root directory and environment variables.
+   Check the new deployment build and inspect the 100-question library live.
+8. No Supabase migration or Redis configuration change is needed for this release.
+
+TEST COVERAGE
+Catalog integrity and subject split; full-content hashes for all original 60;
+old backup compatibility; topic/release/progress/search combinations;
+existing mock/timer/import validation; 6 JavaScript outputs in real Node;
+6 Python outputs through the actual prepared Pyodide browser worker;
+TypeScript and production build; browser interaction and responsive layouts.
+
+IMPORTANT LIMITS
+Interview reviews are self-assessment, not AI grades or hiring predictions.
+Technical lessons use official documentation as further reading, and behavior
+can depend on your installed framework version and configuration.
+Full mocks keep their original curated question lists; the short mock pools expand.
+The release ZIP is source code, not evidence that www.sukoaa.com has deployed it.
