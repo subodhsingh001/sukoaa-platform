@@ -1,6 +1,6 @@
-Current release: v0.22.2. Read PORTAL-READY-SETUP.md and docs/30-SOURCE-AUDIT.md for the formatter, tokenizer repair and trust/security changes. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
+Current release: v0.23.0. Read TOOL-SCHEMA-GENERATOR.md for the new browser-local schema studio. Read PORTAL-READY-SETUP.md and docs/30-SOURCE-AUDIT.md for the formatter, tokenizer repair and trust/security changes. Read API-STUDIO-SETUP.txt for the new compiler workspaces, private REST sandboxes, JSON/YAML builder, GraphQL and public GitHub config sync.
 
-# Sukoaa Platform — v0.22.2
+# Sukoaa Platform — v0.23.0
 
 A professional home for Sukoaa's browser, extensions and developer tools. This source release includes the frontend, Next.js backend routes, Supabase database migration, optional Redis integration, a code workspace, release distribution metadata and setup guides. **AI agents are disabled.**
 
@@ -35,7 +35,7 @@ Open **/studio** for multi-file React/Next.js projects. It includes folders/file
 | Cloud project create/open/update/delete | Backend/UI + RLS implemented; requires Supabase migration and production Redis |
 | Admin release manager/download directory | Implemented; requires Supabase and administrator promotion via SQL |
 | Redis | Atomic fixed-window rate limits and expiring runner job ownership mappings; configuration required |
-| AI agents | Disabled in UI and API; no AI SDK, key or calls |
+| AI agents | Disabled. An independent Gemini wording trial is available only in explicitly enabled local development; see GEMINI-WORDING-LOCAL-SETUP.txt. |
 | Browser/extension binaries | Not included in this website project; attach reviewed release URLs separately |
 
 ## Error locations and red highlights
@@ -122,3 +122,7 @@ The opaque-origin Python frame and worker retain `connect-src 'none'`; a channel
 
 ### CI runtime fix (0.7.1)
 Use Node.js 24 for installation, testing and builds. GitHub CI now selects Node 24. The test launcher explicitly starts its child Node process with `--experimental-wasm-jspi` so the Python worker tests have JavaScript Promise Integration even when it is not enabled by default in the parent Node process. This flag is inherited by test workers; setting it only on the outer launcher did not previously enable the spawned test process. Run tests with `npm test`. Browser code and diagnostic line expectations are unchanged.
+
+## Local Gemini wording trial (v0.23.1)
+
+The token counter now includes an optional Gemini rewrite action in local development only. Counting stays in the browser. AI requests require consent and server-only environment configuration. Production cannot enable this endpoint. See [GEMINI-WORDING-LOCAL-SETUP.txt](GEMINI-WORDING-LOCAL-SETUP.txt). Extracted interview questions are in [GENAI-INTERVIEW-TOPICS.txt](GENAI-INTERVIEW-TOPICS.txt).

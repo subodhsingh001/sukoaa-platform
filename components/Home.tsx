@@ -9,6 +9,7 @@ import './home-extra.css';
 import {useState,useEffect,useRef} from 'react';
 import {ArrowUpRight,ArrowRight,Search,Globe,Code2,Puzzle,ShieldCheck,Bookmark,Command,ChevronDown,X,Play,Copy,Check,Menu,Braces,FileCode2,Terminal,Layers,MousePointer2,Sparkles,Plus,CheckCircle2} from 'lucide-react';
 const tools=[
+ {href:'/tools/tool-schema-generator',name:'Tool Schema Generator',category:'Code',desc:'Draft and edit AI tool schemas locally. Review unclear inputs, validate arguments and export JSON for your API.',icon:'{ƒ}',color:'green',status:'Available',tags:['JSON Schema','No AI calls','Local']},
  {href:'/tools/portal-ready',name:'Portal Photo & PDF Fixer',category:'Documents',desc:'Crop, resize and compress photos or signatures, create an A4 PDF, and keep an exam checklist on your device.',icon:'PDF',color:'green',status:'Available',tags:['Photos','PDF','Local']},
  {href:'/tools/json-to-typescript',name:'Types Studio',category:'Code',desc:'Turn JSON into TypeScript interfaces, type aliases and Zod schemas. Merge arrays, infer optional fields and keep your data local.',icon:'TS',color:'purple',status:'Available',tags:['JSON → TS','Zod','No upload']},
  {href:'/play',name:'Play & Learn',category:'Code',desc:'Predict output, order code, find bugs and solve practical CSS, SQL and API challenges. Guest progress stays on your device.',icon:'▶',color:'green',status:'Available',tags:['Games','Learning','78 activities']},

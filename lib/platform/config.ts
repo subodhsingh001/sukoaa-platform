@@ -1,4 +1,4 @@
-export const AI_ENABLED = false; // Deliberately disabled. No provider SDK or secret is used.
+export const AI_ENABLED = false; // Platform AI agents stay disabled. Optional local-development token wording is independently gated.
 export const configured = () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_PUBLISHABLE_KEY);
 export function supabaseConfig() {
   const url = process.env.SUPABASE_URL?.replace(/\/$/, '');

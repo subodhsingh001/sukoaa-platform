@@ -74,3 +74,7 @@ import './demo-studio.test';
 
 import './portal-ready.test';
 import './trust-audit.test';
+
+import './tool-schema.test';
+
+import './token-wording.test';

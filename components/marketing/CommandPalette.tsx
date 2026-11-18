@@ -5,6 +5,7 @@ import {isPubliclyReady,unavailableToolSlugs} from '@/lib/marketing/availability
 import './command-palette.css';
 type Item={label:string;hint:string;href:string;group:string};
 const extra:Item[]=[
+ {label:'Tool Schema Generator',hint:'Draft, edit and validate function schemas locally',href:'/tools/tool-schema-generator',group:'AI & LLM'},
  {label:'Portal Photo & PDF Fixer',hint:'Crop, resize, compress and exam checklist',href:'/tools/portal-ready',group:'Photo & Document Tools'},
  {label:'Online tools',hint:'All compilers and playgrounds',href:'/tools',group:'Pages'},
  {label:'Coding practice',hint:'JavaScript, Python, SQL, TypeScript, JSON',href:'/practice',group:'Practice'},

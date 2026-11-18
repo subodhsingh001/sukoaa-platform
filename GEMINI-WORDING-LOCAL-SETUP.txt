@@ -1,0 +1,77 @@
+SUKOAA v0.23.1 — LOCAL GEMINI WORDING TRIAL
+
+WHAT THIS RELEASE DOES
+Token counting still runs on your device with the existing o200k_base and
+cl100k_base tokenizer workers. In development, an optional consent-based button
+asks Gemini for shorter wording and recounts both versions locally. It shows
+actual tokens saved, including zero savings when the rewrite is not better.
+The original stays unchanged until you choose Use suggestion.
+
+This is a localhost development integration calling Google's hosted Gemini API.
+It is NOT an offline AI model and does not automate Google Search AI Mode.
+No compiler, database migration, Redis setup or new domain is needed.
+
+WINDOWS / POWERSHELL SETUP
+1. Extract the FULL ZIP into a clean folder. Open sukoaa-platform in VS Code.
+2. In its terminal run:
+   npm ci --include=dev
+3. Copy .env.example to .env.local only if you do not already have .env.local:
+   Copy-Item .env.example .env.local
+   Preserve existing settings. Never commit .env.local or share your API key.
+4. Visit https://aistudio.google.com/apikey and create a Gemini API key.
+   Check the model list, availability, quota, billing and current terms for your
+   own project. Free access is limited and varies by model/project/region.
+5. In .env.local set:
+   ENABLE_LOCAL_GEMINI_WORDING=true
+   GEMINI_API_KEY=YOUR_PRIVATE_GOOGLE_KEY
+   GEMINI_WORDING_MODEL=YOUR_AVAILABLE_GEMINI_MODEL_ID
+   For example, gemini-3.5-flash-lite is documented as a current text-capable
+   model on 18 November 2026. Use it only if available in your project and
+   check its pricing first. This application deliberately has no model default
+   or automatic fallback to a potentially billable model.
+6. Run bound to your own computer:
+   npm run dev -- --hostname 127.0.0.1 --port 3000
+7. Open http://127.0.0.1:3000/tools/token-counter
+   Paste non-sensitive sample text (up to 8,000 characters), check the Google
+   consent box and click Suggest shorter wording with Gemini.
+8. Compare original and suggestion. Choose Use suggestion, Copy or Dismiss.
+   Edit the input or change encoding to discard/cancel stale suggestions.
+9. Restart the dev server after changing environment variables.
+   Set ENABLE_LOCAL_GEMINI_WORDING=false to disable requests.
+
+LIMITS / PRIVACY
+- AI endpoint and UI are intentionally unavailable with npm run build/start
+  and on Vercel production, even if the local flag is accidentally copied.
+- 10 provider attempts/hour and one active request per Node process. Restarting
+  resets this in-memory budget. Do not treat it as a production quota system.
+- No automatic provider retries, no prompt or response persistence by Sukoaa.
+- Provider request timeout 25 seconds; tokenizer comparison timeout 20 seconds.
+- Unpaid Gemini inputs/outputs may be used for product improvement and human
+  review. Do not send sensitive, confidential or personal information.
+- Google terms include age and region restrictions. Review them before any
+  public release. Public rollout is outside this local-only version.
+- Meaning preservation is not guaranteed. Check numbers, names and negations.
+- Token savings use the chosen OpenAI encoding, not Gemini billing tokens.
+  Generating a rewrite itself consumes provider tokens; reuse savings do not
+  include that generation cost.
+- A missing key/model, provider quota, blocked output, connection problem or
+  incomplete generation shows an error without replacing your original.
+
+VERIFICATION
+The package includes mocked provider tests; no real key is included.
+Verified in this release: 261 tests passed (including 8 new wording tests),
+TypeScript checking passed, and the Next.js production build passed.
+Browser visual QA was unavailable because the managed preview launcher used
+Vite-style flags unsupported by Next.js.
+To repeat checks: npm test, npm run typecheck, npm run build.
+A real authenticated Gemini generation must be tested with your own key.
+
+DOCS
+https://ai.google.dev/gemini-api/docs/api-key
+https://ai.google.dev/gemini-api/docs/pricing
+https://ai.google.dev/gemini-api/terms
+https://ai.google.dev/api/generate-content
+
+The interview topics extracted from your four screenshots are in
+GENAI-INTERVIEW-TOPICS.txt. Two screenshots show the same RAG round;
+Round 1 was not supplied. These topics have not been added to Practice.

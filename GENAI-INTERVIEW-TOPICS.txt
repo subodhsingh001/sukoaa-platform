@@ -1,0 +1,40 @@
+GENAI ENGINEER INTERVIEW TOPICS — EXTRACTED FROM PROVIDED SCREENSHOTS
+
+Context shown: GenAI Engineer · Fintech · 1.5 YOE.
+Four screenshots contain three distinct rounds. Two show the same RAG round.
+Round 1 is not visible in the supplied images.
+
+ROUND 2 OF 4 — RAG DEEP DIVE — 60 MINUTES
+1. Walk me through your RAG pipeline end to end.
+2. How did you validate chunk size and overlap?
+3. Why does dense retrieval fail on exact product codes?
+4. Bi-encoder vs cross-encoder: what's the reranker latency cost?
+5. The context doesn't have the answer. How do you stop hallucination?
+
+ROUND 3 OF 4 — LLM EVAL SYSTEM DESIGN — 75 MINUTES
+1. Design an eval pipeline for a customer-support RAG assistant.
+2. How reliable is LLM-as-a-judge? Position bias, verbosity bias, human agreement.
+3. Define faithfulness, answer relevance and context precision.
+4. A 2-point gain on a 200-question eval set. Statistically real or luck?
+
+ROUND 4 OF 4 — HIRING MANAGER + HR — 40 MINUTES
+1. Tell me about a production or demo failure.
+2. Why GenAI over classical ML?
+3. Where do you see yourself in 2 years?
+4. Notice period and expectations.
+
+STUDY TOPICS DERIVED FROM THE QUESTIONS
+- End-to-end retrieval-augmented generation architecture.
+- Chunking experiments: chunk size, overlap and evaluation datasets.
+- Dense versus lexical/hybrid retrieval for exact identifiers.
+- Bi-encoders, cross-encoders, reranking quality and latency tradeoffs.
+- Evidence-grounded answers and abstention when evidence is missing.
+- RAG evaluation pipelines and human-labelled reference sets.
+- LLM-as-a-judge reliability, position/verbosity biases and calibration.
+- Faithfulness, answer relevance and context precision metrics.
+- Statistical uncertainty and paired evaluation of model improvements.
+- Incident ownership, debugging, lessons learned and prevention.
+- Choosing GenAI or classical ML for a concrete business problem.
+- Career direction and employment logistics.
+
+The study-topic wording above is a summary, not additional text from the images.
