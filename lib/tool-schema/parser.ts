@@ -17,6 +17,7 @@ export function parseDescription(source:string):DraftResult {
  function finish(){
   if(!current)return;
   if(globalRequired)applyAll(current.fields);
+  if(/\bmultiply\b/i.test(current.name.replace(/_/g,' '))&&/\breturn(?:s|ing)?\s+(?:their\s+|the\s+|a\s+)?sum\b/i.test(current.description))warn(`${current.name}: the name says multiply, but the description says return a sum. Multiplication normally returns a product; confirm the intended meaning.`);
   if(!explicitDescription)warn(`${current.name}: the description is a draft; review its meaning.`);
   if(!current.fields.length)warn(`${current.name}: no parameters were found. Confirm that this is a no-argument function.`);
   if(tools.length>=LIMITS.tools)throw Error('Use no more than 20 functions.');
@@ -86,7 +87,10 @@ export function parseDescription(source:string):DraftResult {
   const chunks=cleaned.split(/,(?![^\[]*\])|\s+and\s+/i).map(v=>v.trim()).filter(Boolean);
   for(const chunk of chunks){if(/^(?:both|all|parameters?|arguments?)$/i.test(chunk))continue;parameter(chunk);}
  }
- const lines=source.replace(/;\s*(?=function\s*:)/gi,'\n').split(/\r?\n/);
+ // Normalize pasted line endings and Markdown hard-break slashes. Also accept
+ // separate supported declarations in a paragraph, rather than treating the
+ // remaining functions as parameters of the first one.
+ const lines=source.replace(/\r\n?|[\u2028\u2029]/g,'\n').replace(/\u00a0/g,' ').replace(/\\[ \t]*(?=\n|$)/g,'').replace(/;\s*(?=function\s*:)/gi,'\n').replace(/([.!?;])\s+(?=(?:function\s*:|[A-Za-z_][A-Za-z0-9_ -]{0,70}\s+(?:takes?|accepts?)\b))/gi,'$1\n').split('\n');
  for(const [index,raw] of lines.entries()){
   const line=raw.trim().replace(/^\d+[.)]\s*/, '');if(!line)continue;
   if(/^description\s*:/i.test(line)&&current){current.description=sentence(line.replace(/^description\s*:/i,''));explicitDescription=true;continue;}
@@ -105,8 +109,8 @@ export function parseDescription(source:string):DraftResult {
 }
 
 export const examples=[
- {name:'Two functions',text:'Function: add numbers\nDescription: Add two numbers and return their sum.\na: number, required\nb: number, required\n\nFunction: greet\nDescription: Build a greeting for a person.\nname: string, required\ngreeting: string, optional'},
- {name:'Plain English',text:'Add numbers takes a and b, both required.\nGet weather takes city string required and units string optional.'},
+ {name:'Functions',text:'Function: add numbers\nDescription: Add two numbers and return their sum.\na: number, required\nb: number, required\n\nFunction: greet\nDescription: Build a greeting for a person.\nname: string, required\ngreeting: string, optional\n\nFunction: multiply numbers\nDescription: Multiply two numbers and return their product.\na: number, required\nb: number, required'},
+ {name:'Plain English',text:'Add numbers takes a and b, both required.\nGet weather takes city string required and units string optional.\nMultiply two numbers takes a and b, both required.'},
  {name:'Nested order',text:'Function: create order\nDescription: Create an order for a customer.\ncustomer: object, required\ncustomer.name: string, required\ncustomer.email: string, optional\nitems: array of objects, required\nitems[].sku: string, required\nitems[].quantity: integer, required, minimum 1\nstatus: string, optional, enum [draft, confirmed]'},
  {name:'Needs review',text:'Function: find books\nDescription: Find books using the requested filters.\nfilters: object\nfilters.query: string, required\nlimit: integer, optional, minimum 1, maximum 100\nmetadata: array'},
 ];

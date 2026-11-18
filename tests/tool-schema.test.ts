@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {parseDescription,examples} from '../lib/tool-schema/parser';
+import {generateDescriptionDraft} from '../lib/tool-schema/drafting';
 import {exportTools,importTools,validateDraft,validateArguments,newField,snakeCase,type ToolDraft} from '../lib/tool-schema/schema';
 
 test('examples create separate functions and preserve required vs optional parameters',()=>{
- const {tools}=parseDescription(examples[0].text);assert.equal(tools.length,2);assert.equal(tools[0].name,'add_numbers');assert.deepEqual(tools[0].fields.map(f=>[f.name,f.type,f.required]),[['a','number','yes'],['b','number','yes']]);assert.equal(tools[1].fields[1].required,'no');assert.deepEqual(validateDraft(tools),[]);
+ const {tools}=parseDescription(examples[0].text);assert.equal(tools.length,3);assert.equal(tools[0].name,'add_numbers');assert.deepEqual(tools[0].fields.map(f=>[f.name,f.type,f.required]),[['a','number','yes'],['b','number','yes']]);assert.equal(tools[1].fields[1].required,'no');assert.deepEqual(validateDraft(tools),[]);
 });
 test('plain English math infers numeric parameters and applies both required',()=>{
- const result=parseDescription(examples[1].text);assert.equal(result.tools.length,2);assert.deepEqual(result.tools[0].fields.map(f=>f.type),['number','number']);assert.ok(result.tools[0].fields.every(f=>f.required==='yes'));assert.ok(result.warnings.some(w=>w.includes('inferred number')));assert.equal(result.tools[1].fields[1].required,'no');assert.deepEqual(validateDraft(result.tools),[]);
+ const result=parseDescription(examples[1].text);assert.equal(result.tools.length,3);assert.deepEqual(result.tools[0].fields.map(f=>f.type),['number','number']);assert.ok(result.tools[0].fields.every(f=>f.required==='yes'));assert.ok(result.warnings.some(w=>w.includes('inferred number')));assert.equal(result.tools[1].fields[1].required,'no');assert.deepEqual(validateDraft(result.tools),[]);
 });
 test('all required preserves explicit optional fields and does not resolve contradictory flags',()=>{
  const result=parseDescription('Function: greet\nDescription: Greet someone.\nname: string\nemail: string, optional\nmode: string, required and optional\nall mandatory');
@@ -33,7 +34,7 @@ test('provider wrappers differ without mixing API shapes',()=>{
  const chat=exportTools(tools,'chat') as any;assert.equal(chat.tools[0].function.strict,false);assert.equal(chat.tools[0].name,undefined);
  const responses=exportTools(tools,'responses') as any;assert.equal(responses.tools[0].name,'add_numbers');assert.equal(responses.tools[0].function,undefined);
  const claude=exportTools(tools,'claude') as any;assert.equal(claude.tools[0].input_schema.type,'object');assert.equal(claude.tools[0].parameters,undefined);
- const gemini=exportTools(tools,'gemini') as any;assert.equal(gemini.tools[0].functionDeclarations.length,2);assert.equal(gemini.tools[0].functionDeclarations[0].parametersJsonSchema.type,'object');
+ const gemini=exportTools(tools,'gemini') as any;assert.equal(gemini.tools[0].functionDeclarations.length,3);assert.equal(gemini.tools[0].functionDeclarations[0].parametersJsonSchema.type,'object');
 });
 test('argument checks reject missing, extra, mistyped and constrained values without executing code',()=>{
  const tool=parseDescription(examples[2].text).tools[0];
@@ -63,4 +64,39 @@ test('input and nesting limits prevent unbounded drafts',()=>{
  assert.throws(()=>parseDescription('x'.repeat(12001)),/12,000/);
  const deep=parseDescription('Function: deep\nDescription: Test depth.\na.b.c.d.e.f.g.h: number, required');assert.equal(deep.tools[0].fields.length,0);assert.ok(deep.warnings.some(v=>v.includes('six levels')));
  const tools:ToolDraft[]=[{name:'many',description:'Test field count.',fields:Array.from({length:151},(_,i)=>({...newField('f'+i),type:'string' as const,required:'yes' as const}))}];assert.ok(validateDraft(tools).some(v=>v.message.includes('151')));
+});
+
+
+test('user structured three-function input preserves every function and flags the contradictory multiplication description',()=>{
+ const source='Function: add numbers\nDescription: Add two numbers and return their sum.\na: number, required\nb: number, required\n\nFunction: greet\nDescription: Build a greeting for a person.\nname: string, required\ngreeting: string, optional\n\nFunction: multiply numbers\nDescription: Multiply two numbers and return their sum.\na: number, required\nb: number, required';
+ const {tools,warnings}=generateDescriptionDraft(source);
+ assert.deepEqual(tools.map(t=>t.name),['add_numbers','greet','multiply_numbers']);
+ assert.deepEqual(validateDraft(tools),[]);
+ assert.ok(warnings.some(w=>w.includes('multiply_numbers')&&w.includes('sum')));
+ assert.equal(tools[2].description,'Multiply two numbers and return their sum.');
+ assert.deepEqual(tools[2].fields.map(f=>[f.name,f.type,f.required]),[['a','number','yes'],['b','number','yes']]);
+ const exported=exportTools(tools) as {tools:{function:{name:string;parameters:{required:string[]}}}[]};
+ assert.equal(exported.tools.length,3);assert.deepEqual(exported.tools[2].function.parameters.required,['a','b']);
+});
+test('user plain-English three-function input works with newlines or one paragraph',()=>{
+ const lines=['Add numbers takes a and b, both required.','Get weather takes city string required and units string optional.','Multiply two numbers takes a and b, both required.'];
+ for(const separator of ['\n','\r\n',' ','\u2028']){
+  const {tools}=generateDescriptionDraft(lines.join(separator));
+  assert.deepEqual(tools.map(t=>t.name),['add_numbers','get_weather','multiply_two_numbers']);
+  assert.deepEqual(tools[2].fields.map(f=>[f.name,f.type,f.required]),[['a','number','yes'],['b','number','yes']]);
+  assert.deepEqual(tools[1].fields.map(f=>[f.name,f.type,f.required]),[['city','string','yes'],['units','string','no']]);
+  assert.deepEqual(validateDraft(tools),[]);
+ }
+});
+test('pasted Markdown line breaks and Windows line endings do not corrupt declarations',()=>{
+ const source=examples[0].text.split('\n').join('\\\r\n');
+ const {tools}=generateDescriptionDraft(source);
+ assert.equal(tools.length,3);assert.deepEqual(validateDraft(tools),[]);
+ assert.deepEqual(tools[2].fields.map(f=>f.name),['a','b']);
+});
+test('generation rejects empty or unsupported descriptions without mutating an existing draft',()=>{
+ const prior=generateDescriptionDraft(examples[0].text);const copy=JSON.stringify(prior);
+ for(const source of ['', 'Please do whatever is needed.', 'x'.repeat(12001)])assert.throws(()=>generateDescriptionDraft(source));
+ assert.equal(JSON.stringify(prior),copy);
+ assert.equal(examples[0].name,'Functions');assert.ok(!examples[0].text.includes('Multiply two numbers and return their sum'));
 });

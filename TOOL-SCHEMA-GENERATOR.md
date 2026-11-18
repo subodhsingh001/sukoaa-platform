@@ -1,4 +1,4 @@
-# Tool Schema Generator — v0.23.0
+# Tool Schema Generator — v0.24.1
 
 Open Tools → Tool Schema Generator, or `/tools/tool-schema-generator`.
 
@@ -7,7 +7,7 @@ This is a browser-local parser, schema editor and sample-argument validator. It 
 ## Use it
 
 1. Choose an example, or enter a function declaration and parameter lines.
-2. Generate draft. This replaces the editor after confirmation.
+2. Generate draft. This updates the editor immediately and reports every generated function. Undo last replacement restores the previous editor and input state. If no supported function is found, the existing draft is kept.
 3. Review every function name, description, type and required/optional decision. Resolve any validation issue and review unconverted text.
 4. Choose Generic JSON, OpenAI Chat, OpenAI Responses, Claude tools or Gemini generateContent.
 5. Optionally open Test arguments and validate a JSON input against one selected function. This never runs that function.
@@ -67,3 +67,7 @@ The uploaded `ai-tool-schema-generator.zip` was inspected as a reference. It is 
 Use Node 24.x, `npm ci --include=dev`, `npm test`, `npm run build`, then `npm run dev`. No dependency inputs changed except the release version. Push this complete source to your own GitHub repository to redeploy www.sukoaa.com through Vercel. The separate ChatGPT review site does not update that deployment automatically.
 
 Core files: `lib/tool-schema/parser.ts`, `lib/tool-schema/schema.ts`, `components/tools/ToolSchemaStudio.tsx`, `components/tools/tool-schema-studio.css`, `app/tools/tool-schema-generator/page.tsx`, `tests/tool-schema.test.ts`.
+
+## Draft-generation repair (v0.24.1)
+
+The Functions and Plain English examples now contain three functions. Both multi-line and sentence-separated plain-English declarations are supported. Windows, Unicode and pasted Markdown hard line breaks are normalized. Generation and example loading no longer depend on a browser confirmation; one-step Undo preserves the previous state. Result feedback appears beside Generate draft, and export prerequisites are explained beside the review checkbox. Contradictory multiplication/sum wording is flagged without rewriting the supplied meaning. This tool generates JSON, not PDFs.

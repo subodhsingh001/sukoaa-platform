@@ -1,0 +1,91 @@
+SUKOAA TOOL SCHEMA GENERATOR FIX — v0.24.1
+
+CHANGES
+- Renamed the Two functions example button to Functions.
+- Functions and Plain English examples now each include three functions.
+- Generate draft updates immediately; it no longer waits for a browser
+  confirmation dialog. A one-step Undo restores the preceding editor state.
+- A visible message next to Generate draft lists every generated function.
+- Plain-English declarations can be entered on separate lines or as separate
+  sentences in one paragraph.
+- Windows, Unicode and pasted Markdown hard line breaks are normalized.
+- Unsupported input keeps the existing draft and shows a clear error.
+- Export guidance explains why Copy JSON / Download .json are disabled.
+- A multiplication description that says return their sum is flagged for
+  review. Supplied descriptions are preserved rather than silently rewritten.
+
+YOUR STRUCTURED EXAMPLE
+Function: add numbers
+Description: Add two numbers and return their sum.
+a: number, required
+b: number, required
+
+Function: greet
+Description: Build a greeting for a person.
+name: string, required
+greeting: string, optional
+
+Function: multiply numbers
+Description: Multiply two numbers and return their product.
+a: number, required
+b: number, required
+
+Expected names: add_numbers, greet, multiply_numbers.
+There are six total parameters. greeting is optional; the other five are
+required. For multiplication, product is the usual intended result.
+If you retain return their sum, the tool keeps it and warns you to review it.
+
+YOUR PLAIN-ENGLISH EXAMPLE
+Add numbers takes a and b, both required.
+Get weather takes city string required and units string optional.
+Multiply two numbers takes a and b, both required.
+
+Expected names: add_numbers, get_weather, multiply_two_numbers.
+Both mathematical functions have numeric a and b, both required.
+get_weather has a required string city and an optional string units.
+Inferred types and draft descriptions still need human review.
+
+HOW TO USE
+1. Paste the description or choose an example.
+2. Click Generate draft. The message should report all three functions.
+3. Select each function tab and review its name, meaning, types and presence.
+4. Correct any unresolved validation issues.
+5. Select the output provider/format.
+6. Tick I reviewed the function meanings, types, required fields and any
+   unconverted text.
+7. Copy JSON or Download .json.
+This is a tool-schema JSON generator, not a PDF generator or function runner.
+No API key, AI call or database changes are needed for this fix.
+
+RUN LOCALLY
+Extract the FULL ZIP into a clean folder and enter sukoaa-platform.
+npm ci --include=dev
+npm run dev
+Open http://localhost:3000/tools/tool-schema-generator
+
+DEPLOY TO YOUR LIVE WEBSITE
+Update your GitHub project with the corrected source and let Vercel redeploy.
+Keep your existing Vercel environment variables. No new credentials required.
+The downloadable source does not automatically update www.sukoaa.com.
+
+Relevant changed code files:
+lib/tool-schema/parser.ts
+lib/tool-schema/drafting.ts (new; include it when updating)
+components/tools/ToolSchemaStudio.tsx
+components/tools/tool-schema-studio.css
+tests/tool-schema.test.ts
+The full ZIP also retains Interview Prep and the existing platform features.
+
+VERIFICATION
+273 automated tests passed; TypeScript checking passed; production build passed.
+Browser checks using compiled Next.js HTML/client assets verified:
+- Your three structured functions, including the sum/product warning.
+- Your three plain-English functions, with line breaks and in one paragraph.
+- Required/optional output and enabled JSON download after review.
+- Undo restoring a manually edited function description.
+- Unsupported input preserving the prior draft.
+The production URL could not be retrieved by the web reader during this task;
+these checks verify the repaired source, not a deployed production change.
+
+Suggested commit message:
+fix: make schema draft generation immediate and support three-function inputs
