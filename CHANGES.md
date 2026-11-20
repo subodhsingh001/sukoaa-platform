@@ -348,3 +348,11 @@ Added a directory and five utilities: CSV cleaner, ID-based spreadsheet comparis
 Added ExcelJS and PDF.js with self-hosted PDF worker/support assets, dependency license copies and a preparation script. Existing runtime preparation and compiler/auth/API implementation are retained. Added focused workbench tests and one import in tests/platform.test.ts; no existing assertion was changed or test removed. See docs/33-FILE-AND-DATA-TOOLS.md for installation, operations, limits and exact verification scope. No GitHub push or live deployment occurred.
 
 Verification for this addition: Node 24 typecheck and production build pass; 322/322 tests pass, including 21 new workbench tests. Generated commerce SQL executes with foreign-key checking and 100 valid joined orders. No production dependency advisories were reported. After source recovery, browser automation was unavailable; fresh final screenshots and repeat browser end-to-end checks are not claimed.
+
+## Homepage workspace visual · 20 November 2026
+
+Restored the reference's layered browser/code composition on the right of the homepage intro, using the current logo and green branding. The visual stacks below the unchanged intro on tablet/mobile. It is lightweight HTML/CSS with existing Lucide icons, aria-hidden, and contains no fake interactive controls. This single decorative composition is restored at the owner's explicit request; the documentation-style sections remain.
+
+Validation: typecheck and final production build pass; 322/322 tests pass. Browser checks at 375/768/1280 px show no horizontal overflow and correct stacked/right-side placement. Data and All tools filters still work. No existing assertion, compiler implementation, route, title/meta/H1 target keyword, canonical or JSON-LD definition changed. See docs/34-HOMEPAGE-WORKSPACE-VISUAL.md. No GitHub push or live deployment was performed.
+
+Homepage follow-up: Data now includes all five entries in the shared file/data catalog, including batch images, PDF organization and test fixtures. Other relevant category filters remain; All tools does not duplicate entries.

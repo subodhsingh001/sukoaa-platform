@@ -1707,3 +1707,18 @@ Validation: Node 24 typecheck, 301 passing tests, production build, and browser 
 | tests/workbench.test.ts, tests/platform.test.ts | Add behavioral tests and one import. No existing test removed, weakened or assertion rewritten. |
 
 No existing section longer than 150 words was removed. No new hard-coded marketing count is introduced: the directory count comes from workbenchTools. Claims are bounded by file/memory limits, values-only workbook import, unsupported PDF forms/encryption and non-guaranteed image compression. Files do not upload; normal website asset requests still occur. No deployment is performed. Final package verification limits are documented in docs/33-FILE-AND-DATA-TOOLS.md.
+
+## Requested homepage visual restoration · 20 November 2026
+
+The owner explicitly requested the earlier layered browser/editor composition on the homepage's right side. This is a bounded exception to the earlier instruction to remove illustrative mockups. The actual H1, intro copy and compiler CTA are preserved. No section is deleted or rewritten.
+
+| Files | Treatment |
+| --- | --- |
+| components/Home.tsx | Wrap the existing intro copy and add HomeIntroVisual as its sibling. |
+| components/HomeIntroVisual.tsx | New decorative, aria-hidden composition with current Sukoaa artwork and existing Lucide icons; no fake interactive controls. |
+| components/home-extra.css | Homepage-only responsive grid and scoped browser/code composition styles. Stacks below copy at 800 px and narrower. |
+| docs/34-HOMEPAGE-WORKSPACE-VISUAL.md | Installation, design exception and verification scope. |
+
+No additional hard-coded product count, external dependency or backend change. Browser checks at 375/768/1280 px found no document overflow; existing Data/All tools filters work. Typecheck, 322 tests and production build pass. Existing tests and SEO definitions are retained. No live deployment performed.
+
+Homepage discovery follow-up: Data filtering derives membership from workbenchTools so all five file/data utilities appear, retaining each primary category and avoiding duplicate cards. Counts continue to derive from the filtered array.

@@ -7,8 +7,10 @@ import {toolLandingHref} from '@/lib/marketing/tool-links';
 import {SiteHeader} from '@/components/layout/SiteHeader';
 import {SiteFooter} from '@/components/layout/SiteFooter';
 import './home-extra.css';
+import {HomeIntroVisual} from './HomeIntroVisual';
 import {useState,useEffect} from 'react';
 import {Search,Globe,Code2,Puzzle,Bookmark,ChevronDown,Play,FileCode2,Terminal,BookOpen,FileText,Atom,FileJson,Regex,Diff,Workflow} from 'lucide-react';
+const dataToolHrefs = new Set<string>(workbenchTools.map(tool => '/tools/' + tool.slug));
 const tools=[
  ...workbenchTools.map(t=>({href:'/tools/'+t.slug,name:t.name,category:t.group,desc:t.description,icon:'{}',color:'green',status:'Available',tags:['No AI','Local files']})),
  {href:'/tools/tool-schema-generator',name:'Tool Schema Generator',category:'Code',desc:'Draft and edit AI tool schemas locally. Review unclear inputs, validate arguments and export JSON for your API.',icon:'{ƒ}',color:'green',status:'Available',tags:['JSON Schema','No AI calls','Local']},
@@ -54,15 +56,18 @@ export default function Home({stats}: {stats: HomeStats}){
  useEffect(()=>{try{setSaved(JSON.parse(localStorage.getItem('sukoaa-favorites')||'[]'))}catch{}},[]);
  function favorite(name:string){const next=saved.includes(name)?saved.filter(x=>x!==name):[...saved,name];setSaved(next);localStorage.setItem('sukoaa-favorites',JSON.stringify(next))}
  const homeTools=tools.map(tool=>tool.name==='Interview Preparation'?{...tool,desc:`Study ${stats.interviewQuestions} GenAI and Frontend questions, review reference answers and rehearse project explanations.`,tags:[...tool.tags,`${stats.interviewQuestions} questions`]}:tool.name==='Play & Learn'?{...tool,tags:[...tool.tags,`${stats.activities} activities`]}:tool);
- const filtered=homeTools.filter(t=>(category==='All tools'||t.category===category)&&(!onlySaved||saved.includes(t.name))&&(t.name+' '+t.desc+' '+t.tags.join(' ')).toLowerCase().includes(query.toLowerCase()));
+ const filtered=homeTools.filter(t=>(category==='All tools'||t.category===category||(category==='Data'&&dataToolHrefs.has(t.href)))&&(!onlySaved||saved.includes(t.name))&&(t.name+' '+t.desc+' '+t.tags.join(' ')).toLowerCase().includes(query.toLowerCase()));
  return <>
  <SiteHeader/>
  <main id="main-content" tabIndex={-1} className="home-page">
   <section className="home-intro" aria-labelledby="home-title">
+   <div className="home-intro-copy">
    <h1 id="home-title">Online coding tools. Learn by running real examples.</h1>
    <p>Run JavaScript and Python, build React interfaces, and practise with explained examples. Browser playgrounds work without an account; check each tool’s runtime requirements.</p>
    <a className="home-primary" href="/workspace?language=javascript">Open JavaScript compiler</a>
    {!accountLoading && user && <p className="home-session">You’re signed in. <a href="/workspace?language=javascript">Open your workspace</a>.</p>}
+   </div>
+   <HomeIntroVisual/>
   </section>
   <section id="tools" className="home-directory" aria-labelledby="home-tools-title">
    <div className="home-section-heading"><h2 id="home-tools-title">Tools</h2><a href="/tools">All tool guides</a></div>
