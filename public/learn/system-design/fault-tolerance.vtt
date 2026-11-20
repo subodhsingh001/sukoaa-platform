@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:11.333
+Separate essential work. The event page needs correct booking information, but recommendations are optional. Give these paths different deadlines and resource budgets.
+
+2
+00:00:11.333 --> 00:00:23.417
+An optional call stalls. Recommendations stop responding. Without a boundary, waiting calls can consume all connections or workers and affect otherwise healthy operations.
+
+3
+00:00:23.417 --> 00:00:34.083
+Enforce a deadline. The timeout guard ends waiting for optional work. This protects local resources but does not prove a remote write was cancelled or never happened.
+
+4
+00:00:34.083 --> 00:00:45.083
+Degrade honestly. Render the essential page without suggestions. Do not turn an uncertain payment outcome into a success message just to make the page appear healthy.
+
+5
+00:00:45.083 --> 00:00:57.667
+Bound retries. If a retry is appropriate, limit attempts and use backoff with jitter. Preserve one operation identity for side effects so retries do not create duplicate business actions.
+
+6
+00:00:57.667 --> 00:01:10.417
+Test partial failure. Inject a slow response and a lost reply in a safe test environment. Verify core capacity and user-visible correctness rather than only testing a clean server shutdown.

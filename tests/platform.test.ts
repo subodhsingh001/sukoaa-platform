@@ -1,3 +1,6 @@
+import './workbench.test';
+import './system-design.test';
+import './navigation.test';
 import './ai-tools.test';
 import './learning-stage.test';
 import './play.test';
@@ -80,3 +83,5 @@ import './tool-schema.test';
 import './token-wording.test';
 
 import './interview.test';
+
+import './regex.test';

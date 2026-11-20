@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:12.750
+Write at the owner. A booking write reaches the current primary. Its acknowledgment policy determines what the application can assume about durability and replication at that moment.
+
+2
+00:00:12.750 --> 00:00:22.583
+Ship changes. Changes travel to replicas. With asynchronous replication, the primary can reply before all copies have applied the latest write.
+
+3
+00:00:22.583 --> 00:00:33.000
+Read a lagging copy. A confirmation read reaches Replica A before the booking arrives there. The user may see an older state even though the primary accepted the write.
+
+4
+00:00:33.000 --> 00:00:44.417
+Choose a consistent path. Use the primary or an explicitly supported consistency mechanism for confirmation. Public catalog reads can have a different staleness allowance.
+
+5
+00:00:44.417 --> 00:00:57.250
+Coordinate failover. If the primary fails, promotion needs a clear election or orchestration process and fencing. Avoid letting an isolated old writer accept conflicting new changes.
+
+6
+00:00:57.250 --> 00:01:10.833
+Keep recovery separate. Replication also copies many mistakes. Maintain tested backups and recovery points independently rather than counting live copies as protection against every kind of data loss.

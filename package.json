@@ -9,9 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "node scripts/prepare-runtimes.mjs",
-    "predev": "node scripts/prepare-runtimes.mjs",
-    "prebuild": "node scripts/check-source.mjs && node scripts/prepare-runtimes.mjs",
+    "postinstall": "node scripts/prepare-runtimes.mjs && node scripts/prepare-workbench.mjs",
+    "predev": "node scripts/prepare-runtimes.mjs && node scripts/prepare-workbench.mjs",
+    "prebuild": "node scripts/check-source.mjs && node scripts/prepare-runtimes.mjs && node scripts/prepare-workbench.mjs",
     "prepare:runtimes": "node scripts/prepare-runtimes.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "test": "node scripts/test-platform.mjs",
@@ -59,7 +59,9 @@
     "tailwind-merge": "3.6.0",
     "vaul": "^1.1.2",
     "yaml": "^2.9.1",
-    "zod": "^4.6.7"
+    "zod": "^4.6.7",
+    "exceljs": "4.4.0",
+    "pdfjs-dist": "6.5.438"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.2.1",
@@ -71,6 +73,9 @@
     "typescript": "5.9.3"
   },
   "overrides": {
-    "dompurify": "3.4.18"
+    "dompurify": "3.4.18",
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
   }
 }

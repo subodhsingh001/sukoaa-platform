@@ -70,7 +70,7 @@ No browser or extension binaries were created or submitted by this website chang
 
 - Server-rendered product and tool descriptions with real internal anchors.
 - Page-specific titles/descriptions and canonical URLs from SITE_URL/APP_ORIGIN.
-- Open Graph/Twitter image at /social/sukoaa.png (1200×630).
+- Open Graph/Twitter image at /social/sukoaa.png (supplied 1536×1024 artwork; dynamic /og images are 1200×630).
 - app/sitemap.ts and app/robots.ts with production opt-in.
 - Organization/WebSite and breadcrumb JSON-LD. Browser-local tools include SoftwareApplication/WebApplication facts and free offers. Pending extensions do not advertise a software download in structured data until a store URL exists. No fabricated ratings, reviews or testimonials.
 - Downloads rendered from public release metadata with HTTPS/checksum validation and clear empty/unavailable states.

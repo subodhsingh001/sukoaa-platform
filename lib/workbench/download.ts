@@ -1,0 +1,2 @@
+export function downloadFile(name: string, data: BlobPart | Blob, type = 'text/plain;charset=utf-8') { const b = data instanceof Blob ? data : new Blob([data], { type }), url = URL.createObjectURL(b), a = document.createElement('a'); a.href = url; a.download = name.replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_'); a.click(); setTimeout(() => URL.revokeObjectURL(url), 30000); }
+export function sizeLabel(n: number) { return n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }

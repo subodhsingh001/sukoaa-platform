@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:14.333
+Set recovery objectives. Define how long the required user operation may be unavailable and how much recent data loss is acceptable. These are explicit business objectives, not product defaults.
+
+2
+00:00:14.333 --> 00:00:26.917
+Preserve recoverable state. Capture suitable backups and change logs with recoverable keys and configuration. Live replication alone may copy deletion or corruption to every current replica.
+
+3
+00:00:26.917 --> 00:00:39.583
+Lose production. A serious failure interrupts the production environment. Recovery needs an environment, permissions and an executable runbook, not merely a promise that a backup exists.
+
+4
+00:00:39.583 --> 00:00:52.750
+Restore in isolation. Rebuild required infrastructure and restore data in a safe environment. Include secrets, certificates, queues and other dependencies required for actual user workflows.
+
+5
+00:00:52.750 --> 00:01:05.167
+Validate before routing. Query restored data and run correctness checks. A process reporting restore complete does not prove that bookings, ownership and payment reconciliation are usable.
+
+6
+00:01:05.167 --> 00:01:16.083
+Measure and improve. Restore traffic safely and compare measured end-to-end recovery and data loss with the objectives. Record gaps, improve the runbook and repeat the drill.

@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:13.417
+Map required flows. The public client needs the web tier, which needs booking. Booking needs the database. Record required ports and dependencies before introducing isolation.
+
+2
+00:00:13.417 --> 00:00:25.000
+Remove unnecessary paths. The unrelated worker has no business requirement to contact the orders database. Blocking that path reduces reachability and potential blast radius.
+
+3
+00:00:25.000 --> 00:00:35.250
+Allow a narrow connection. Permit the actual booking workload to use the configured database port. Broad namespace-wide rules may allow more callers than intended.
+
+4
+00:00:35.250 --> 00:00:47.333
+Verify enforcement. A policy object is only configuration intent. The cluster network implementation must support and enforce it, and selectors must match the intended workloads.
+
+5
+00:00:47.333 --> 00:01:00.500
+Keep identity checks. An allowed TCP connection is not permission to read every order. Database credentials, encrypted transport and application ownership checks remain separate controls.
+
+6
+00:01:00.500 --> 00:01:14.750
+Test both directions. Verify allowed traffic, denied traffic and necessary DNS/monitoring dependencies. Observe unexpected failures and refine the policy without silently opening everything.

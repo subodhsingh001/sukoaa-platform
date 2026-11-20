@@ -1,0 +1,10 @@
+import {createRequire} from 'node:module';
+import {dirname,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {mkdirSync,copyFileSync,cpSync} from 'node:fs';
+const require=createRequire(import.meta.url),root=dirname(dirname(fileURLToPath(import.meta.url))),pdf=dirname(require.resolve('pdfjs-dist/package.json')),dest=join(root,'public/workbench/pdfjs');
+mkdirSync(dest,{recursive:true});
+copyFileSync(join(pdf,'build/pdf.worker.min.mjs'),join(dest,'pdf.worker.min.mjs'));
+for(const folder of ['standard_fonts','cmaps','wasm'])cpSync(join(pdf,folder),join(dest,folder),{recursive:true});
+for(const name of ['pdfjs-dist','exceljs'])copyFileSync(join(dirname(require.resolve(name+'/package.json')),'LICENSE'),join(root,'docs/licenses',name+'-LICENSE.txt'));
+console.log('Prepared local PDF worker, fonts, decoders and notices.');

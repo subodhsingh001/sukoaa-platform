@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:13.000
+One public address. Visitors send event requests to one endpoint. The load balancer selects an application target so visitors do not need to know individual server addresses.
+
+2
+00:00:13.000 --> 00:00:23.000
+Share requests. Alternate requests between App A and App B. This shares turns, but a slow request can still occupy one target much longer than another.
+
+3
+00:00:23.000 --> 00:00:34.083
+A target fails. App A stops passing readiness checks. Detection takes time; requests already in flight may fail and must be handled safely by the client.
+
+4
+00:00:34.083 --> 00:00:45.167
+Use the healthy target. New requests go to App B after the target is removed. App B needs enough spare capacity; routing cannot manufacture capacity during an outage.
+
+5
+00:00:45.167 --> 00:00:56.167
+Protect the booking. Both copies use the same order system. A repeated booking request carries the same idempotency key so a lost response does not charge twice.
+
+6
+00:00:56.167 --> 00:01:08.167
+Measure the whole path. Check latency and errors at the balancer, application and database. If both applications wait on the database, adding routing rules will not fix that bottleneck.

@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:12.167
+Closed: calls flow. The breaker allows normal calls and records eligible outcomes. Timeouts still bound each attempt; a closed breaker is not a guarantee of health.
+
+2
+00:00:12.167 --> 00:00:23.000
+Observe repeated failures. The dependency times out repeatedly. A minimum sample and measurement window help distinguish a pattern from a single unlucky request.
+
+3
+00:00:23.000 --> 00:00:34.917
+Open: stop pressure. The breaker opens and rejects dependency calls quickly. This frees local resources and avoids repeating expensive failures while recovery is investigated.
+
+4
+00:00:34.917 --> 00:00:47.167
+Choose an honest fallback. Optional recommendations can be omitted. Essential payment outcomes must remain pending or failed according to verified state, not invented to hide the outage.
+
+5
+00:00:47.167 --> 00:00:58.333
+Half-open: probe. After a reset interval, allow a limited probe set. Sending every waiting caller at once can overload a dependency that is only partly recovered.
+
+6
+00:00:58.333 --> 00:01:09.833
+Recover or reopen. Successful probes restore normal traffic; failed probes reopen the breaker. Observe both false trips and recovery behavior under controlled failure tests.

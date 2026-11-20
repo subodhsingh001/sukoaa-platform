@@ -32,7 +32,7 @@ test('all 13 distinct supplied questions are preserved in the three screenshot r
   const slugs = screenshotRounds.flatMap(r => r.slugs);
   assert.equal(new Set(slugs).size, 13);
   assert.deepEqual(new Set(slugs), new Set(supplied.map(q => q.slug)));
-  assert.match(mockRounds.find(r => r.id === 'genai-foundations')!.note, /not supplied/);
+  assert.match(mockRounds.find(r => r.id === 'genai-foundations')!.note, /^Practice round covering GenAI foundations and coding\.$/);
 });
 test('every mock question resolves and short sessions honor subject experience without duplicates', () => {
   for (const r of mockRounds) for (const slug of r.slugs) assert.ok(getQuestion(r.track, slug), slug);

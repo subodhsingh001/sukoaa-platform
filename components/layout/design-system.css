@@ -1,0 +1,106 @@
+:root{
+  --site-canvas:#fafbfc;--site-surface:#fff;--site-text:#1f2933;--site-muted:#52616b;
+  --site-accent:#24563c;--site-accent-hover:#183e2a;--site-soft:#f1f5f3;--site-border:#d8dfe3;
+  --site-focus:#145c99;--site-radius:7px;--site-body:1rem;--site-label:.875rem;--site-meta:.75rem;
+  --site-header-height:68px;--site-prose-width:70ch;
+  --ink:var(--site-text);--muted:var(--site-muted);--paper:var(--site-canvas);--line:var(--site-border);
+}
+body{font-size:var(--site-body);color:var(--site-text);background:var(--site-canvas);line-height:1.6}
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible{outline:3px solid var(--site-focus);outline-offset:3px}
+:where(button,input,textarea,select){font-family:inherit}
+:where(button,a,summary){touch-action:manipulation}
+.marketing-site{--product-ink:var(--site-text);--product-muted:var(--site-muted);--product-line:var(--site-border);--product-paper:var(--site-canvas)}
+.site-header,.site-header *,.site-footer,.site-footer *,.site-footer-compact,.site-footer-compact *{box-sizing:border-box}
+.site-header{position:relative;z-index:90;display:flex;align-items:center;gap:24px;width:100%;height:var(--site-header-height);min-width:0;max-width:none;margin:0;padding:0 max(24px,calc((100% - 1280px)/2));border:0;border-bottom:1px solid var(--site-border);background:var(--site-surface);color:var(--site-text);font-size:14px;line-height:1.4}
+.site-header.site-header--editor{padding-inline:18px;gap:16px;height:62px}
+.site-header .site-brand{display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 auto;min-height:44px;margin:0;text-decoration:none}
+.site-header .site-brand .sukoaa-logo{max-width:100%;width:auto!important;height:27px!important}
+.site-header nav{display:flex;align-items:center;gap:20px;min-width:0;width:auto;margin:0;padding:0;font-size:14px}
+.site-header nav a{display:flex;align-items:center;min-height:44px;margin:0;padding:8px 0;color:var(--site-text);font-size:14px;line-height:1.4;text-decoration:none;white-space:nowrap}
+.site-header nav a:hover{color:var(--site-accent);text-decoration:underline;text-underline-offset:4px}
+.site-header .site-context{gap:12px}
+.site-header .site-context a{color:var(--site-muted);font-size:13px}
+.site-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0;margin-left:auto}
+.site-header-context{display:flex;align-items:center;gap:10px;min-width:0}
+.site-header-context .studio-save-state{margin:0;font-size:12px;color:var(--site-muted)}
+.site-header-context .studio-icon{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;border:1px solid var(--site-border);border-radius:var(--site-radius);color:var(--site-text)}
+.site-header .account-nav{display:flex;align-items:center;gap:4px;flex:0 0 auto;margin:0;position:relative}
+.site-header .account-link,.site-header .account-nav>button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;min-width:44px;height:auto;margin:0;padding:9px 12px;border:1px solid var(--site-border);border-radius:var(--site-radius);color:var(--site-text);background:var(--site-surface);font-size:14px;line-height:1.4;white-space:nowrap;text-decoration:none}
+.site-header .account-link:hover,.site-header .account-nav>button:hover{background:var(--site-soft)}
+.site-header .account-placeholder{width:94px;min-height:44px;display:block}
+.site-header .account-nav-error{position:absolute;top:calc(100% + 8px);right:0;width:260px;padding:12px;border:1px solid #b73d31;background:#fff;color:#862a21;font-size:14px;z-index:2}
+.site-menu{position:relative;flex:0 0 auto;margin:0;padding:0;border:0}
+.site-header .site-menu>summary{display:flex;align-items:center;justify-content:center;gap:5px;min-height:44px;min-width:44px;padding:9px 7px;border:1px solid transparent;border-radius:var(--site-radius);background:transparent;color:var(--site-text);font-size:14px;line-height:1.4;list-style:none;cursor:pointer;white-space:nowrap}
+.site-menu>summary::-webkit-details-marker,.site-footer-compact summary::-webkit-details-marker{display:none}
+.site-header .site-menu[open]>summary,.site-header .site-menu>summary:hover{background:var(--site-soft);border-color:var(--site-border)}
+.site-header nav.site-menu-panel{display:flex;flex-direction:column;align-items:stretch;gap:0;position:absolute;right:0;top:calc(100% + 8px);z-index:100;width:280px;max-width:calc(100vw - 24px);max-height:70dvh;overflow:auto;overscroll-behavior:contain;margin:0;padding:8px;background:var(--site-surface);border:1px solid var(--site-border);border-radius:var(--site-radius);box-shadow:0 6px 18px #17252d12}
+.site-header nav.site-menu-panel a{display:flex;align-items:center;min-height:44px;width:100%;padding:10px 12px;border-radius:5px;font-size:14px;white-space:normal;overflow-wrap:anywhere}
+.site-header nav.site-menu-panel a:hover{background:var(--site-soft)}
+.site-menu-group{padding:5px 0;border-bottom:1px solid var(--site-border)}
+.site-menu-group:last-child{border-bottom:0}
+.site-menu-group>span{display:block;padding:9px 12px;color:var(--site-muted);font-size:12px;font-weight:600}
+.site-header .site-mobile-menu{display:none}
+.site-skip{position:absolute;left:16px;top:-100px;z-index:1005;padding:12px 16px;background:var(--site-accent);color:white!important;border-radius:var(--site-radius);font-size:14px}
+.site-skip:focus{top:10px}
+#main-content:focus{outline:none}
+.site-footer{display:block;max-width:none;width:100%;margin:48px 0 0;padding:0;background:var(--site-surface);border:0;border-top:1px solid var(--site-border);color:var(--site-text);font-size:14px}
+.site-footer-inner{max-width:1280px;margin:0 auto;padding:36px 24px 24px}
+.site-footer-brand{display:flex;align-items:center;gap:24px;margin-bottom:28px}
+.site-footer-brand a{display:inline-flex;align-items:center;min-height:44px}
+.site-footer-brand p{font-size:14px;line-height:1.6;color:var(--site-muted);margin:0}
+.site-footer-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px}
+.site-footer-columns nav{display:flex;align-items:flex-start;flex-direction:column;justify-content:flex-start;gap:0;width:auto;min-width:0;margin:0;padding:0;font-size:14px}
+.site-footer-columns h2{font-size:14px;line-height:1.5;font-weight:650;letter-spacing:0;text-transform:none;margin:0 0 12px;color:var(--site-text);text-align:left}
+.site-footer-columns a{display:flex;align-items:center;width:fit-content;max-width:100%;min-height:44px;padding:8px 0;margin:0;color:var(--site-muted);font-size:14px;line-height:1.5;text-decoration:none;white-space:normal;overflow-wrap:anywhere}
+.site-footer-columns a:hover{color:var(--site-accent);text-decoration:underline;text-underline-offset:4px}
+.site-copyright{padding-top:20px;margin:24px 0 0!important;border-top:1px solid var(--site-border);font-size:12px!important;color:var(--site-muted)}
+.site-footer-compact{display:block;position:relative;flex:0 0 auto;width:auto;max-width:none;height:auto;min-height:0;margin:0;padding:0;border:0;background:transparent;color:inherit;font-size:12px;line-height:1.4}
+.site-footer-compact details{margin:0;padding:0;border:0;font-size:12px}
+.site-footer-compact summary{display:flex;align-items:center;justify-content:center;gap:6px;min-height:24px;min-width:44px;padding:2px 6px;list-style:none;cursor:pointer;font-size:12px;line-height:1.4}
+.site-footer-popover{position:fixed;right:16px;bottom:40px;z-index:1100;width:680px;max-width:calc(100vw - 32px);max-height:75dvh;overflow:auto;padding:22px;border:1px solid var(--site-border);border-radius:var(--site-radius);background:var(--site-surface);color:var(--site-text);box-shadow:0 6px 18px #17252d12}
+.site-footer-popover>p{font-size:12px;margin:16px 0 0;color:var(--site-muted)}
+.site-footer-popover .site-footer-columns{gap:20px}
+/* Document prose only: editors and result tables retain their own sizing. */
+:where(.prose-page,.lab-seo,.ut-seo,.product-questions,.product-steps,.product-note,.collection-intro) :is(p,li){font-size:1rem;line-height:1.8;max-width:var(--site-prose-width)}
+:where(.prose-page,.lab-seo,.ut-seo) :is(h2,h3){max-width:var(--site-prose-width);text-align:left}
+:where(.prose-page,.lab-seo,.ut-seo) p a{text-decoration:underline;text-underline-offset:3px;color:var(--site-accent)}
+.marketing-site .product-crumbs{font-size:12px;color:var(--site-muted);line-height:1.6;flex-wrap:wrap}
+.marketing-site .product-crumbs a{display:inline-flex;align-items:center;min-height:44px}
+.marketing-site .product-crumbs>span{color:var(--site-muted)}
+.marketing-site .product-fineprint{font-size:14px!important;color:var(--site-muted)!important}
+.marketing-site .product-button{min-height:44px;font-size:14px;border-radius:var(--site-radius)}
+.marketing-site .product-button.dark{background:var(--site-accent);color:#fff}
+.marketing-site .product-button.light{background:var(--site-surface);color:var(--site-accent);border-color:var(--site-border)}
+.marketing-site .product-questions summary{min-height:44px;font-size:16px;line-height:1.5}
+@media(max-width:1200px){.site-header{gap:20px;padding-inline:24px}.site-header .site-primary{gap:15px}.site-header .site-resources{display:none}.site-header .site-mobile-menu{display:block}}
+@media(max-width:950px){.site-header .site-primary,.site-header .site-context{display:none}.site-header{gap:16px}.site-header--editor .site-learn{display:none}.site-header-context .studio-save-state{display:none}}
+@media(max-width:600px){:root{--site-header-height:64px}.site-header{padding-inline:16px;gap:12px}.site-header .site-brand .sukoaa-logo{height:24px!important}.site-header-actions{gap:6px}.site-header .site-learn{display:none}.site-header .account-link span{display:none}.site-header .account-link,.site-header .account-nav>button{padding:9px;min-width:44px}.site-header .account-placeholder{width:44px}.site-footer-inner{padding:28px 20px 20px}.site-footer-brand{align-items:flex-start;flex-direction:column;gap:8px}.site-footer-columns{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 18px}.site-footer-popover .site-footer-columns{grid-template-columns:repeat(2,minmax(0,1fr))}.site-header.site-header--editor{height:62px;padding-inline:12px;gap:8px}.site-header--editor .site-brand .sukoaa-logo{height:20px!important}.site-header--editor .site-header-actions{gap:3px}}
+@media(pointer:coarse){.site-footer-compact summary{min-height:44px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.site-header *,.site-footer *,.site-footer-compact *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Match fixed editor row geometry; do not inherit document header dimensions. */
+.site-header.site-header--editor{height:62px;max-width:none;margin:0;padding-inline:18px;border-bottom:1px solid var(--site-border);background:var(--site-surface)}
+.studio-fullscreen .site-header{display:none}
+.workspace-footer>.site-footer-compact{margin-left:auto}
+@media(max-width:600px){.site-header.site-header--editor{height:62px;padding-inline:12px}}
+@media(pointer:coarse){.studio-statusbar .site-footer-compact summary{min-height:24px}.studio-statusbar .site-footer-compact summary::after{content:"";position:absolute;inset:-10px 0}}
+
+.marketing-site .product-main :is(.prose-page,.lab-seo,.ut-seo,.product-questions,.product-steps,.product-note,.collection-intro) :is(p,li){font-size:1rem;line-height:1.8}
+.marketing-site .product-main :is(.prose-page,.lab-seo,.ut-seo) p{max-width:var(--site-prose-width)}
+
+/* Brand chrome uses the requested green and transparent artwork; reading and editing surfaces stay light. */
+:root{--site-accent:#075e60;--site-accent-hover:#06494b;--site-soft:#edf5f5;--site-focus:#087d97;--site-chrome:#134741;--site-chrome-text:#f3fcf9;--site-chrome-muted:#cee3dc;--site-chrome-border:#3b7168}
+.site-header,.site-header.site-header--editor{background:var(--site-chrome);border-color:var(--site-chrome-border);color:var(--site-chrome-text)}
+.site-header .site-brand .sukoaa-logo{height:42px!important;width:190px!important}
+.site-header nav a,.site-header .site-menu>summary{color:var(--site-chrome-text)}
+.site-header nav a:hover{color:#76ece2}
+.site-header .site-context a,.site-header-context .studio-save-state{color:var(--site-chrome-muted)}
+.site-header .account-link,.site-header .account-nav>button,.site-header .cp-trigger,.site-header-context .studio-icon{background:transparent;color:var(--site-chrome-text);border-color:var(--site-chrome-border)}
+.site-header .account-link:hover,.site-header .account-nav>button:hover,.site-header .cp-trigger:hover,.site-header .site-menu[open]>summary,.site-header .site-menu>summary:hover{background:#1b5e54;border-color:#7bb5a7;color:#fff}
+.site-header .cp-trigger kbd{background:#1b5e54;color:var(--site-chrome-muted);border-color:var(--site-chrome-border)}
+.site-header nav.site-menu-panel{color:var(--site-text);background:var(--site-surface)}
+.site-header nav.site-menu-panel a{color:var(--site-text)}
+.site-header nav.site-menu-panel a:hover{color:var(--site-accent);background:var(--site-soft)}
+.site-header :is(a,button,summary):focus-visible{outline-color:#50dfdd}
+.site-footer-brand>a{background:var(--site-chrome);padding:6px 10px;border-radius:7px}
+@media(max-width:600px){.site-header .site-brand .sukoaa-logo{height:34px!important;width:154px!important}.site-header--editor .site-brand .sukoaa-logo{height:30px!important;width:136px!important}}

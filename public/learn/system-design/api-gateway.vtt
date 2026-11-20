@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:13.417
+Enter one API boundary. The client calls a public API address. The gateway provides a shared routing boundary instead of requiring clients to know every internal service location.
+
+2
+00:00:13.417 --> 00:00:25.750
+Apply coarse policy. Validate the request and supported identity credentials with maintained security libraries. Reject oversized or invalid traffic before forwarding expensive work.
+
+3
+00:00:25.750 --> 00:00:36.833
+Route by responsibility. Event requests go to the event service; order requests go to the order service. API versions and paths should have deliberate routing rules.
+
+4
+00:00:36.833 --> 00:00:49.000
+Authorize the record. The order service checks ownership and allowed actions using verified identity. Passing gateway authentication does not grant access to another visitor order.
+
+5
+00:00:49.000 --> 00:01:01.083
+Bound aggregation. If one API request fans out, set deadlines and partial-failure behavior. A slow optional service should not hold every gateway worker indefinitely.
+
+6
+00:01:01.083 --> 00:01:14.000
+Operate the entry tier. Trace requests through the boundary and test gateway capacity and redundancy. Centralizing policy is useful, but it also creates an important operational dependency.

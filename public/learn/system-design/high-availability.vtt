@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:12.833
+Define success. For this example, success means a correct booking response within its latency objective. A homepage response alone does not measure the same user outcome.
+
+2
+00:00:12.833 --> 00:00:24.167
+Spread the copies. Applications run in separate zones behind a resilient entry point. The goal is to avoid losing every application copy to the same local failure.
+
+3
+00:00:24.167 --> 00:00:36.250
+Lose one zone. Zone A becomes unavailable. Detection and rerouting consume time, and requests already in flight may fail. The objective allows an explicitly measured error budget.
+
+4
+00:00:36.250 --> 00:00:47.667
+Use remaining capacity. Zone B receives new work. It must have enough capacity, network access and working credentials to serve the actual user operation.
+
+5
+00:00:47.667 --> 00:00:58.917
+Follow the data. Both application copies need a suitable data service. A single unprotected database can still interrupt bookings even when both application zones are healthy.
+
+6
+00:00:58.917 --> 00:01:11.667
+Test the objective. Run a controlled failure and measure booking success and recovery time. Availability is demonstrated by user outcomes, not by counting boxes in a diagram.
