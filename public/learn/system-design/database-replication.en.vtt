@@ -1,0 +1,305 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.420
+Let us understand database replication.
+
+2
+00:00:03.260 --> 00:00:05.380
+Two students copy notes from one teacher.
+
+3
+00:00:06.020 --> 00:00:09.260
+If copying takes time, one
+notebook may lack the last
+
+4
+00:00:09.260 --> 00:00:12.800
+sentence. If the teacher
+accidentally deletes an important
+
+5
+00:00:12.800 --> 00:00:16.700
+page and the students copy that
+deletion, every notebook can
+
+6
+00:00:16.700 --> 00:00:19.920
+lose it. You still need
+a recoverable older copy.
+
+7
+00:00:20.560 --> 00:00:23.200
+Replication keeps copies of database data.
+
+8
+00:00:23.800 --> 00:00:27.367
+It can improve resilience or
+serve reads, but asynchronous
+
+9
+00:00:27.367 --> 00:00:31.280
+copies may lag. A replica is
+not the same as an independent
+
+10
+00:00:31.280 --> 00:00:36.140
+backup. Follow the normal path.
+A booking write reaches the
+
+11
+00:00:36.140 --> 00:00:39.920
+current primary. Its acknowledgment
+policy determines what
+
+12
+00:00:39.920 --> 00:00:43.200
+the application can assume
+about durability and replication
+
+13
+00:00:43.200 --> 00:00:46.540
+at that moment. Changes
+travel to replicas.
+
+14
+00:00:47.040 --> 00:00:50.540
+With asynchronous replication,
+the primary can reply before
+
+15
+00:00:50.540 --> 00:00:53.080
+all copies have applied the latest write.
+
+16
+00:00:53.080 --> 00:00:57.560
+SeatSpot may serve public
+catalog reads from replicas while
+
+17
+00:00:57.560 --> 00:01:00.720
+routing authoritative
+reservations to the write owner.
+
+18
+00:01:01.580 --> 00:01:04.700
+A user reading immediately
+after a write must not be
+
+19
+00:01:04.700 --> 00:01:07.080
+surprised by a stale confirmation state.
+
+20
+00:01:07.800 --> 00:01:11.360
+Now change one condition.
+A confirmation read reaches
+
+21
+00:01:11.360 --> 00:01:13.800
+Replica A before the
+booking arrives there.
+
+22
+00:01:14.260 --> 00:01:17.040
+The user may see an older
+state even though the primary
+
+23
+00:01:17.040 --> 00:01:20.960
+accepted the write. A common
+misunderstanding is this:
+
+24
+00:01:21.260 --> 00:01:24.240
+Replication protects against
+every accidental deletion.
+
+25
+00:01:24.860 --> 00:01:27.960
+A replica can copy the same
+deletion or corruption.
+
+26
+00:01:28.920 --> 00:01:31.140
+Keep restore-tested
+recovery points separately.
+
+27
+00:01:31.660 --> 00:01:37.020
+Think about this. The primary
+confirms at 12:00:00; the
+
+28
+00:01:37.020 --> 00:01:43.660
+replica applies at 12:00:02.
+What can a read at 12:00:01
+
+29
+00:01:43.660 --> 00:01:46.420
+show? Pause the video
+and make your prediction.
+
+30
+00:01:46.420 --> 00:01:49.940
+The earlier state, even though
+the primary accepted the
+
+31
+00:01:49.940 --> 00:01:53.840
+write. Read-your-writes requires
+a suitable authoritative or
+
+32
+00:01:53.840 --> 00:01:57.860
+documented consistency path.
+Let us reason with a concrete
+
+33
+00:01:57.860 --> 00:02:03.940
+example. The primary confirms
+a booking at 12:00:00.
+
+34
+00:02:03.940 --> 00:02:08.480
+A read replica applies it at 12:00:02.
+
+35
+00:02:08.480 --> 00:02:12.760
+A read at 12:00:01 may
+see the earlier state.
+
+36
+00:02:12.760 --> 00:02:16.380
+Two seconds here is fictional
+teaching lag, not a product
+
+37
+00:02:16.380 --> 00:02:20.040
+guarantee. Read the confirmation
+from an authoritative path
+
+38
+00:02:20.040 --> 00:02:23.400
+or implement a documented
+consistency mechanism.
+
+39
+00:02:24.140 --> 00:02:27.120
+Do not tell the user their
+purchase disappeared simply
+
+40
+00:02:27.120 --> 00:02:31.080
+because a replica is behind.
+These figures are teaching
+
+41
+00:02:31.080 --> 00:02:33.400
+examples, not production guarantees.
+
+42
+00:02:34.380 --> 00:02:36.540
+Turn the idea into a design decision.
+
+43
+00:02:37.240 --> 00:02:40.580
+Use the primary or an
+explicitly supported consistency
+
+44
+00:02:40.580 --> 00:02:44.960
+mechanism for confirmation.
+Public catalog reads can have a
+
+45
+00:02:44.960 --> 00:02:48.140
+different staleness allowance.
+If the primary fails,
+
+46
+00:02:48.500 --> 00:02:52.020
+promotion needs a clear election
+or orchestration process
+
+47
+00:02:52.020 --> 00:02:56.060
+and fencing. Avoid letting
+an isolated old writer accept
+
+48
+00:02:56.060 --> 00:02:59.540
+conflicting new changes. When
+you try the practice task,
+
+49
+00:02:59.820 --> 00:03:03.160
+look for this result. Lag
+is different from a failed
+
+50
+00:03:03.160 --> 00:03:07.440
+purchase; a replica is not an
+independent historical backup.
+
+51
+00:03:08.420 --> 00:03:11.960
+Check your understanding.
+Replication also copies many
+
+52
+00:03:11.960 --> 00:03:15.720
+mistakes. Maintain tested
+backups and recovery points
+
+53
+00:03:15.720 --> 00:03:19.260
+independently rather than
+counting live copies as protection
+
+54
+00:03:19.260 --> 00:03:22.600
+against every kind of data
+loss. Here is a challenge.
+
+55
+00:03:23.280 --> 00:03:26.220
+Why can a replica show an
+order as missing just after
+
+56
+00:03:26.220 --> 00:03:30.140
+checkout? Pause before the
+answer. Asynchronous replication
+
+57
+00:03:30.140 --> 00:03:32.120
+may not have applied the write yet.
+
+58
+00:03:32.460 --> 00:03:35.740
+Route that confirmation to an
+appropriate authoritative path
+
+59
+00:03:35.740 --> 00:03:38.200
+or use a supported
+read-your-writes mechanism.
+
+60
+00:03:38.200 --> 00:03:41.900
+Distinguish lag from a real failed write.
+
+61
+00:03:41.900 --> 00:03:45.120
+For an interview, compare
+acknowledgment, read consistency
+
+62
+00:03:45.640 --> 00:03:49.020
+and failover fencing. Say what
+you would measure, not only
+
+63
+00:03:49.020 --> 00:03:50.180
+which tool you would buy.

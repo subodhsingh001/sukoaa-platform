@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:14.083
+00:00:00.000 --> 00:00:38.083
 Commit a business fact. The booking owner establishes that the booking is confirmed, then reliably publishes the associated fact. Publication and storage must have an explicit failure strategy.
 
 2
-00:00:14.083 --> 00:00:25.833
+00:00:38.083 --> 00:01:16.000
 Fan out independently. The event channel makes the fact available to separate subscribers. Each subscriber has a distinct business responsibility and its own processing state.
 
 3
-00:00:25.833 --> 00:00:37.750
+00:01:16.000 --> 00:01:58.750
 One subscriber lags. Analytics becomes slow while receipt processing continues. Subscriber delay is observable; it should not silently redefine the original booking outcome.
 
 4
-00:00:37.750 --> 00:00:49.750
+00:01:58.750 --> 00:02:31.750
 Deliver the event twice. A repeated delivery uses the same logical event identity. Consumers must avoid awarding points or producing another external effect accidentally.
 
 5
-00:00:49.750 --> 00:00:59.917
+00:02:31.750 --> 00:03:00.750
 Evolve the contract. Add compatible fields carefully and test old consumers. Retained events and delayed subscribers may outlive the latest deployment.
 
 6
-00:00:59.917 --> 00:01:12.833
+00:03:00.750 --> 00:03:40.833
 Plan recovery and replay. Replay analytics when appropriate, but do not resend historical receipts automatically. Reprocessing policy depends on the side effects owned by each subscriber.

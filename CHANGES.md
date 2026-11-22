@@ -356,3 +356,15 @@ Restored the reference's layered browser/code composition on the right of the ho
 Validation: typecheck and final production build pass; 322/322 tests pass. Browser checks at 375/768/1280 px show no horizontal overflow and correct stacked/right-side placement. Data and All tools filters still work. No existing assertion, compiler implementation, route, title/meta/H1 target keyword, canonical or JSON-LD definition changed. See docs/34-HOMEPAGE-WORKSPACE-VISUAL.md. No GitHub push or live deployment was performed.
 
 Homepage follow-up: Data now includes all five entries in the shared file/data catalog, including batch images, PDF organization and test fixtures. Other relevant category filters remain; All tools does not duplicate entries.
+
+
+## Learning course update — 22 November 2026
+
+- Added /learn/gen-ai and 40 concept pages with three explanation depths, worked tasks, answered follow-ups, primary references and guided visual stages.
+- Added deterministic engineering experiments, five mock-round formats, four runnable Python reference tasks, four capstone briefs and local progress/notes with backup/merge.
+- Added course links to components/Home.tsx, lib/navigation.ts and app/interview-prep/page.tsx; added new paths to the existing sitemap catalog. Existing metadata and route destinations are preserved.
+- Rebuilt all 25 system-design videos with offline synthetic female narration, normalized audio, aligned two-line captions, audio-only tracks and expanded six-chapter teaching. Added goals, predictions, misconception corrections, practical tasks and interview depth guidance to every lesson.
+- Fixed mobile course-header collisions with legacy CSS and kept architecture diagram scrolling inside its own bounded region.
+- Updated offline exports, handbooks, media provenance and per-topic review documentation.
+- No existing test assertion was removed or weakened. Existing slogan assertions were not changed. Added 14 new tests relative to the delivered 322-test baseline, including three teaching tests, one media/caption test and ten GenAI curriculum/behavior/example tests. All 336 pass on Node 24. Type checking and production build also pass.
+- Compiler and app/api source files remain unchanged from the delivered baseline. No deployment, database migration or new runtime AI service was performed.

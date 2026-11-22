@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:13.167
+00:00:00.000 --> 00:00:32.250
 Identify the principal. Requests are assigned a deliberate identity key, such as a verified account and endpoint. A spoofable header cannot safely define a protected client budget.
 
 2
-00:00:13.167 --> 00:00:23.833
+00:00:32.250 --> 00:01:09.167
 Refill the budget. The token bucket refills over elapsed time up to its capacity. Capacity permits a bounded burst while the refill rate controls sustained use.
 
 3
-00:00:23.833 --> 00:00:34.250
+00:01:09.167 --> 00:01:52.250
 Consume atomically. Checking and consuming a token must behave as one operation for shared state. Separate reads and writes can overspend under concurrency.
 
 4
-00:00:34.250 --> 00:00:47.667
+00:01:52.250 --> 00:02:33.000
 Allow affordable work. A request with enough tokens proceeds, but still faces authorization, request validation and downstream concurrency limits. Passing the limiter is not a correctness guarantee.
 
 5
-00:00:47.667 --> 00:00:58.917
+00:02:33.000 --> 00:03:09.167
 Reject excess traffic. A request without budget receives a clear rejection and retry guidance where appropriate. Clients should wait rather than creating an immediate retry storm.
 
 6
-00:00:58.917 --> 00:01:11.250
+00:03:09.167 --> 00:03:53.833
 Plan storage failure. If the shared limiter fails, enforce the chosen endpoint policy and alert. Independent local counters do not preserve a strict global quota across replicas.

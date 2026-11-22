@@ -1,0 +1,313 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.980
+Let us understand load balancing.
+A school has three lunch
+
+2
+00:00:03.980 --> 00:00:07.720
+counters. A helper sends
+each child to an open counter
+
+3
+00:00:07.720 --> 00:00:10.320
+instead of letting everyone
+crowd around the first.
+
+4
+00:00:10.820 --> 00:00:13.800
+If a counter closes, the
+helper stops using it.
+
+5
+00:00:14.040 --> 00:00:17.280
+But if all counters share
+one empty kitchen, the helper
+
+6
+00:00:17.280 --> 00:00:21.540
+cannot create food. Likewise,
+distributing requests does not
+
+7
+00:00:21.540 --> 00:00:23.580
+remove a shared database bottleneck.
+
+8
+00:00:24.400 --> 00:00:27.940
+One address receives requests
+and shares them across healthy
+
+9
+00:00:27.940 --> 00:00:32.060
+copies of your application.
+It chooses a destination; it
+
+10
+00:00:32.060 --> 00:00:36.040
+does not create extra servers
+or make slow database queries
+
+11
+00:00:36.040 --> 00:00:40.600
+disappear. Follow the normal
+path. Visitors send event
+
+12
+00:00:40.600 --> 00:00:44.320
+requests to one endpoint.
+The load balancer selects an
+
+13
+00:00:44.320 --> 00:00:47.220
+application target so
+visitors do not need to know
+
+14
+00:00:47.220 --> 00:00:51.140
+individual server addresses.
+Alternate requests between App
+
+15
+00:00:51.140 --> 00:00:55.780
+A and App B. This shares turns,
+but a slow request can still
+
+16
+00:00:55.780 --> 00:00:58.200
+occupy one target much
+longer than another.
+
+17
+00:00:58.200 --> 00:01:02.100
+In our fictional SeatSpot
+ticket app, many people open the
+
+18
+00:01:02.100 --> 00:01:05.860
+same event at once. One
+application instance becomes
+
+19
+00:01:05.860 --> 00:01:08.740
+overloaded while a second
+has spare capacity.
+
+20
+00:01:09.620 --> 00:01:12.880
+A load balancer makes the spare
+capacity reachable through
+
+21
+00:01:12.880 --> 00:01:16.760
+the same public endpoint.
+Now change one condition.
+
+22
+00:01:17.420 --> 00:01:19.340
+App A stops passing readiness checks.
+
+23
+00:01:19.860 --> 00:01:23.440
+Detection takes time; requests
+already in flight may fail
+
+24
+00:01:23.440 --> 00:01:25.620
+and must be handled safely by the client.
+
+25
+00:01:25.620 --> 00:01:30.400
+A common misunderstanding is
+this: Round robin means equal
+
+26
+00:01:30.400 --> 00:01:34.660
+CPU usage. It shares turns;
+request cost and connection
+
+27
+00:01:34.660 --> 00:01:37.380
+lifetime can differ. Think about this.
+
+28
+00:01:37.680 --> 00:01:40.960
+App A fails. Can App B
+always take all its traffic?
+
+29
+00:01:41.440 --> 00:01:43.320
+Pause the video and make your prediction.
+
+30
+00:01:44.020 --> 00:01:47.300
+Only if App B and the shared
+dependencies have enough tested
+
+31
+00:01:47.300 --> 00:01:51.300
+spare capacity. Health checks
+also take time to remove App
+
+32
+00:01:51.300 --> 00:01:54.680
+A. Let us reason with a concrete example.
+
+33
+00:01:54.680 --> 00:01:59.580
+Suppose one tested replica
+handles 200 requests/second
+
+34
+00:01:59.580 --> 00:02:03.820
+within the latency objective
+and the expected peak is 450.
+
+35
+00:02:04.720 --> 00:02:08.660
+Three replicas provide 600
+requests/second in the simplified
+
+36
+00:02:08.660 --> 00:02:12.540
+model. Losing one leaves
+400, below the peak.
+
+37
+00:02:13.000 --> 00:02:17.220
+Four leave 600 after one
+failure. Real capacity must be
+
+38
+00:02:17.220 --> 00:02:19.580
+load-tested with the
+database and dependencies.
+
+39
+00:02:20.420 --> 00:02:23.180
+Use four if that failure
+headroom is required and
+
+40
+00:02:23.180 --> 00:02:27.000
+affordable. Monitor per-target
+latency, error rate and
+
+41
+00:02:27.000 --> 00:02:30.520
+queueing; do not infer usable
+capacity from instance count
+
+42
+00:02:30.520 --> 00:02:34.440
+alone. These figures are
+teaching examples, not production
+
+43
+00:02:34.440 --> 00:02:37.880
+guarantees. Turn the idea
+into a design decision.
+
+44
+00:02:38.420 --> 00:02:41.220
+New requests go to App B
+after the target is removed.
+
+45
+00:02:41.960 --> 00:02:44.820
+App B needs enough spare
+capacity; routing cannot
+
+46
+00:02:44.820 --> 00:02:46.820
+manufacture capacity during an outage.
+
+47
+00:02:47.440 --> 00:02:49.600
+Both copies use the same order system.
+
+48
+00:02:50.120 --> 00:02:53.600
+A repeated booking request
+carries the same idempotency key
+
+49
+00:02:53.760 --> 00:02:56.280
+so a lost response does not charge twice.
+
+50
+00:02:56.760 --> 00:02:59.400
+When you try the practice
+task, look for this result.
+
+51
+00:03:00.000 --> 00:03:03.120
+The surviving target receives
+new traffic, but the database
+
+52
+00:03:03.120 --> 00:03:06.020
+remains shared. Check your understanding.
+
+53
+00:03:06.660 --> 00:03:09.940
+Check latency and errors at
+the balancer, application and
+
+54
+00:03:09.940 --> 00:03:13.880
+database. If both applications
+wait on the database, adding
+
+55
+00:03:13.880 --> 00:03:15.980
+routing rules will not
+fix that bottleneck.
+
+56
+00:03:16.660 --> 00:03:20.320
+Here is a challenge. You have
+three replicas each safe at
+
+57
+00:03:20.320 --> 00:03:24.200
+150 requests/second. Peak demand is 350.
+
+58
+00:03:25.100 --> 00:03:26.980
+Can you survive one replica failing?
+
+59
+00:03:27.260 --> 00:03:30.560
+Pause before the answer.
+After a failure, two replicas
+
+60
+00:03:30.560 --> 00:03:36.740
+provide 300, below 350. Four
+total leave 450 after one
+
+61
+00:03:36.740 --> 00:03:40.120
+failure in this simplified
+model. Also test dependency
+
+62
+00:03:40.120 --> 00:03:44.100
+limits and the actual request
+mix. For an interview, defend
+
+63
+00:03:44.100 --> 00:03:47.480
+a routing policy, session
+state and failure headroom.
+
+64
+00:03:47.940 --> 00:03:50.560
+Say what you would measure,
+not only which tool you would
+
+65
+00:03:50.560 --> 00:03:50.920
+buy.

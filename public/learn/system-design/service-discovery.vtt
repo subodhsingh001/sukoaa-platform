@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:12.167
+00:00:00.000 --> 00:00:33.917
 Ask for a stable name. The caller requests the payment capability by service name instead of storing an individual pod address that may disappear during the next deployment.
 
 2
-00:00:12.167 --> 00:00:23.750
+00:00:33.917 --> 00:01:07.250
 Maintain endpoints. The platform or registry tracks service destinations and readiness. Registration and removal need reliable ownership and observable convergence.
 
 3
-00:00:23.750 --> 00:00:34.667
+00:01:07.250 --> 00:01:48.583
 Choose a destination. Client or server routing selects a usable endpoint. Discovery and load balancing cooperate, but they describe different responsibilities.
 
 4
-00:00:34.667 --> 00:00:44.917
+00:01:48.583 --> 00:02:20.917
 Replace an instance. An old instance becomes unready and a replacement joins. Cached addresses and existing connections can outlive the registry update.
 
 5
-00:00:44.917 --> 00:00:54.417
+00:02:20.917 --> 00:02:49.250
 Retry within a budget. A failed connection may use a safe bounded retry against current membership. Do not hide repeated errors with unlimited retries.
 
 6
-00:00:54.417 --> 00:01:06.583
+00:02:49.250 --> 00:03:30.917
 Verify service identity. Knowing an address does not authorize a request. Validate the relevant identity, transport security and resource permissions at the appropriate boundaries.

@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:12.250
+00:00:00.000 --> 00:00:35.583
 Choose the route. A visitor requests a public poster. The content delivery network routes the request to a suitable edge location rather than always going directly to the origin.
 
 2
-00:00:12.250 --> 00:00:23.000
+00:00:35.583 --> 00:01:09.333
 Return a cached asset. If the edge has a valid copy, it returns that representation. This can reduce both response latency and repeated origin transfer.
 
 3
-00:00:23.000 --> 00:00:32.083
+00:01:09.333 --> 00:01:48.333
 Fetch on a miss. A missing or expired representation needs an origin fetch. The origin and its network path still matter for uncached work.
 
 4
-00:00:32.083 --> 00:00:42.917
+00:01:48.333 --> 00:02:27.250
 Use a versioned URL. When asset bytes change, publish a new content-versioned name. Long-lived immutable caching only fits a URL whose content will not change.
 
 5
-00:00:42.917 --> 00:00:54.167
+00:02:27.250 --> 00:03:00.000
 Separate private data. An account or booking response may be personal and time-sensitive. Do not place it on the shared public cache path without a deliberately safe policy.
 
 6
-00:00:54.167 --> 00:01:05.500
+00:03:00.000 --> 00:03:44.500
 Measure each path. Compare edge hits, misses and private requests separately. A fast cached poster does not show whether the booking API meets its latency and correctness objectives.

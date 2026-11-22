@@ -1,0 +1,284 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.040
+Let us understand service discovery.
+
+2
+00:00:02.840 --> 00:00:05.800
+A school directory lists which
+rooms currently host each
+
+3
+00:00:05.800 --> 00:00:09.700
+club. Students ask for the chess
+club rather than memorizing
+
+4
+00:00:09.700 --> 00:00:13.460
+an old room number. The
+directory can become stale, so
+
+5
+00:00:13.460 --> 00:00:16.660
+someone must update it and
+decide what happens when a listed
+
+6
+00:00:16.660 --> 00:00:20.760
+room is closed. Service discovery
+maps a stable service name
+
+7
+00:00:20.760 --> 00:00:24.960
+to current usable destinations.
+Instances change as they
+
+8
+00:00:24.960 --> 00:00:29.900
+deploy, fail or scale. Discovery
+finds candidates; routing
+
+9
+00:00:29.900 --> 00:00:33.720
+and health policies decide
+how requests reach them.
+
+10
+00:00:34.300 --> 00:00:37.460
+Follow the normal path. The
+caller requests the payment
+
+11
+00:00:37.460 --> 00:00:41.100
+capability by service name
+instead of storing an individual
+
+12
+00:00:41.100 --> 00:00:44.220
+pod address that may disappear
+during the next deployment.
+
+13
+00:00:45.000 --> 00:00:49.000
+The platform or registry
+tracks service destinations and
+
+14
+00:00:49.000 --> 00:00:53.040
+readiness. Registration and
+removal need reliable ownership
+
+15
+00:00:53.040 --> 00:00:57.880
+and observable convergence.
+SeatSpot booking replicas should
+
+16
+00:00:57.880 --> 00:01:01.320
+find the payment service even
+when its pod addresses change.
+
+17
+00:01:01.320 --> 00:01:05.580
+Hard-coded ephemeral IPs
+become stale during routine
+
+18
+00:01:05.580 --> 00:01:08.940
+operations. Now change one condition.
+
+19
+00:01:09.560 --> 00:01:12.740
+Client or server routing
+selects a usable endpoint.
+
+20
+00:01:13.400 --> 00:01:16.740
+Discovery and load balancing
+cooperate, but they describe
+
+21
+00:01:16.740 --> 00:01:20.320
+different responsibilities.
+A common misunderstanding is
+
+22
+00:01:20.320 --> 00:01:24.020
+this: Finding an endpoint
+authorizes access to it.
+
+23
+00:01:24.020 --> 00:01:28.140
+Discovery provides destinations,
+not identity or business
+
+24
+00:01:28.140 --> 00:01:32.220
+permissions. Think about
+this. DNS resolves the payment
+
+25
+00:01:32.220 --> 00:01:35.440
+service. Does that prove
+every connection will succeed?
+
+26
+00:01:35.860 --> 00:01:37.720
+Pause the video and make your prediction.
+
+27
+00:01:38.540 --> 00:01:42.080
+No. Name resolution can
+succeed while endpoints are
+
+28
+00:01:42.080 --> 00:01:44.700
+unhealthy, changing or unreachable.
+
+29
+00:01:45.380 --> 00:01:47.640
+Timeouts and failure handling still apply.
+
+30
+00:01:48.680 --> 00:01:50.820
+Let us reason with a concrete example.
+
+31
+00:01:50.820 --> 00:01:54.560
+Three payment pods are replaced
+during a rolling deployment.
+
+32
+00:01:55.180 --> 00:01:58.640
+Their individual IPs may change
+while a Kubernetes Service
+
+33
+00:01:58.640 --> 00:02:03.440
+name remains stable.
+Endpoint/readiness propagation and
+
+34
+00:02:03.440 --> 00:02:06.720
+existing connections still
+create a transition interval.
+
+35
+00:02:07.480 --> 00:02:10.520
+Use the platform service
+abstraction and test replacement
+
+36
+00:02:10.520 --> 00:02:14.640
+with live requests. Do not
+promise instantaneous convergence
+
+37
+00:02:14.640 --> 00:02:18.880
+from a stable name. These figures
+are teaching examples, not
+
+38
+00:02:18.880 --> 00:02:23.060
+production guarantees. Turn the
+idea into a design decision.
+
+39
+00:02:23.540 --> 00:02:26.980
+An old instance becomes unready
+and a replacement joins.
+
+40
+00:02:26.980 --> 00:02:30.920
+Cached addresses and existing
+connections can outlive the
+
+41
+00:02:30.920 --> 00:02:34.180
+registry update. A failed
+connection may use a safe bounded
+
+42
+00:02:34.180 --> 00:02:37.460
+retry against current
+membership. Do not hide repeated
+
+43
+00:02:37.460 --> 00:02:40.960
+errors with unlimited retries.
+When you try the practice
+
+44
+00:02:40.960 --> 00:02:45.380
+task, look for this result.
+Stable naming helps callers, but
+
+45
+00:02:45.380 --> 00:02:48.220
+does not imply instantaneous
+endpoint convergence.
+
+46
+00:02:48.220 --> 00:02:52.300
+Check your understanding.
+Knowing an address does not
+
+47
+00:02:52.300 --> 00:02:55.680
+authorize a request. Validate
+the relevant identity,
+
+48
+00:02:56.300 --> 00:02:58.960
+transport security and
+resource permissions at the
+
+49
+00:02:58.960 --> 00:03:01.360
+appropriate boundaries.
+Here is a challenge.
+
+50
+00:03:02.060 --> 00:03:04.960
+DNS resolves the service
+but requests fail.
+
+51
+00:03:05.440 --> 00:03:08.000
+What do you check next?
+Pause before the answer.
+
+52
+00:03:08.720 --> 00:03:11.460
+Check ready endpoints,
+target port, network
+
+53
+00:03:11.460 --> 00:03:16.280
+reachability/policy, TLS identity
+and the dependency itself.
+
+54
+00:03:16.280 --> 00:03:20.040
+Compare resolution with an
+actual bounded request and
+
+55
+00:03:20.040 --> 00:03:23.640
+inspect traces. For an
+interview, compare client-side
+
+56
+00:03:23.640 --> 00:03:26.620
+selection with a stable
+service/proxy address.
+
+57
+00:03:27.260 --> 00:03:29.660
+Say what you would measure,
+not only which tool you would
+
+58
+00:03:29.660 --> 00:03:29.940
+buy.

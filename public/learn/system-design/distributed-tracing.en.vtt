@@ -1,0 +1,307 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.280
+Let us understand distributed tracing.
+
+2
+00:00:02.940 --> 00:00:05.760
+A parcel carries a tracking
+number through several delivery
+
+3
+00:00:05.760 --> 00:00:09.720
+centres. Each centre records
+when its part began and ended.
+
+4
+00:00:10.280 --> 00:00:12.180
+You can find where this parcel waited.
+
+5
+00:00:12.780 --> 00:00:16.000
+That does not mean every
+parcel took the same path, and
+
+6
+00:00:16.000 --> 00:00:18.520
+missing a tracking scan
+does not prove the parcel
+
+7
+00:00:18.520 --> 00:00:22.260
+disappeared. Distributed
+tracing follows one operation
+
+8
+00:00:22.260 --> 00:00:26.400
+across multiple components using
+linked spans and propagated
+
+9
+00:00:26.400 --> 00:00:31.220
+context. It helps locate time
+and errors, but traces are
+
+10
+00:00:31.220 --> 00:00:34.920
+sampled evidence, not proof
+that every request behaved the
+
+11
+00:00:34.920 --> 00:00:39.500
+same way. Follow the normal
+path. The gateway starts or
+
+12
+00:00:39.500 --> 00:00:41.500
+receives trace context for checkout.
+
+13
+00:00:42.140 --> 00:00:45.660
+Its span represents one part
+of the operation, not all
+
+14
+00:00:45.660 --> 00:00:49.780
+system traffic. Booking
+receives compatible context and
+
+15
+00:00:49.780 --> 00:00:53.460
+creates a related span.
+Without propagation, downstream
+
+16
+00:00:53.460 --> 00:00:56.060
+records can appear as
+unrelated operations.
+
+17
+00:00:56.060 --> 00:01:00.820
+SeatSpot checkout passes through
+gateway, booking, database
+
+18
+00:01:01.120 --> 00:01:05.100
+and payment. One total latency
+number cannot show which hop
+
+19
+00:01:05.100 --> 00:01:08.080
+waited or whether two
+operations ran in parallel.
+
+20
+00:01:09.180 --> 00:01:13.300
+Now change one condition.
+Database and payment calls run in
+
+21
+00:01:13.300 --> 00:01:16.380
+parallel in this teaching
+example. Their intervals overlap,
+
+22
+00:01:16.800 --> 00:01:19.880
+so adding both durations would
+overstate wall-clock time.
+
+23
+00:01:20.460 --> 00:01:23.920
+A common misunderstanding is
+this: A sampled trace proves
+
+24
+00:01:23.920 --> 00:01:26.140
+every request behaved the same way.
+
+25
+00:01:26.680 --> 00:01:29.400
+Sampling selects evidence,
+not every operation.
+
+26
+00:01:30.060 --> 00:01:33.040
+Missing context also
+creates incomplete traces.
+
+27
+00:01:33.660 --> 00:01:38.780
+Think about this. A 100 ms
+database call overlaps a 300 ms
+
+28
+00:01:38.780 --> 00:01:43.280
+payment call, with 40 ms
+overhead. Is total duration
+
+29
+00:01:43.280 --> 00:01:47.820
+necessarily 440 ms? Pause
+the video and make your
+
+30
+00:01:47.820 --> 00:01:52.220
+prediction. No. In the
+simplified parallel example it is
+
+31
+00:01:52.220 --> 00:01:57.740
+about 340 ms. Inspect overlap
+and missing time rather than
+
+32
+00:01:57.740 --> 00:02:01.740
+summing every child span.
+Let us reason with a concrete
+
+33
+00:02:01.740 --> 00:02:07.840
+example. Checkout has a 100
+ms database call and a 300 ms
+
+34
+00:02:07.840 --> 00:02:12.040
+provider call in parallel,
+plus about 40 ms sequential
+
+35
+00:02:12.040 --> 00:02:18.840
+overhead. A simplified total
+is about 340 ms, not 440 ms.
+
+36
+00:02:18.840 --> 00:02:23.400
+Actual scheduling, serialization
+and network effects require
+
+37
+00:02:23.400 --> 00:02:27.260
+measured traces. Investigate
+the critical path and compare
+
+38
+00:02:27.260 --> 00:02:31.320
+slow traces with broader
+metrics. Do not optimize a fast
+
+39
+00:02:31.320 --> 00:02:34.420
+database span just because
+it is easiest to see.
+
+40
+00:02:35.000 --> 00:02:38.060
+These figures are teaching
+examples, not production
+
+41
+00:02:38.060 --> 00:02:41.920
+guarantees. Turn the idea
+into a design decision.
+
+42
+00:02:42.600 --> 00:02:46.080
+Instrumentation exports spans
+to an observability backend.
+
+43
+00:02:46.080 --> 00:02:50.540
+Export buffering, sampling and
+failures mean a trace view is
+
+44
+00:02:50.540 --> 00:02:52.880
+not a complete audit of every request.
+
+45
+00:02:53.520 --> 00:02:57.340
+Compare the critical path,
+errors and dependency waits.
+
+46
+00:02:57.340 --> 00:03:00.560
+Combine traces with aggregate
+metrics to determine whether
+
+47
+00:03:00.560 --> 00:03:03.880
+the visible slow request
+reflects a widespread problem.
+
+48
+00:03:04.420 --> 00:03:07.340
+When you try the practice
+task, look for this result.
+
+49
+00:03:07.980 --> 00:03:11.940
+Parallel work overlaps in
+wall-clock time; sampled traces
+
+50
+00:03:11.940 --> 00:03:14.140
+must be compared with aggregate metrics.
+
+51
+00:03:14.140 --> 00:03:18.200
+Check your understanding.
+Do not attach secrets or
+
+52
+00:03:18.200 --> 00:03:20.420
+unnecessary personal data to spans.
+
+53
+00:03:21.060 --> 00:03:25.160
+Keep attribute cardinality,
+access, sampling and retention
+
+54
+00:03:25.160 --> 00:03:27.300
+within a deliberate observability budget.
+
+55
+00:03:27.900 --> 00:03:32.780
+Here is a challenge. Two 200
+ms spans run in parallel inside
+
+56
+00:03:32.780 --> 00:03:39.620
+a 250 ms request. Is the request
+necessarily missing 150 ms?
+
+57
+00:03:39.620 --> 00:03:43.860
+Pause before the answer. No.
+Parallel spans overlap, so
+
+58
+00:03:43.860 --> 00:03:46.520
+their sum can exceed
+wall-clock request duration.
+
+59
+00:03:47.360 --> 00:03:50.740
+Inspect start/end times and
+the critical path before
+
+60
+00:03:50.740 --> 00:03:54.380
+inferring missing time. For
+an interview, discuss context
+
+61
+00:03:54.380 --> 00:03:57.560
+propagation, critical paths
+and useful attributes.
+
+62
+00:03:58.240 --> 00:04:00.760
+Say what you would measure,
+not only which tool you would
+
+63
+00:04:00.760 --> 00:04:01.040
+buy.

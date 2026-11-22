@@ -1,0 +1,312 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.320
+Let us understand disaster recovery.
+
+2
+00:00:03.060 --> 00:00:06.140
+A student keeps a second copy
+of schoolwork in another safe
+
+3
+00:00:06.140 --> 00:00:09.460
+place and practises opening
+it on a different computer.
+
+4
+00:00:10.140 --> 00:00:13.760
+Knowing a copy exists is not
+enough if it is unreadable, its
+
+5
+00:00:13.760 --> 00:00:16.580
+password is lost or it takes days to find.
+
+6
+00:00:17.120 --> 00:00:20.640
+Recovery is the complete
+ability to resume useful work.
+
+7
+00:00:21.240 --> 00:00:25.000
+Disaster recovery is a tested
+plan for restoring required
+
+8
+00:00:25.000 --> 00:00:27.860
+service and data after
+a serious disruption.
+
+9
+00:00:27.860 --> 00:00:32.340
+Define the acceptable recovery
+time and acceptable data-loss
+
+10
+00:00:32.340 --> 00:00:35.860
+window, then prove your
+procedure can meet them.
+
+11
+00:00:36.200 --> 00:00:39.960
+Follow the normal path. Define
+how long the required user
+
+12
+00:00:39.960 --> 00:00:43.580
+operation may be unavailable
+and how much recent data loss
+
+13
+00:00:43.580 --> 00:00:47.900
+is acceptable. These are
+explicit business objectives, not
+
+14
+00:00:47.900 --> 00:00:51.940
+product defaults. Capture
+suitable backups and change logs
+
+15
+00:00:51.940 --> 00:00:54.240
+with recoverable keys and configuration.
+
+16
+00:00:55.060 --> 00:00:58.900
+Live replication alone may
+copy deletion or corruption to
+
+17
+00:00:58.900 --> 00:01:03.060
+every current replica. SeatSpot
+needs a response to regional
+
+18
+00:01:03.060 --> 00:01:06.040
+loss, accidental deletion or corruption.
+
+19
+00:01:06.900 --> 00:01:10.920
+Application replicas alone do
+not restore deleted orders or
+
+20
+00:01:10.920 --> 00:01:15.660
+missing secrets/configuration.
+Now change one condition.
+
+21
+00:01:16.360 --> 00:01:19.280
+A serious failure interrupts
+the production environment.
+
+22
+00:01:19.960 --> 00:01:23.280
+Recovery needs an environment,
+permissions and an executable
+
+23
+00:01:23.280 --> 00:01:26.540
+runbook, not merely a
+promise that a backup exists.
+
+24
+00:01:27.180 --> 00:01:30.760
+A common misunderstanding is
+this: Replication replaces
+
+25
+00:01:30.760 --> 00:01:35.120
+recovery backups. Replication
+may reproduce corruption or
+
+26
+00:01:35.120 --> 00:01:38.380
+deletion. Independent recovery
+points solve a different
+
+27
+00:01:38.380 --> 00:01:42.140
+problem. Think about this.
+Hourly-only backups are
+
+28
+00:01:42.140 --> 00:01:45.900
+available. Do they satisfy
+a 15-minute recovery-point
+
+29
+00:01:45.900 --> 00:01:49.340
+objective by themselves?
+Pause the video and make your
+
+30
+00:01:49.340 --> 00:01:53.120
+prediction. No. The missing-data
+window can approach an
+
+31
+00:01:53.120 --> 00:01:57.680
+hour. Use a suitable capture/recovery
+strategy and prove it
+
+32
+00:01:57.680 --> 00:02:01.400
+in a drill. Let us reason
+with a concrete example.
+
+33
+00:02:02.080 --> 00:02:06.820
+The business requires an
+illustrative RTO of 60 minutes and
+
+34
+00:02:06.820 --> 00:02:11.660
+RPO of 15 minutes. Backups run every hour.
+
+35
+00:02:11.660 --> 00:02:15.020
+Hourly-only backups can leave
+nearly an hour of missing
+
+36
+00:02:15.020 --> 00:02:21.840
+data, exceeding a 15-minute
+RPO. A 60-minute RTO also
+
+37
+00:02:21.840 --> 00:02:25.060
+includes provisioning,
+restore, validation and traffic
+
+38
+00:02:25.060 --> 00:02:27.980
+recovery, not just file download time.
+
+39
+00:02:28.620 --> 00:02:32.500
+Select a suitable backup/log
+capture strategy and rehearse
+
+40
+00:02:32.500 --> 00:02:36.300
+the whole path. Targets are
+objectives; measured drill
+
+41
+00:02:36.300 --> 00:02:39.460
+results establish whether
+the current plan meets them.
+
+42
+00:02:39.840 --> 00:02:42.460
+These figures are teaching
+examples, not production
+
+43
+00:02:42.460 --> 00:02:46.300
+guarantees. Turn the idea
+into a design decision.
+
+44
+00:02:46.960 --> 00:02:50.340
+Rebuild required infrastructure
+and restore data in a safe
+
+45
+00:02:50.340 --> 00:02:54.920
+environment. Include secrets,
+certificates, queues and other
+
+46
+00:02:54.920 --> 00:02:57.760
+dependencies required for
+actual user workflows.
+
+47
+00:02:58.440 --> 00:03:01.220
+Query restored data and
+run correctness checks.
+
+48
+00:03:01.220 --> 00:03:04.720
+A process reporting restore
+complete does not prove that
+
+49
+00:03:04.720 --> 00:03:08.220
+bookings, ownership and payment
+reconciliation are usable.
+
+50
+00:03:08.880 --> 00:03:11.840
+When you try the practice
+task, look for this result.
+
+51
+00:03:12.440 --> 00:03:16.060
+An existing backup is not proof
+of a usable recovery plan;
+
+52
+00:03:16.500 --> 00:03:18.460
+measured restoration is the evidence.
+
+53
+00:03:19.680 --> 00:03:23.060
+Check your understanding. Restore
+traffic safely and compare
+
+54
+00:03:23.060 --> 00:03:25.900
+measured end-to-end recovery
+and data loss with the
+
+55
+00:03:25.900 --> 00:03:30.000
+objectives. Record gaps, improve
+the runbook and repeat the
+
+56
+00:03:30.000 --> 00:03:34.220
+drill. Here is a challenge. A
+restore finishes in 40 minutes
+
+57
+00:03:34.460 --> 00:03:38.120
+but application validation
+and routing take another 35.
+
+58
+00:03:38.720 --> 00:03:43.260
+Does it meet a 60-minute
+RTO? Pause before the answer.
+
+59
+00:03:43.960 --> 00:03:47.940
+No: the measured end-to-end
+recovery is 75 minutes.
+
+60
+00:03:48.600 --> 00:03:51.700
+Improve or revise the plan
+based on business requirements
+
+61
+00:03:51.700 --> 00:03:55.320
+and repeat the drill. For an
+interview, choose a recovery
+
+62
+00:03:55.320 --> 00:03:57.560
+strategy and measure the complete drill.
+
+63
+00:03:58.020 --> 00:04:00.620
+Say what you would measure,
+not only which tool you would
+
+64
+00:04:00.620 --> 00:04:00.900
+buy.

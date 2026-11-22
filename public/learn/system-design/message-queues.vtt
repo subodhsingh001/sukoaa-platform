@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:14.000
+00:00:00.000 --> 00:00:33.167
 Record outgoing work. A booking succeeds and records a receipt job reliably. Coordinate this with business storage, for example using an outbox, so a crash does not lose the obligation.
 
 2
-00:00:14.000 --> 00:00:24.333
+00:00:33.167 --> 00:01:07.000
 Buffer a burst. The queue stores work while consumers catch up. Stored backlog buys time, but retention, storage and acceptable delay remain finite.
 
 3
-00:00:24.333 --> 00:00:34.250
+00:01:07.000 --> 00:01:47.917
 Process within limits. Workers pull jobs at a safe rate. Their combined concurrency must respect email provider quotas and other downstream capacity.
 
 4
-00:00:34.250 --> 00:00:43.083
+00:01:47.917 --> 00:02:24.583
 A worker crashes. A worker can send an email and fail before acknowledging its job. The queue may deliver that same logical job again.
 
 5
-00:00:43.083 --> 00:00:55.417
+00:02:24.583 --> 00:02:57.500
 Protect the effect. Use stable job identity and an appropriate idempotency or reconciliation strategy. A delivery guarantee alone does not guarantee exactly one external effect.
 
 6
-00:00:55.417 --> 00:01:07.083
+00:02:57.500 --> 00:03:40.250
 Handle persistent failure. After bounded attempts, move a poison job to a monitored dead-letter path. Investigate and repair before controlled replay instead of retrying forever.

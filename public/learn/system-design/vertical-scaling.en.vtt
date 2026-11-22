@@ -1,0 +1,287 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.060
+Let us understand vertical scaling.
+
+2
+00:00:02.680 --> 00:00:05.820
+A student replaces a tiny
+desk with a larger desk.
+
+3
+00:00:06.300 --> 00:00:08.720
+More books fit, but
+there is still one desk.
+
+4
+00:00:09.340 --> 00:00:13.060
+A bigger desk does not solve
+every problem: a lost key to
+
+5
+00:00:13.060 --> 00:00:17.080
+the room still blocks access.
+Likewise, extra memory helps a
+
+6
+00:00:17.080 --> 00:00:20.260
+memory bottleneck but may not
+help a slow external payment
+
+7
+00:00:20.260 --> 00:00:25.140
+call. Vertical scaling gives
+one machine more CPU, memory,
+
+8
+00:00:25.680 --> 00:00:29.100
+storage or throughput. It can
+be the simplest improvement,
+
+9
+00:00:29.100 --> 00:00:32.740
+but it has a size ceiling and
+does not create a second copy
+
+10
+00:00:32.740 --> 00:00:35.800
+for failover. Follow the normal path.
+
+11
+00:00:36.260 --> 00:00:40.260
+The application is slow.
+Inspect whether requests wait on
+
+12
+00:00:40.260 --> 00:00:44.680
+CPU, memory, storage, locks
+or another service before
+
+13
+00:00:44.680 --> 00:00:48.140
+selecting a bigger machine.
+Give the same database more
+
+14
+00:00:48.140 --> 00:00:51.940
+appropriate resources. This is
+vertical scaling because the
+
+15
+00:00:51.940 --> 00:00:55.220
+number of independent database
+copies has not increased.
+
+16
+00:00:55.220 --> 00:00:59.720
+A SeatSpot database may benefit
+from more memory for its
+
+17
+00:00:59.720 --> 00:01:02.380
+working set before the
+team considers sharding.
+
+18
+00:01:02.920 --> 00:01:05.960
+First measure the constraint
+rather than buying a larger
+
+19
+00:01:05.960 --> 00:01:08.400
+machine because the site feels slow.
+
+20
+00:01:09.260 --> 00:01:13.120
+Now change one condition. More
+memory can hold more of the
+
+21
+00:01:13.120 --> 00:01:16.680
+hot working set. If disk
+reads were the bottleneck, the
+
+22
+00:01:16.680 --> 00:01:20.460
+experiment may show lower
+latency. A common misunderstanding
+
+23
+00:01:20.460 --> 00:01:24.720
+is this: A larger instance
+is a second failover copy.
+
+24
+00:01:25.320 --> 00:01:28.720
+It remains one instance unless
+a separate redundancy design
+
+25
+00:01:28.720 --> 00:01:32.620
+exists. Think about this. A
+payment provider takes five
+
+26
+00:01:32.620 --> 00:01:36.160
+seconds. Will doubling your
+app RAM necessarily fix it?
+
+27
+00:01:36.380 --> 00:01:38.280
+Pause the video and make your prediction.
+
+28
+00:01:39.100 --> 00:01:43.060
+No. Extra RAM does not shorten
+an external provider delay.
+
+29
+00:01:43.840 --> 00:01:47.420
+Measure the critical path
+first. Let us reason with a
+
+30
+00:01:47.420 --> 00:01:52.340
+concrete example. The database
+reads a 12 GB hot dataset but
+
+31
+00:01:52.340 --> 00:01:55.400
+has only 4 GB available
+for useful caching.
+
+32
+00:01:56.160 --> 00:01:59.540
+A larger memory budget may
+improve hit rate; the actual
+
+33
+00:01:59.540 --> 00:02:03.340
+benefit depends on access
+patterns, other memory users and
+
+34
+00:02:03.340 --> 00:02:07.040
+query plans. Doubling RAM
+is not a promise of double
+
+35
+00:02:07.040 --> 00:02:10.720
+throughput. Profile the working
+set and expensive queries,
+
+36
+00:02:10.720 --> 00:02:14.680
+test a larger instance in a
+safe environment and measure
+
+37
+00:02:14.680 --> 00:02:18.680
+tail latency and restart
+behavior. These figures are
+
+38
+00:02:18.680 --> 00:02:21.360
+teaching examples, not
+production guarantees.
+
+39
+00:02:22.400 --> 00:02:24.620
+Turn the idea into a design decision.
+
+40
+00:02:25.260 --> 00:02:28.320
+A size change may restart
+or fail over the database.
+
+41
+00:02:29.300 --> 00:02:32.800
+Use the actual platform procedure
+and verify what users see
+
+42
+00:02:32.800 --> 00:02:36.520
+during the transition. Repeat
+the same controlled workload.
+
+43
+00:02:37.100 --> 00:02:41.400
+Compare throughput, tail latency,
+waits and cost; do not use
+
+44
+00:02:41.400 --> 00:02:43.420
+machine size as the success metric.
+
+45
+00:02:43.420 --> 00:02:46.980
+When you try the practice
+task, look for this result.
+
+46
+00:02:47.540 --> 00:02:50.860
+A resize is justified by
+observed improvement and
+
+47
+00:02:50.860 --> 00:02:53.860
+operational constraints,
+not instance size alone.
+
+48
+00:02:54.840 --> 00:02:57.980
+Check your understanding. The
+larger machine still needs
+
+49
+00:02:57.980 --> 00:03:01.980
+redundancy and backups. If the
+machine fails or reaches its
+
+50
+00:03:01.980 --> 00:03:04.820
+size ceiling, a different
+design decision is needed.
+
+51
+00:03:05.440 --> 00:03:10.100
+Here is a challenge. CPU is
+idle but one SQL query waits on
+
+52
+00:03:10.100 --> 00:03:13.180
+a lock. Will twice as many cores fix it?
+
+53
+00:03:13.340 --> 00:03:15.820
+Pause before the answer. Probably not.
+
+54
+00:03:16.280 --> 00:03:19.200
+Inspect the blocking
+transaction, query and locking
+
+55
+00:03:19.200 --> 00:03:22.440
+strategy. Extra cores
+do not release the lock.
+
+56
+00:03:23.080 --> 00:03:25.300
+Re-test after addressing
+the measured contention.
+
+57
+00:03:26.040 --> 00:03:29.260
+For an interview, choose a
+resource using profiling and
+
+58
+00:03:29.260 --> 00:03:32.600
+compare cost. Say what you
+would measure, not only which
+
+59
+00:03:32.600 --> 00:03:33.420
+tool you would buy.

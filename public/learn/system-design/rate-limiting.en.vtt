@@ -1,0 +1,302 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.080
+Let us understand rate limiting.
+A library lets each student
+
+2
+00:00:04.080 --> 00:00:07.580
+borrow a limited number of books
+so one student cannot empty
+
+3
+00:00:07.580 --> 00:00:11.700
+the shelves. A short burst may
+be acceptable, but repeated
+
+4
+00:00:11.700 --> 00:00:14.120
+borrowing must remain within a fair rate.
+
+5
+00:00:14.460 --> 00:00:18.320
+The rule needs a reliable way
+to identify the student, not
+
+6
+00:00:18.320 --> 00:00:22.100
+just the colour of their shoes.
+Rate limiting controls how
+
+7
+00:00:22.100 --> 00:00:25.620
+much work an identity or
+client may request over time.
+
+8
+00:00:26.040 --> 00:00:29.600
+It protects capacity and
+fairness, but it is not a complete
+
+9
+00:00:29.600 --> 00:00:33.800
+defense against every attack.
+Follow the normal path.
+
+10
+00:00:34.300 --> 00:00:38.040
+Requests are assigned a
+deliberate identity key, such as a
+
+11
+00:00:38.040 --> 00:00:41.920
+verified account and endpoint.
+A spoofable header cannot
+
+12
+00:00:41.920 --> 00:00:44.240
+safely define a protected client budget.
+
+13
+00:00:44.880 --> 00:00:48.340
+The token bucket refills
+over elapsed time up to its
+
+14
+00:00:48.340 --> 00:00:52.140
+capacity. Capacity permits a
+bounded burst while the refill
+
+15
+00:00:52.140 --> 00:00:56.500
+rate controls sustained use.
+SeatSpot protects sign-in and
+
+16
+00:00:56.500 --> 00:00:58.680
+booking attempts from excessive traffic.
+
+17
+00:00:59.460 --> 00:01:03.040
+Public browsing, expensive
+searches and paid customers may
+
+18
+00:01:03.040 --> 00:01:06.760
+need different budgets; one
+shared limit for everyone can
+
+19
+00:01:06.760 --> 00:01:10.820
+punish unrelated users.
+Now change one condition.
+
+20
+00:01:11.560 --> 00:01:14.900
+Checking and consuming a token
+must behave as one operation
+
+21
+00:01:14.900 --> 00:01:18.520
+for shared state. Separate
+reads and writes can overspend
+
+22
+00:01:18.520 --> 00:01:23.220
+under concurrency. A common
+misunderstanding is this: An IP
+
+23
+00:01:23.220 --> 00:01:26.140
+header is always a reliable user identity.
+
+24
+00:01:26.140 --> 00:01:29.840
+Client-controlled forwarding
+headers can be forged, and many
+
+25
+00:01:29.840 --> 00:01:33.520
+people share one NAT
+address. Think about this.
+
+26
+00:01:33.960 --> 00:01:37.600
+Ten tokens are spent immediately.
+After three idle seconds
+
+27
+00:01:37.600 --> 00:01:40.900
+at two tokens/second,
+how many tokens remain?
+
+28
+00:01:41.320 --> 00:01:43.200
+Pause the video and make your prediction.
+
+29
+00:01:44.080 --> 00:01:47.160
+Six, capped by the bucket capacity of ten.
+
+30
+00:01:47.160 --> 00:01:50.800
+Concurrent updates need an
+atomic implementation to preserve
+
+31
+00:01:50.800 --> 00:01:54.680
+that rule. Let us reason
+with a concrete example.
+
+32
+00:01:55.100 --> 00:01:58.980
+A teaching token bucket has
+capacity 10 and refills at 2
+
+33
+00:01:58.980 --> 00:02:03.560
+tokens/second. If initially
+full, ten immediate requests can
+
+34
+00:02:03.560 --> 00:02:08.160
+consume ten tokens. After 3
+idle seconds it has six tokens,
+
+35
+00:02:08.740 --> 00:02:12.940
+capped at ten. This model ignores
+distributed races until an
+
+36
+00:02:12.940 --> 00:02:16.780
+atomic implementation is
+chosen. Choose a key and storage
+
+37
+00:02:16.780 --> 00:02:20.640
+behavior explicitly. Protect
+critical actions with a
+
+38
+00:02:20.640 --> 00:02:24.300
+deliberate fail-closed or
+degraded policy rather than
+
+39
+00:02:24.300 --> 00:02:27.480
+silently giving unlimited
+access after a store failure.
+
+40
+00:02:28.300 --> 00:02:31.380
+These figures are teaching
+examples, not production
+
+41
+00:02:31.380 --> 00:02:35.240
+guarantees. Turn the idea
+into a design decision.
+
+42
+00:02:35.820 --> 00:02:39.400
+A request with enough tokens
+proceeds, but still faces
+
+43
+00:02:39.400 --> 00:02:43.560
+authorization, request validation
+and downstream concurrency
+
+44
+00:02:43.560 --> 00:02:47.280
+limits. Passing the limiter is
+not a correctness guarantee.
+
+45
+00:02:48.000 --> 00:02:51.580
+A request without budget
+receives a clear rejection and
+
+46
+00:02:51.580 --> 00:02:55.200
+retry guidance where appropriate.
+Clients should wait rather
+
+47
+00:02:55.200 --> 00:02:57.500
+than creating an immediate retry storm.
+
+48
+00:02:58.040 --> 00:03:00.960
+When you try the practice
+task, look for this result.
+
+49
+00:03:01.840 --> 00:03:06.600
+Only the available budget is
+admitted; a 429 response can
+
+50
+00:03:06.600 --> 00:03:10.240
+communicate a retry policy.
+Check your understanding.
+
+51
+00:03:10.240 --> 00:03:14.100
+If the shared limiter fails,
+enforce the chosen endpoint
+
+52
+00:03:14.100 --> 00:03:18.160
+policy and alert. Independent
+local counters do not preserve
+
+53
+00:03:18.160 --> 00:03:20.540
+a strict global quota across replicas.
+
+54
+00:03:21.160 --> 00:03:24.640
+Here is a challenge. Three
+replicas each allow 100
+
+55
+00:03:24.640 --> 00:03:29.400
+requests/minute for one user.
+Is the global user limit 100?
+
+56
+00:03:29.880 --> 00:03:33.800
+Pause before the answer. Not
+with independent counters: the
+
+57
+00:03:33.800 --> 00:03:36.940
+user may receive up to
+roughly 300 across replicas,
+
+58
+00:03:37.320 --> 00:03:40.920
+depending on routing and
+windows. Use an atomic shared
+
+59
+00:03:40.920 --> 00:03:44.300
+budget or state explicitly that
+the policy is per instance.
+
+60
+00:03:44.980 --> 00:03:48.360
+For an interview, choose a
+principal, atomic state and
+
+61
+00:03:48.360 --> 00:03:51.740
+store-failure policy. Say what
+you would measure, not only
+
+62
+00:03:51.740 --> 00:03:52.860
+which tool you would buy.

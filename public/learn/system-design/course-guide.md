@@ -69,6 +69,18 @@ A client asks; a server processes requests; an API defines an interaction; a dat
 
 One address receives requests and shares them across healthy copies of your application. It chooses a destination; it does not create extra servers or make slow database queries disappear.
 
+### Prerequisites
+
+Client, request, server and replica
+
+### Learning goals
+
+- Trace a request to a healthy replica
+
+- distinguish routing from creating capacity
+
+- calculate survivor capacity
+
 ### Everyday explanation
 
 A school has three lunch counters. A helper sends each child to an open counter instead of letting everyone crowd around the first. If a counter closes, the helper stops using it. But if all counters share one empty kitchen, the helper cannot create food. Likewise, distributing requests does not remove a shared database bottleneck.
@@ -160,29 +172,61 @@ Correct option: 2. The application can share work and still wait on the same con
 
 ### Animation transcript
 
-**One public address**
+**Build an intuition**
 
-Visitors send event requests to one endpoint. The load balancer selects an application target so visitors do not need to know individual server addresses.
+Let us understand load balancing. A school has three lunch counters. A helper sends each child to an open counter instead of letting everyone crowd around the first. If a counter closes, the helper stops using it. But if all counters share one empty kitchen, the helper cannot create food. Likewise, distributing requests does not remove a shared database bottleneck. One address receives requests and shares them across healthy copies of your application. It chooses a destination; it does not create extra servers or make slow database queries disappear.
 
-**Share requests**
+**Follow the normal path**
 
-Alternate requests between App A and App B. This shares turns, but a slow request can still occupy one target much longer than another.
+Follow the normal path. Visitors send event requests to one endpoint. The load balancer selects an application target so visitors do not need to know individual server addresses. Alternate requests between App A and App B. This shares turns, but a slow request can still occupy one target much longer than another. In our fictional SeatSpot ticket app, many people open the same event at once. One application instance becomes overloaded while a second has spare capacity. A load balancer makes the spare capacity reachable through the same public endpoint.
 
-**A target fails**
+**Predict a failure**
 
-App A stops passing readiness checks. Detection takes time; requests already in flight may fail and must be handled safely by the client.
+Now change one condition. App A stops passing readiness checks. Detection takes time; requests already in flight may fail and must be handled safely by the client. A common misunderstanding is this: Round robin means equal CPU usage. It shares turns; request cost and connection lifetime can differ. Think about this. App A fails. Can App B always take all its traffic? Pause the video and make your prediction. Only if App B and the shared dependencies have enough tested spare capacity. Health checks also take time to remove App A.
 
-**Use the healthy target**
+**Work through an example**
 
-New requests go to App B after the target is removed. App B needs enough spare capacity; routing cannot manufacture capacity during an outage.
+Let us reason with a concrete example. Suppose one tested replica handles 200 requests/second within the latency objective and the expected peak is 450. Three replicas provide 600 requests/second in the simplified model. Losing one leaves 400, below the peak. Four leave 600 after one failure. Real capacity must be load-tested with the database and dependencies. Use four if that failure headroom is required and affordable. Monitor per-target latency, error rate and queueing; do not infer usable capacity from instance count alone. These figures are teaching examples, not production guarantees.
 
-**Protect the booking**
+**Choose and apply**
 
-Both copies use the same order system. A repeated booking request carries the same idempotency key so a lost response does not charge twice.
+Turn the idea into a design decision. New requests go to App B after the target is removed. App B needs enough spare capacity; routing cannot manufacture capacity during an outage. Both copies use the same order system. A repeated booking request carries the same idempotency key so a lost response does not charge twice. When you try the practice task, look for this result. The surviving target receives new traffic, but the database remains shared.
 
-**Measure the whole path**
+**Explain it back**
 
-Check latency and errors at the balancer, application and database. If both applications wait on the database, adding routing rules will not fix that bottleneck.
+Check your understanding. Check latency and errors at the balancer, application and database. If both applications wait on the database, adding routing rules will not fix that bottleneck. Here is a challenge. You have three replicas each safe at 150 requests/second. Peak demand is 350. Can you survive one replica failing? Pause before the answer. After a failure, two replicas provide 300, below 350. Four total leave 450 after one failure in this simplified model. Also test dependency limits and the actual request mix. For an interview, defend a routing policy, session state and failure headroom. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+App A fails. Can App B always take all its traffic?
+
+Only if App B and the shared dependencies have enough tested spare capacity. Health checks also take time to remove App A.
+
+### Correct a misconception
+
+Round robin means equal CPU usage.
+
+It shares turns; request cost and connection lifetime can differ.
+
+### Practical task
+
+Route six paper requests
+
+- Draw two app boxes and one shared database.
+
+- Assign six requests alternately to the apps.
+
+- Cross out App A, then recalculate capacity before rerouting.
+
+Expected outcome: The surviving target receives new traffic, but the database remains shared.
+
+### Choose interview depth
+
+**Foundation:** Explain one request and a failed target.
+
+**Practical:** Defend a routing policy, session state and failure headroom.
+
+**Advanced:** Discuss correlated failures, draining, retries and measured tail latency.
 
 ### Official references
 
@@ -194,6 +238,18 @@ Check latency and errors at the balancer, application and database. If both appl
 ## 2. Auto scaling
 
 Auto scaling changes capacity automatically when measured demand changes. A controller observes a signal, chooses a replica count and waits for new capacity to become ready. It is a delayed feedback loop, not instant unlimited capacity.
+
+### Prerequisites
+
+Replica, CPU usage and readiness
+
+### Learning goals
+
+- Identify a useful scaling signal
+
+- explain startup delay
+
+- check downstream limits
 
 ### Everyday explanation
 
@@ -290,29 +346,61 @@ Correct option: 3. Scaling has delays and shared constraints. Observe readiness,
 
 ### Animation transcript
 
-**Observe demand**
+**Build an intuition**
 
-The application serves visitors while metrics record utilization and request behavior. Select a signal related to the constrained resource, not simply the easiest chart.
+Let us understand auto scaling. A shop manager sees a long checkout queue and opens another counter. Opening takes time: someone must arrive, sign in and prepare the till. Closing every quiet counter immediately would cause a new queue a minute later. The manager needs minimum staffing and patience, not just a rule that reacts to every small change. Auto scaling changes capacity automatically when measured demand changes. A controller observes a signal, chooses a replica count and waits for new capacity to become ready. It is a delayed feedback loop, not instant unlimited capacity.
 
-**Choose a target**
+**Follow the normal path**
 
-The controller compares the observed signal with a configured target and computes a desired replica count within minimum and maximum limits.
+Follow the normal path. The application serves visitors while metrics record utilization and request behavior. Select a signal related to the constrained resource, not simply the easiest chart. The controller compares the observed signal with a configured target and computes a desired replica count within minimum and maximum limits. SeatSpot traffic grows before a popular sale. Manual scaling may arrive too late, while leaving peak capacity running all day wastes resources. Automatic control can help, provided start-up delay and dependency limits are included.
 
-**Request capacity**
+**Predict a failure**
 
-The controller requests more replicas. Scheduling, image download, initialization and health checks take time. Desired capacity and ready capacity can differ.
+Now change one condition. The controller requests more replicas. Scheduling, image download, initialization and health checks take time. Desired capacity and ready capacity can differ. A common misunderstanding is this: Automatic scaling is instant. Observation, scheduling, image startup and readiness all take time. Think about this. CPU is low while requests wait on a database. Should CPU scaling be your only signal? Pause the video and make your prediction. No. CPU can be low during I/O waits. Inspect latency, concurrency, database waits and the actual constrained resource.
 
-**Wait for readiness**
+**Work through an example**
 
-Only ready replicas should receive normal traffic. If nodes or quotas are exhausted, a controller cannot create the missing physical capacity by itself.
+Let us reason with a concrete example. Four replicas average 80% CPU. The target is 50%, assuming similar replicas and CPU-bound work. A simplified estimate is ceil(4 × 80 / 50) = 7 replicas. This is a teaching estimate; real controllers apply tolerances, readiness handling and other policies. Check whether seven replicas can start, whether their total database connections fit, and whether latency improves. A replica recommendation is not proof the system is safe. These figures are teaching examples, not production guarantees.
 
-**Check dependencies**
+**Choose and apply**
 
-More application copies can increase database connections. Limit aggregate concurrency so solving an application bottleneck does not create a database outage.
+Turn the idea into a design decision. Only ready replicas should receive normal traffic. If nodes or quotas are exhausted, a controller cannot create the missing physical capacity by itself. More application copies can increase database connections. Limit aggregate concurrency so solving an application bottleneck does not create a database outage. When you try the practice task, look for this result. Seven is a simplified recommendation, not seven instantly ready or safe servers.
 
-**Scale down carefully**
+**Explain it back**
 
-After demand falls, stabilization prevents rapid shrinking and regrowth. Drain work before removing replicas and keep enough minimum capacity for the next burst.
+Check your understanding. After demand falls, stabilization prevents rapid shrinking and regrowth. Drain work before removing replicas and keep enough minimum capacity for the next burst. Here is a challenge. A queue receives 120 jobs/second. Each worker handles 20. How many workers stop backlog growth, and why might you need more? Pause before the answer. Six workers match the average under ideal assumptions. More are needed to drain existing backlog and tolerate failures or variable duration, within downstream safety limits. Monitor oldest-job age, not just queue size. For an interview, choose metrics, minimums, maximums and stabilization. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+CPU is low while requests wait on a database. Should CPU scaling be your only signal?
+
+No. CPU can be low during I/O waits. Inspect latency, concurrency, database waits and the actual constrained resource.
+
+### Correct a misconception
+
+Automatic scaling is instant.
+
+Observation, scheduling, image startup and readiness all take time.
+
+### Practical task
+
+Work a scaling recommendation
+
+- Start with four replicas at 80% CPU and a 50% target.
+
+- Calculate 4 × 80 / 50 and round up.
+
+- List startup time, cluster quota and database-connection limits.
+
+Expected outcome: Seven is a simplified recommendation, not seven instantly ready or safe servers.
+
+### Choose interview depth
+
+**Foundation:** Describe the observe-decide-wait loop.
+
+**Practical:** Choose metrics, minimums, maximums and stabilization.
+
+**Advanced:** Explain quota exhaustion, feedback delay, cold-cache effects and overload protection.
 
 ### Official references
 
@@ -324,6 +412,18 @@ After demand falls, stabilization prevents rapid shrinking and regrowth. Drain w
 ## 3. High availability
 
 High availability means meeting an agreed target for successful service over time. Redundant components and recovery reduce downtime, but a system can never promise that nothing will ever fail.
+
+### Prerequisites
+
+User operation, replica and failure domain
+
+### Learning goals
+
+- Define a user-visible objective
+
+- find shared failures
+
+- budget recovery time
 
 ### Everyday explanation
 
@@ -419,29 +519,61 @@ Correct option: 1. Application redundancy alone does not cover the shared databa
 
 ### Animation transcript
 
-**Define success**
+**Build an intuition**
 
-For this example, success means a correct booking response within its latency objective. A homepage response alone does not measure the same user outcome.
+Let us understand high availability. A school keeps two water pumps so one can help when the other stops. If both use the same broken power line, two pumps do not solve the problem. Availability depends on the whole chain and on how quickly people notice and recover, not just the number of pumps. High availability means meeting an agreed target for successful service over time. Redundant components and recovery reduce downtime, but a system can never promise that nothing will ever fail.
 
-**Spread the copies**
+**Follow the normal path**
 
-Applications run in separate zones behind a resilient entry point. The goal is to avoid losing every application copy to the same local failure.
+Follow the normal path. For this example, success means a correct booking response within its latency objective. A homepage response alone does not measure the same user outcome. Applications run in separate zones behind a resilient entry point. The goal is to avoid losing every application copy to the same local failure. SeatSpot must keep ticket browsing and booking usable when a machine or zone fails. Different features can have different objectives: cached event descriptions may remain available even if booking is temporarily paused to protect correct seat allocation.
 
-**Lose one zone**
+**Predict a failure**
 
-Zone A becomes unavailable. Detection and rerouting consume time, and requests already in flight may fail. The objective allows an explicitly measured error budget.
+Now change one condition. Zone A becomes unavailable. Detection and rerouting consume time, and requests already in flight may fail. The objective allows an explicitly measured error budget. A common misunderstanding is this: Two replicas guarantee availability. Shared power, data, credentials or control planes can fail both replicas. Think about this. Two apps run on different machines but use one unprotected database. Is the complete booking path redundant? Pause the video and make your prediction. No. A database failure can still stop both apps. Follow the entire user operation, not only the web tier.
 
-**Use remaining capacity**
+**Work through an example**
 
-Zone B receives new work. It must have enough capacity, network access and working credentials to serve the actual user operation.
+Let us reason with a concrete example. An agreed objective is 99.9% time availability over an illustrative 30-day month. 30 × 24 × 60 = 43,200 minutes. A 0.1% unavailability budget is 43.2 minutes. Request-based indicators use failed eligible requests instead, so do not mix the two measurements. Choose the objective from business needs and recovery cost. Measure actual booking success separately from whether the homepage responds. These figures are teaching examples, not production guarantees.
 
-**Follow the data**
+**Choose and apply**
 
-Both application copies need a suitable data service. A single unprotected database can still interrupt bookings even when both application zones are healthy.
+Turn the idea into a design decision. Zone B receives new work. It must have enough capacity, network access and working credentials to serve the actual user operation. Both application copies need a suitable data service. A single unprotected database can still interrupt bookings even when both application zones are healthy. When you try the practice task, look for this result. The illustrative time budget is 43.2 minutes; a request-based SLI uses different units.
 
-**Test the objective**
+**Explain it back**
 
-Run a controlled failure and measure booking success and recovery time. Availability is demonstrated by user outcomes, not by counting boxes in a diagram.
+Check your understanding. Run a controlled failure and measure booking success and recovery time. Availability is demonstrated by user outcomes, not by counting boxes in a diagram. Here is a challenge. Two application replicas run in one zone. A second zone is added. List three things to verify before calling the service highly available. Pause before the answer. Check traffic failover/detection, data-layer availability and consistency, and survivor capacity. Also test shared authentication, DNS and configuration dependencies using the agreed user-visible indicator. For an interview, define the SLI, time window, failover and survivor capacity. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Two apps run on different machines but use one unprotected database. Is the complete booking path redundant?
+
+No. A database failure can still stop both apps. Follow the entire user operation, not only the web tier.
+
+### Correct a misconception
+
+Two replicas guarantee availability.
+
+Shared power, data, credentials or control planes can fail both replicas.
+
+### Practical task
+
+Find shared failure domains
+
+- Draw two apps, their host/zone and shared dependencies.
+
+- Mark what a machine, zone and database failure would remove.
+
+- Calculate the 99.9% budget in a 30-day teaching month.
+
+Expected outcome: The illustrative time budget is 43.2 minutes; a request-based SLI uses different units.
+
+### Choose interview depth
+
+**Foundation:** Explain a shared single point of failure.
+
+**Practical:** Define the SLI, time window, failover and survivor capacity.
+
+**Advanced:** Defend error budgets, correlated-failure drills and business-operation evidence.
 
 ### Official references
 
@@ -453,6 +585,18 @@ Run a controlled failure and measure booking success and recovery time. Availabi
 ## 4. Fault tolerance
 
 Fault tolerance is the ability to keep required behavior correct when specified components fail. Name the failure you tolerate and the degraded behavior you allow. It is not a claim of immunity to every possible fault.
+
+### Prerequisites
+
+Timeout, request deadline and side effect
+
+### Learning goals
+
+- Name the tolerated fault
+
+- choose safe degradation
+
+- handle unknown write outcomes
 
 ### Everyday explanation
 
@@ -545,29 +689,61 @@ Correct option: 2. Network failure can hide a successful remote write. Preserve 
 
 ### Animation transcript
 
-**Separate essential work**
+**Build an intuition**
 
-The event page needs correct booking information, but recommendations are optional. Give these paths different deadlines and resource budgets.
+Let us understand fault tolerance. A bicycle with a spare light can still be seen when the main light breaks. But that spare light cannot fix a broken frame. A useful plan names the fault and the remaining safe behavior. A website might keep showing events when its recommendation feature fails while refusing to sell a seat it cannot confirm. Fault tolerance is the ability to keep required behavior correct when specified components fail. Name the failure you tolerate and the degraded behavior you allow. It is not a claim of immunity to every possible fault.
 
-**An optional call stalls**
+**Follow the normal path**
 
-Recommendations stop responding. Without a boundary, waiting calls can consume all connections or workers and affect otherwise healthy operations.
+Follow the normal path. The event page needs correct booking information, but recommendations are optional. Give these paths different deadlines and resource budgets. Recommendations stop responding. Without a boundary, waiting calls can consume all connections or workers and affect otherwise healthy operations. A slow optional recommendation service should not use every request thread and prevent checkout. SeatSpot isolates optional work and keeps a safe core path instead of treating every dependency as equally critical.
 
-**Enforce a deadline**
+**Predict a failure**
 
-The timeout guard ends waiting for optional work. This protects local resources but does not prove a remote write was cancelled or never happened.
+Now change one condition. The timeout guard ends waiting for optional work. This protects local resources but does not prove a remote write was cancelled or never happened. A common misunderstanding is this: A timeout means the remote action did not happen. A timeout describes your observation, not the remote side effect. Think about this. A payment call times out. Is it safe to retry with a fresh order ID? Pause the video and make your prediction. No. The first charge may have succeeded. Reuse a stable idempotency identity and reconcile the unknown outcome.
 
-**Degrade honestly**
+**Work through an example**
 
-Render the essential page without suggestions. Do not turn an uncertain payment outcome into a success message just to make the page appear healthy.
+Let us reason with a concrete example. A page fans out to three optional services with an overall 800 ms deadline. One dependency stalls for ten seconds. A 200 ms dependency timeout can preserve some page budget, but sequential calls, retries and rendering time must also fit inside 800 ms. Timeouts are not independent free budgets. Return the essential event page without recommendations; keep seat reservations and payment outcomes authoritative. Isolate resource pools so optional failures cannot consume core capacity. These figures are teaching examples, not production guarantees.
 
-**Bound retries**
+**Choose and apply**
 
-If a retry is appropriate, limit attempts and use backoff with jitter. Preserve one operation identity for side effects so retries do not create duplicate business actions.
+Turn the idea into a design decision. Render the essential page without suggestions. Do not turn an uncertain payment outcome into a success message just to make the page appear healthy. If a retry is appropriate, limit attempts and use backoff with jitter. Preserve one operation identity for side effects so retries do not create duplicate business actions. When you try the practice task, look for this result. Recommendations can be omitted; a confirmed payment must not be invented.
 
-**Test partial failure**
+**Explain it back**
 
-Inject a slow response and a lost reply in a safe test environment. Verify core capacity and user-visible correctness rather than only testing a clean server shutdown.
+Check your understanding. Inject a slow response and a lost reply in a safe test environment. Verify core capacity and user-visible correctness rather than only testing a clean server shutdown. Here is a challenge. The payment provider times out after you send a charge. What should the booking UI say and what should the backend do? Pause before the answer. Show a pending/unknown outcome rather than success or automatic failure. Reconcile by the same idempotency key/provider reference and update the order state. Avoid issuing a new independent charge. For an interview, bound retries, cancellation and concurrency independently. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A payment call times out. Is it safe to retry with a fresh order ID?
+
+No. The first charge may have succeeded. Reuse a stable idempotency identity and reconcile the unknown outcome.
+
+### Correct a misconception
+
+A timeout means the remote action did not happen.
+
+A timeout describes your observation, not the remote side effect.
+
+### Practical task
+
+Classify failure responses
+
+- List event browsing, recommendations and seat purchase.
+
+- Give each an explicit acceptable degraded behavior.
+
+- Fit dependency timeouts and bounded retries inside one request deadline.
+
+Expected outcome: Recommendations can be omitted; a confirmed payment must not be invented.
+
+### Choose interview depth
+
+**Foundation:** Describe a failure and safe fallback.
+
+**Practical:** Bound retries, cancellation and concurrency independently.
+
+**Advanced:** Reason about ambiguous outcomes, reconciliation and isolation of resource pools.
 
 ### Official references
 
@@ -579,6 +755,18 @@ Inject a slow response and a lost reply in a safe test environment. Verify core 
 ## 5. Horizontal scaling
 
 Horizontal scaling adds more machines or application copies. Work must be shareable between them. It differs from auto scaling: horizontal describes the direction of growth; automatic describes how the decision is made.
+
+### Prerequisites
+
+Replica, throughput and shared state
+
+### Learning goals
+
+- Separate scaling direction from automation
+
+- identify serial work
+
+- calculate scaling efficiency
 
 ### Everyday explanation
 
@@ -667,29 +855,61 @@ Correct option: 2. Direction and automation are different decisions; adding copi
 
 ### Animation transcript
 
-**Start with one copy**
+**Build an intuition**
 
-One application serves event pages. Its safe measured capacity is finite, and a restart can interrupt every request reaching that copy.
+Let us understand horizontal scaling. A teacher asks three helpers to check homework instead of giving one helper a faster pen. This helps if papers can be divided. It does not help much if every paper must wait for one locked answer book. Shared resources and coordination decide whether more helpers actually increase throughput. Horizontal scaling adds more machines or application copies. Work must be shareable between them. It differs from auto scaling: horizontal describes the direction of growth; automatic describes how the decision is made.
 
-**Add another copy**
+**Follow the normal path**
 
-Deploy the same application on another machine or process. Horizontal scaling adds peers rather than increasing resources inside the original machine.
+Follow the normal path. One application serves event pages. Its safe measured capacity is finite, and a restart can interrupt every request reaching that copy. Deploy the same application on another machine or process. Horizontal scaling adds peers rather than increasing resources inside the original machine. SeatSpot can run several stateless event-page replicas during a sale. A user may reach a different copy on the next request, so login state, uploaded files and reservations cannot silently live only in one replica memory.
 
-**Share incoming work**
+**Predict a failure**
 
-Routing sends requests to ready replicas. Balance according to workload characteristics; more boxes are useful only when requests can reach them.
+Now change one condition. Routing sends requests to ready replicas. Balance according to workload characteristics; more boxes are useful only when requests can reach them. A common misunderstanding is this: More app copies automatically scale database writes. The write owner, locks and connection limits can still constrain throughput. Think about this. Four copies reach 250 requests/second when one reaches 100. Did capacity grow four times? Pause the video and make your prediction. No. The measured efficiency is 62.5% of the ideal 400. Investigate the shared bottleneck before adding more replicas.
 
-**Move durable state**
+**Work through an example**
 
-Both replicas use the same appropriate storage for files, sessions or records. A file written only to Replica A will not magically appear on Replica B.
+Let us reason with a concrete example. One replica safely serves 100 requests/second. A load test with four replicas reaches only 250. Ideal linear scaling would suggest 400, but the measured efficiency is 250/400 = 62.5%. This number describes the experiment, not a universal law. Investigate database locking, shared CPU, connection limits and the serial part before adding another four replicas. Re-test after each change. These figures are teaching examples, not production guarantees.
 
-**Find serial work**
+**Choose and apply**
 
-If every request waits on one locked database operation, extra applications may add waiting instead of throughput. Trace and load-test the complete path.
+Turn the idea into a design decision. Both replicas use the same appropriate storage for files, sessions or records. A file written only to Replica A will not magically appear on Replica B. If every request waits on one locked database operation, extra applications may add waiting instead of throughput. Trace and load-test the complete path. When you try the practice task, look for this result. A gap from ideal scaling is a diagnostic clue, not proof which dependency is slow.
 
-**Test the gain**
+**Explain it back**
 
-Compare throughput and tail latency before and after scaling. Also remove one replica to check that remaining copies serve users correctly with available capacity.
+Check your understanding. Compare throughput and tail latency before and after scaling. Also remove one replica to check that remaining copies serve users correctly with available capacity. Here is a challenge. An upload is saved to App A local disk. The next download request reaches App B. Propose a fix. Pause before the answer. Store the file in a shared durable object store and keep metadata/access rules in an authoritative store. Stream or redirect authorized downloads from that shared location. Do not depend on sticky sessions for durability. For an interview, discuss state, job ownership, database limits and real load tests. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Four copies reach 250 requests/second when one reaches 100. Did capacity grow four times?
+
+No. The measured efficiency is 62.5% of the ideal 400. Investigate the shared bottleneck before adding more replicas.
+
+### Correct a misconception
+
+More app copies automatically scale database writes.
+
+The write owner, locks and connection limits can still constrain throughput.
+
+### Practical task
+
+Compare ideal and measured growth
+
+- Write the measured single-copy throughput.
+
+- Multiply by four for the ideal reference.
+
+- Compare the real result and name three shared constraints.
+
+Expected outcome: A gap from ideal scaling is a diagnostic clue, not proof which dependency is slow.
+
+### Choose interview depth
+
+**Foundation:** Describe adding copies and sharing work.
+
+**Practical:** Discuss state, job ownership, database limits and real load tests.
+
+**Advanced:** Defend bottleneck measurements, coordination overhead and the cost of another replica.
 
 ### Official references
 
@@ -701,6 +921,18 @@ Compare throughput and tail latency before and after scaling. Also remove one re
 ## 6. Vertical scaling
 
 Vertical scaling gives one machine more CPU, memory, storage or throughput. It can be the simplest improvement, but it has a size ceiling and does not create a second copy for failover.
+
+### Prerequisites
+
+CPU, memory and disk waits
+
+### Learning goals
+
+- Match resources to the bottleneck
+
+- separate resizing from redundancy
+
+- plan rollback
 
 ### Everyday explanation
 
@@ -788,29 +1020,61 @@ Correct option: 2. Resource allocation and redundancy solve different problems.
 
 ### Animation transcript
 
-**Measure the wait**
+**Build an intuition**
 
-The application is slow. Inspect whether requests wait on CPU, memory, storage, locks or another service before selecting a bigger machine.
+Let us understand vertical scaling. A student replaces a tiny desk with a larger desk. More books fit, but there is still one desk. A bigger desk does not solve every problem: a lost key to the room still blocks access. Likewise, extra memory helps a memory bottleneck but may not help a slow external payment call. Vertical scaling gives one machine more CPU, memory, storage or throughput. It can be the simplest improvement, but it has a size ceiling and does not create a second copy for failover.
 
-**Increase resources**
+**Follow the normal path**
 
-Give the same database more appropriate resources. This is vertical scaling because the number of independent database copies has not increased.
+Follow the normal path. The application is slow. Inspect whether requests wait on CPU, memory, storage, locks or another service before selecting a bigger machine. Give the same database more appropriate resources. This is vertical scaling because the number of independent database copies has not increased. A SeatSpot database may benefit from more memory for its working set before the team considers sharding. First measure the constraint rather than buying a larger machine because the site feels slow.
 
-**Watch useful memory**
+**Predict a failure**
 
-More memory can hold more of the hot working set. If disk reads were the bottleneck, the experiment may show lower latency.
+Now change one condition. More memory can hold more of the hot working set. If disk reads were the bottleneck, the experiment may show lower latency. A common misunderstanding is this: A larger instance is a second failover copy. It remains one instance unless a separate redundancy design exists. Think about this. A payment provider takes five seconds. Will doubling your app RAM necessarily fix it? Pause the video and make your prediction. No. Extra RAM does not shorten an external provider delay. Measure the critical path first.
 
-**Plan interruption**
+**Work through an example**
 
-A size change may restart or fail over the database. Use the actual platform procedure and verify what users see during the transition.
+Let us reason with a concrete example. The database reads a 12 GB hot dataset but has only 4 GB available for useful caching. A larger memory budget may improve hit rate; the actual benefit depends on access patterns, other memory users and query plans. Doubling RAM is not a promise of double throughput. Profile the working set and expensive queries, test a larger instance in a safe environment and measure tail latency and restart behavior. These figures are teaching examples, not production guarantees.
 
-**Retest the result**
+**Choose and apply**
 
-Repeat the same controlled workload. Compare throughput, tail latency, waits and cost; do not use machine size as the success metric.
+Turn the idea into a design decision. A size change may restart or fail over the database. Use the actual platform procedure and verify what users see during the transition. Repeat the same controlled workload. Compare throughput, tail latency, waits and cost; do not use machine size as the success metric. When you try the practice task, look for this result. A resize is justified by observed improvement and operational constraints, not instance size alone.
 
-**Keep a recovery plan**
+**Explain it back**
 
-The larger machine still needs redundancy and backups. If the machine fails or reaches its size ceiling, a different design decision is needed.
+Check your understanding. The larger machine still needs redundancy and backups. If the machine fails or reaches its size ceiling, a different design decision is needed. Here is a challenge. CPU is idle but one SQL query waits on a lock. Will twice as many cores fix it? Pause before the answer. Probably not. Inspect the blocking transaction, query and locking strategy. Extra cores do not release the lock. Re-test after addressing the measured contention. For an interview, choose a resource using profiling and compare cost. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A payment provider takes five seconds. Will doubling your app RAM necessarily fix it?
+
+No. Extra RAM does not shorten an external provider delay. Measure the critical path first.
+
+### Correct a misconception
+
+A larger instance is a second failover copy.
+
+It remains one instance unless a separate redundancy design exists.
+
+### Practical task
+
+Write a resize experiment
+
+- Record latency, memory pressure, CPU and I/O waits.
+
+- Choose one resource change in a test environment.
+
+- Repeat the same workload and measure restart/recovery behavior.
+
+Expected outcome: A resize is justified by observed improvement and operational constraints, not instance size alone.
+
+### Choose interview depth
+
+**Foundation:** Explain making one machine larger.
+
+**Practical:** Choose a resource using profiling and compare cost.
+
+**Advanced:** Discuss size ceilings, migration/restart behavior, rollback and alternative query improvements.
 
 ### Official references
 
@@ -820,6 +1084,18 @@ The larger machine still needs redundancy and backups. If the machine fails or r
 ## 7. Caching
 
 A cache keeps a reusable copy so future reads can avoid slower work. Copies can become stale or disappear. Decide what may be cached, for how long and who is allowed to read it.
+
+### Prerequisites
+
+Source of truth, key and expiry
+
+### Learning goals
+
+- Trace cache-aside hits/misses
+
+- reason about staleness
+
+- protect the cold-cache path
 
 ### Everyday explanation
 
@@ -912,29 +1188,61 @@ Correct option: 1. A disposable cache needs a safe miss path and enough protecti
 
 ### Animation transcript
 
-**Request a description**
+**Build an intuition**
 
-The reader asks for a public event description. The key identifies the resource and representation; private results need appropriate identity scoping.
+Let us understand caching. You keep a timetable on your desk instead of walking to the office every time. It is fast, but a changed timetable makes your copy wrong. The expiry time tells you when to check again; it does not make the copy correct until then. A cache keeps a reusable copy so future reads can avoid slower work. Copies can become stale or disappear. Decide what may be cached, for how long and who is allowed to read it.
 
-**Serve a hit**
+**Follow the normal path**
 
-A reusable cached value returns quickly. Its age matters: a fast response can still be too stale for the business operation.
+Follow the normal path. The reader asks for a public event description. The key identifies the resource and representation; private results need appropriate identity scoping. A reusable cached value returns quickly. Its age matters: a fast response can still be too stale for the business operation. SeatSpot event descriptions change rarely and are read often. They are good cache candidates. Available-seat ownership and payment outcomes need stricter correctness rules than a public description.
 
-**Handle a miss**
+**Predict a failure**
 
-If the value is absent or expired, fetch from the source of truth. A miss is normal and must have bounded latency and safe error handling.
+Now change one condition. If the value is absent or expired, fetch from the source of truth. A miss is normal and must have bounded latency and safe error handling. A common misunderstanding is this: A cache copy is always current until TTL expires. It can become stale immediately after a source update; expiry is not a correctness guarantee. Think about this. A popular key expires for every visitor at once. What load reaches the database? Pause the video and make your prediction. Many concurrent misses can refill the same value. Coalesce work, stagger expiry or serve controlled stale data where allowed.
 
-**Control refill work**
+**Work through an example**
 
-Many readers may miss the same hot key together. Coalesce loads or bound refill work so the cache does not amplify pressure on the database.
+Let us reason with a concrete example. An illustrative endpoint receives 1,000 reads/second with an 80% cache hit rate. About 200 reads/second reach the source in the simplified model. After a cache outage, the source may suddenly receive all 1,000. Test the cold-cache path, bound concurrent refill work and specify acceptable staleness for descriptions. Do not use the estimate to promise production capacity. These figures are teaching examples, not production guarantees.
 
-**Store a temporary copy**
+**Choose and apply**
 
-Populate the cache with an explicit lifetime. Plan what happens after an update and whether serving an older value is acceptable during refresh.
+Turn the idea into a design decision. Many readers may miss the same hot key together. Coalesce loads or bound refill work so the cache does not amplify pressure on the database. Populate the cache with an explicit lifetime. Plan what happens after an update and whether serving an older value is acceptable during refresh. When you try the practice task, look for this result. At 1,000 reads/second, source demand can jump from about 200 to 1,000 when the cache disappears.
 
-**Test a cold cache**
+**Explain it back**
 
-Remove the cache in a safe test. Observe source traffic, latency and errors. A warm hit-rate chart alone does not prove the architecture can recover.
+Check your understanding. Remove the cache in a safe test. Observe source traffic, latency and errors. A warm hit-rate chart alone does not prove the architecture can recover. Here is a challenge. An event title changes but users still see the old title. Explain two remedies. Pause before the answer. Invalidate or version the affected cache entry on a successful update, or accept the documented TTL staleness. Consider races between refill and update; test the chosen consistency behavior. For an interview, choose key scope, invalidation and stampede control. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A popular key expires for every visitor at once. What load reaches the database?
+
+Many concurrent misses can refill the same value. Coalesce work, stagger expiry or serve controlled stale data where allowed.
+
+### Correct a misconception
+
+A cache copy is always current until TTL expires.
+
+It can become stale immediately after a source update; expiry is not a correctness guarantee.
+
+### Practical task
+
+Trace a cache-aside sequence
+
+- Write a cache key for a public event description.
+
+- Follow miss → source read → cache write, then a hit.
+
+- Remove the cache and estimate load at 80% previous hit rate.
+
+Expected outcome: At 1,000 reads/second, source demand can jump from about 200 to 1,000 when the cache disappears.
+
+### Choose interview depth
+
+**Foundation:** Explain a hit, miss and source of truth.
+
+**Practical:** Choose key scope, invalidation and stampede control.
+
+**Advanced:** Defend consistency boundaries, cold-cache capacity and private-data isolation.
 
 ### Official references
 
@@ -946,6 +1254,18 @@ Remove the cache in a safe test. Observe source traffic, latency and errors. A w
 ## 8. CDN
 
 A content delivery network serves suitable content from locations closer to users. It can cache public assets and reduce origin traffic. It does not make private or rapidly changing data safe to cache automatically.
+
+### Prerequisites
+
+HTTP response, public asset and cache key
+
+### Learning goals
+
+- Follow edge hit/miss paths
+
+- distinguish public/private responses
+
+- use versioned asset URLs
 
 ### Everyday explanation
 
@@ -1036,29 +1356,61 @@ Correct option: 2. The URL changes with the bytes, so clients can retain that ex
 
 ### Animation transcript
 
-**Choose the route**
+**Build an intuition**
 
-A visitor requests a public poster. The content delivery network routes the request to a suitable edge location rather than always going directly to the origin.
+Let us understand cdn. A publisher places copies of a book in many nearby libraries. A student borrows locally instead of travelling to the printing factory. A personalized sealed letter should not be put on the shared shelf. Similarly, images and versioned scripts differ from private booking responses. A content delivery network serves suitable content from locations closer to users. It can cache public assets and reduce origin traffic. It does not make private or rapidly changing data safe to cache automatically.
 
-**Return a cached asset**
+**Follow the normal path**
 
-If the edge has a valid copy, it returns that representation. This can reduce both response latency and repeated origin transfer.
+Follow the normal path. A visitor requests a public poster. The content delivery network routes the request to a suitable edge location rather than always going directly to the origin. If the edge has a valid copy, it returns that representation. This can reduce both response latency and repeated origin transfer. SeatSpot posters and JavaScript bundles are useful near visitors. The booking API still needs authorization, correct seat state and an explicit cache policy.
 
-**Fetch on a miss**
+**Predict a failure**
 
-A missing or expired representation needs an origin fetch. The origin and its network path still matter for uncached work.
+Now change one condition. A missing or expired representation needs an origin fetch. The origin and its network path still matter for uncached work. A common misunderstanding is this: A CDN removes the origin from every request. Cache misses and dynamic requests still depend on the origin. Think about this. Can an account response use the same public cache policy as a versioned stylesheet? Pause the video and make your prediction. No. Private representations need deliberate cache keys and policies. Shared caching can leak another user’s response.
 
-**Use a versioned URL**
+**Work through an example**
 
-When asset bytes change, publish a new content-versioned name. Long-lived immutable caching only fits a URL whose content will not change.
+Let us reason with a concrete example. An illustrative 1 MB poster is requested 10,000 times. Uncached origin transfer would be about 10 GB in decimal units. A 90% edge hit rate would reduce those origin payload reads to roughly 1 GB, ignoring overhead and refresh behavior. Use explicit public asset policies and versioned filenames; treat booking/account routes separately. Costs, topology and actual hit rate depend on the provider and workload. These figures are teaching examples, not production guarantees.
 
-**Separate private data**
+**Choose and apply**
 
-An account or booking response may be personal and time-sensitive. Do not place it on the shared public cache path without a deliberately safe policy.
+Turn the idea into a design decision. When asset bytes change, publish a new content-versioned name. Long-lived immutable caching only fits a URL whose content will not change. An account or booking response may be personal and time-sensitive. Do not place it on the shared public cache path without a deliberately safe policy. When you try the practice task, look for this result. A content-hashed public file is a suitable immutable candidate; the account statement is not.
 
-**Measure each path**
+**Explain it back**
 
-Compare edge hits, misses and private requests separately. A fast cached poster does not show whether the booking API meets its latency and correctness objectives.
+Check your understanding. Compare edge hits, misses and private requests separately. A fast cached poster does not show whether the booking API meets its latency and correctness objectives. Here is a challenge. A new logo is uploaded at the old immutable URL but users see the previous one. What is a safer release approach? Pause before the answer. Deploy the new asset under a content-versioned URL and update references. Confirm the production deployment, response headers and edge behavior; invalidate legacy copies if necessary. For an interview, defend cache keys, expiry and invalidation. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Can an account response use the same public cache policy as a versioned stylesheet?
+
+No. Private representations need deliberate cache keys and policies. Shared caching can leak another user’s response.
+
+### Correct a misconception
+
+A CDN removes the origin from every request.
+
+Cache misses and dynamic requests still depend on the origin.
+
+### Practical task
+
+Classify cacheable responses
+
+- List a hashed CSS file, event poster and account statement.
+
+- Assign public immutable or private/no-store policies with reasons.
+
+- Change one asset and decide whether its URL must change.
+
+Expected outcome: A content-hashed public file is a suitable immutable candidate; the account statement is not.
+
+### Choose interview depth
+
+**Foundation:** Explain an edge hit and miss.
+
+**Practical:** Defend cache keys, expiry and invalidation.
+
+**Advanced:** Discuss regional hit rates, origin failures, personalization and bandwidth cost.
 
 ### Official references
 
@@ -1070,6 +1422,18 @@ Compare edge hits, misses and private requests separately. A fast cached poster 
 ## 9. API gateway
 
 An API gateway is an entry layer that applies shared API policies and routes requests to services. Authentication, quotas and request validation may live there, but business authorization still belongs near the protected data.
+
+### Prerequisites
+
+Authentication, service and record ownership
+
+### Learning goals
+
+- Separate authentication from authorization
+
+- trace routing
+
+- bound fan-out
 
 ### Everyday explanation
 
@@ -1158,29 +1522,61 @@ Correct option: 2. Authentication and resource-level authorization solve differe
 
 ### Animation transcript
 
-**Enter one API boundary**
+**Build an intuition**
 
-The client calls a public API address. The gateway provides a shared routing boundary instead of requiring clients to know every internal service location.
+Let us understand api gateway. A school reception desk checks visitor identity and sends visitors to the right office. Passing reception does not mean a visitor can open every cupboard. Services still decide which records or actions that person is permitted to access. An API gateway is an entry layer that applies shared API policies and routes requests to services. Authentication, quotas and request validation may live there, but business authorization still belongs near the protected data.
 
-**Apply coarse policy**
+**Follow the normal path**
 
-Validate the request and supported identity credentials with maintained security libraries. Reject oversized or invalid traffic before forwarding expensive work.
+Follow the normal path. The client calls a public API address. The gateway provides a shared routing boundary instead of requiring clients to know every internal service location. Validate the request and supported identity credentials with maintained security libraries. Reject oversized or invalid traffic before forwarding expensive work. SeatSpot exposes event, order and payment services through one public API. Shared routing and coarse policies can be managed consistently, while each service owns its business rules.
 
-**Route by responsibility**
+**Predict a failure**
 
-Event requests go to the event service; order requests go to the order service. API versions and paths should have deliberate routing rules.
+Now change one condition. Event requests go to the event service; order requests go to the order service. API versions and paths should have deliberate routing rules. A common misunderstanding is this: The gateway replaces all service authorization. Each service must protect its business actions and resources. Think about this. A valid user changes /orders/17 to /orders/18. Which boundary must still verify ownership? Pause the video and make your prediction. The order service or data-access boundary must authorize that record. Passing gateway authentication is insufficient.
 
-**Authorize the record**
+**Work through an example**
 
-The order service checks ownership and allowed actions using verified identity. Passing gateway authentication does not grant access to another visitor order.
+Let us reason with a concrete example. A mobile screen calls events and orders through one gateway. Its latency includes gateway work plus downstream waits. Two parallel calls take approximately the slower path plus overhead; two sequential calls add their delays. Real dependency behavior and timeouts determine the result. Keep routing/coarse policy central but preserve domain authorization and tracing in services. Test a gateway outage and a single unhealthy downstream service. These figures are teaching examples, not production guarantees.
 
-**Bound aggregation**
+**Choose and apply**
 
-If one API request fans out, set deadlines and partial-failure behavior. A slow optional service should not hold every gateway worker indefinitely.
+Turn the idea into a design decision. The order service checks ownership and allowed actions using verified identity. Passing gateway authentication does not grant access to another visitor order. If one API request fans out, set deadlines and partial-failure behavior. A slow optional service should not hold every gateway worker indefinitely. When you try the practice task, look for this result. A verified identity does not grant access to every record.
 
-**Operate the entry tier**
+**Explain it back**
 
-Trace requests through the boundary and test gateway capacity and redundancy. Centralizing policy is useful, but it also creates an important operational dependency.
+Check your understanding. Trace requests through the boundary and test gateway capacity and redundancy. Centralizing policy is useful, but it also creates an important operational dependency. Here is a challenge. A signed-in user changes an order ID in the URL. Which component must stop cross-user access? Pause before the answer. The order service must perform resource-level authorization using verified identity. Gateway checks are useful but cannot replace ownership enforcement. For an interview, explain token checks, quotas, deadlines and resource ownership. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A valid user changes /orders/17 to /orders/18. Which boundary must still verify ownership?
+
+The order service or data-access boundary must authorize that record. Passing gateway authentication is insufficient.
+
+### Correct a misconception
+
+The gateway replaces all service authorization.
+
+Each service must protect its business actions and resources.
+
+### Practical task
+
+Trace a protected order request
+
+- Draw the client, gateway and order owner.
+
+- Mark token validation at the gateway.
+
+- Mark record ownership at the service and test another user’s order ID.
+
+Expected outcome: A verified identity does not grant access to every record.
+
+### Choose interview depth
+
+**Foundation:** Describe routing through one API boundary.
+
+**Practical:** Explain token checks, quotas, deadlines and resource ownership.
+
+**Advanced:** Defend aggregation budgets, redundancy, key rotation and policy bypass risks.
 
 ### Official references
 
@@ -1192,6 +1588,18 @@ Trace requests through the boundary and test gateway capacity and redundancy. Ce
 ## 10. Rate limiting
 
 Rate limiting controls how much work an identity or client may request over time. It protects capacity and fairness, but it is not a complete defense against every attack.
+
+### Prerequisites
+
+Identity, elapsed time and concurrency
+
+### Learning goals
+
+- Distinguish rate and concurrency
+
+- refill a token bucket
+
+- explain shared counters
 
 ### Everyday explanation
 
@@ -1282,29 +1690,61 @@ Correct option: 1. Window boundaries can allow two budgets in a short interval. 
 
 ### Animation transcript
 
-**Identify the principal**
+**Build an intuition**
 
-Requests are assigned a deliberate identity key, such as a verified account and endpoint. A spoofable header cannot safely define a protected client budget.
+Let us understand rate limiting. A library lets each student borrow a limited number of books so one student cannot empty the shelves. A short burst may be acceptable, but repeated borrowing must remain within a fair rate. The rule needs a reliable way to identify the student, not just the colour of their shoes. Rate limiting controls how much work an identity or client may request over time. It protects capacity and fairness, but it is not a complete defense against every attack.
 
-**Refill the budget**
+**Follow the normal path**
 
-The token bucket refills over elapsed time up to its capacity. Capacity permits a bounded burst while the refill rate controls sustained use.
+Follow the normal path. Requests are assigned a deliberate identity key, such as a verified account and endpoint. A spoofable header cannot safely define a protected client budget. The token bucket refills over elapsed time up to its capacity. Capacity permits a bounded burst while the refill rate controls sustained use. SeatSpot protects sign-in and booking attempts from excessive traffic. Public browsing, expensive searches and paid customers may need different budgets; one shared limit for everyone can punish unrelated users.
 
-**Consume atomically**
+**Predict a failure**
 
-Checking and consuming a token must behave as one operation for shared state. Separate reads and writes can overspend under concurrency.
+Now change one condition. Checking and consuming a token must behave as one operation for shared state. Separate reads and writes can overspend under concurrency. A common misunderstanding is this: An IP header is always a reliable user identity. Client-controlled forwarding headers can be forged, and many people share one NAT address. Think about this. Ten tokens are spent immediately. After three idle seconds at two tokens/second, how many tokens remain? Pause the video and make your prediction. Six, capped by the bucket capacity of ten. Concurrent updates need an atomic implementation to preserve that rule.
 
-**Allow affordable work**
+**Work through an example**
 
-A request with enough tokens proceeds, but still faces authorization, request validation and downstream concurrency limits. Passing the limiter is not a correctness guarantee.
+Let us reason with a concrete example. A teaching token bucket has capacity 10 and refills at 2 tokens/second. If initially full, ten immediate requests can consume ten tokens. After 3 idle seconds it has six tokens, capped at ten. This model ignores distributed races until an atomic implementation is chosen. Choose a key and storage behavior explicitly. Protect critical actions with a deliberate fail-closed or degraded policy rather than silently giving unlimited access after a store failure. These figures are teaching examples, not production guarantees.
 
-**Reject excess traffic**
+**Choose and apply**
 
-A request without budget receives a clear rejection and retry guidance where appropriate. Clients should wait rather than creating an immediate retry storm.
+Turn the idea into a design decision. A request with enough tokens proceeds, but still faces authorization, request validation and downstream concurrency limits. Passing the limiter is not a correctness guarantee. A request without budget receives a clear rejection and retry guidance where appropriate. Clients should wait rather than creating an immediate retry storm. When you try the practice task, look for this result. Only the available budget is admitted; a 429 response can communicate a retry policy.
 
-**Plan storage failure**
+**Explain it back**
 
-If the shared limiter fails, enforce the chosen endpoint policy and alert. Independent local counters do not preserve a strict global quota across replicas.
+Check your understanding. If the shared limiter fails, enforce the chosen endpoint policy and alert. Independent local counters do not preserve a strict global quota across replicas. Here is a challenge. Three replicas each allow 100 requests/minute for one user. Is the global user limit 100? Pause before the answer. Not with independent counters: the user may receive up to roughly 300 across replicas, depending on routing and windows. Use an atomic shared budget or state explicitly that the policy is per instance. For an interview, choose a principal, atomic state and store-failure policy. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Ten tokens are spent immediately. After three idle seconds at two tokens/second, how many tokens remain?
+
+Six, capped by the bucket capacity of ten. Concurrent updates need an atomic implementation to preserve that rule.
+
+### Correct a misconception
+
+An IP header is always a reliable user identity.
+
+Client-controlled forwarding headers can be forged, and many people share one NAT address.
+
+### Practical task
+
+Run a paper token bucket
+
+- Start a bucket with capacity ten and ten tokens.
+
+- Spend all ten on a burst, then advance time three seconds.
+
+- Refill six and test another burst before enough time passes.
+
+Expected outcome: Only the available budget is admitted; a 429 response can communicate a retry policy.
+
+### Choose interview depth
+
+**Foundation:** Explain sustained rate and burst allowance.
+
+**Practical:** Choose a principal, atomic state and store-failure policy.
+
+**Advanced:** Discuss distributed budgets, hot keys, NAT fairness and overload beyond request rate.
 
 ### Official references
 
@@ -1316,6 +1756,18 @@ If the shared limiter fails, enforce the chosen endpoint policy and alert. Indep
 ## 11. Circuit breaker
 
 A circuit breaker temporarily stops calls to a dependency that appears unhealthy, then cautiously tests recovery. It prevents repeated waiting and extra pressure; it does not repair the dependency.
+
+### Prerequisites
+
+Dependency, timeout and failure measurement
+
+### Learning goals
+
+- Follow closed/open/half-open
+
+- bound recovery probes
+
+- separate breaker and retry
 
 ### Everyday explanation
 
@@ -1405,29 +1857,61 @@ Correct option: 2. Limited probes avoid overwhelming a dependency before recover
 
 ### Animation transcript
 
-**Closed: calls flow**
+**Build an intuition**
 
-The breaker allows normal calls and records eligible outcomes. Timeouts still bound each attempt; a closed breaker is not a guarantee of health.
+Let us understand circuit breaker. A home fuse interrupts an unsafe circuit instead of letting every appliance keep drawing current. A software breaker is not the same physical mechanism, but the useful idea is similar: stop repeated harmful attempts, observe conditions and restore access carefully. A circuit breaker temporarily stops calls to a dependency that appears unhealthy, then cautiously tests recovery. It prevents repeated waiting and extra pressure; it does not repair the dependency.
 
-**Observe repeated failures**
+**Follow the normal path**
 
-The dependency times out repeatedly. A minimum sample and measurement window help distinguish a pattern from a single unlucky request.
+Follow the normal path. The breaker allows normal calls and records eligible outcomes. Timeouts still bound each attempt; a closed breaker is not a guarantee of health. The dependency times out repeatedly. A minimum sample and measurement window help distinguish a pattern from a single unlucky request. If SeatSpot recommendations repeatedly time out, continuing to call them can occupy every connection. A breaker can reject or use a safe optional fallback while core booking work continues.
 
-**Open: stop pressure**
+**Predict a failure**
 
-The breaker opens and rejects dependency calls quickly. This frees local resources and avoids repeating expensive failures while recovery is investigated.
+Now change one condition. The breaker opens and rejects dependency calls quickly. This frees local resources and avoids repeating expensive failures while recovery is investigated. A common misunderstanding is this: An open breaker makes every fallback safe. A fallback must preserve business meaning; it cannot fabricate a successful payment. Think about this. The breaker opens. Has it repaired the failed payment provider? Pause the video and make your prediction. No. It stops repeated calls quickly. Recovery probes only test whether the dependency can be used again.
 
-**Choose an honest fallback**
+**Work through an example**
 
-Optional recommendations can be omitted. Essential payment outcomes must remain pending or failed according to verified state, not invented to hide the outage.
+Let us reason with a concrete example. An illustrative breaker opens after enough samples show a 50% eligible-failure rate in its window. A minimum of 20 calls avoids opening after one failure out of one call in this example. The numbers are teaching choices, not recommended universal settings. Define which timeouts/errors count, limit half-open probes and watch false trips alongside recovery time. These figures are teaching examples, not production guarantees.
 
-**Half-open: probe**
+**Choose and apply**
 
-After a reset interval, allow a limited probe set. Sending every waiting caller at once can overload a dependency that is only partly recovered.
+Turn the idea into a design decision. Optional recommendations can be omitted. Essential payment outcomes must remain pending or failed according to verified state, not invented to hide the outage. After a reset interval, allow a limited probe set. Sending every waiting caller at once can overload a dependency that is only partly recovered. When you try the practice task, look for this result. Few probes avoid a recovery stampede; thresholds are workload choices.
 
-**Recover or reopen**
+**Explain it back**
 
-Successful probes restore normal traffic; failed probes reopen the breaker. Observe both false trips and recovery behavior under controlled failure tests.
+Check your understanding. Successful probes restore normal traffic; failed probes reopen the breaker. Observe both false trips and recovery behavior under controlled failure tests. Here is a challenge. What should a breaker do after the reset interval? Pause before the answer. Move to half-open with bounded probes. Evaluate actual outcomes before restoring full traffic; otherwise recovering capacity may be overwhelmed again. For an interview, define eligible failures, thresholds and bounded probes. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+The breaker opens. Has it repaired the failed payment provider?
+
+No. It stops repeated calls quickly. Recovery probes only test whether the dependency can be used again.
+
+### Correct a misconception
+
+An open breaker makes every fallback safe.
+
+A fallback must preserve business meaning; it cannot fabricate a successful payment.
+
+### Practical task
+
+Walk the breaker states
+
+- Record eligible failures while the breaker is closed.
+
+- Open after an explicit minimum sample and threshold.
+
+- Permit a small half-open probe set, then decide whether to close or reopen.
+
+Expected outcome: Few probes avoid a recovery stampede; thresholds are workload choices.
+
+### Choose interview depth
+
+**Foundation:** Name the three states and their purpose.
+
+**Practical:** Define eligible failures, thresholds and bounded probes.
+
+**Advanced:** Discuss low-traffic bias, per-instance state, false trips and interactions with retries.
 
 ### Official references
 
@@ -1437,6 +1921,18 @@ Successful probes restore normal traffic; failed probes reopen the breaker. Obse
 ## 12. Message queues
 
 A message queue holds work until a consumer can process it. It separates accepting work from finishing it. Durability, retries, ordering and duplicate delivery depend on the queue and configuration.
+
+### Prerequisites
+
+Producer, consumer and durable side effect
+
+### Learning goals
+
+- Trace publish/process/acknowledge
+
+- predict duplicates
+
+- calculate backlog growth
 
 ### Everyday explanation
 
@@ -1527,29 +2023,61 @@ Correct option: 1. The queue can retry delivery but cannot unsend an external si
 
 ### Animation transcript
 
-**Record outgoing work**
+**Build an intuition**
 
-A booking succeeds and records a receipt job reliably. Coordinate this with business storage, for example using an outbox, so a crash does not lose the obligation.
+Let us understand message queues. A restaurant writes orders on tickets. The cook takes a ticket when ready instead of making every customer stand at the stove. A ticket can be picked up twice after confusion, so the kitchen needs an order number to avoid preparing and charging the same order twice. A message queue holds work until a consumer can process it. It separates accepting work from finishing it. Durability, retries, ordering and duplicate delivery depend on the queue and configuration.
 
-**Buffer a burst**
+**Follow the normal path**
 
-The queue stores work while consumers catch up. Stored backlog buys time, but retention, storage and acceptable delay remain finite.
+Follow the normal path. A booking succeeds and records a receipt job reliably. Coordinate this with business storage, for example using an outbox, so a crash does not lose the obligation. The queue stores work while consumers catch up. Stored backlog buys time, but retention, storage and acceptable delay remain finite. SeatSpot sends receipts asynchronously after booking. The booking request should not wait for an email provider, but it must reliably record that a receipt needs to be sent.
 
-**Process within limits**
+**Predict a failure**
 
-Workers pull jobs at a safe rate. Their combined concurrency must respect email provider quotas and other downstream capacity.
+Now change one condition. Workers pull jobs at a safe rate. Their combined concurrency must respect email provider quotas and other downstream capacity. A common misunderstanding is this: At-least-once delivery means exactly one business effect. Delivery and the external effect have different failure gaps. Think about this. A worker sends a receipt then crashes before acknowledgment. What can happen next? Pause the video and make your prediction. The job may be delivered again. A stable event ID and appropriate idempotency or reconciliation are needed around the external effect.
 
-**A worker crashes**
+**Work through an example**
 
-A worker can send an email and fail before acknowledging its job. The queue may deliver that same logical job again.
+Let us reason with a concrete example. Jobs arrive at 90/second and each worker safely processes 20/second. Four workers provide 80/second, so backlog grows by about 10/second. Five provide 100/second and drain only about 10/second of existing backlog in the simplified model. Add safe capacity or shed work, respecting the email provider quota. More consumers are not safe if they collectively exceed the next dependency limit. These figures are teaching examples, not production guarantees.
 
-**Protect the effect**
+**Choose and apply**
 
-Use stable job identity and an appropriate idempotency or reconciliation strategy. A delivery guarantee alone does not guarantee exactly one external effect.
+Turn the idea into a design decision. A worker can send an email and fail before acknowledging its job. The queue may deliver that same logical job again. Use stable job identity and an appropriate idempotency or reconciliation strategy. A delivery guarantee alone does not guarantee exactly one external effect. When you try the practice task, look for this result. At a constant arrival rate, five workers leave only about ten jobs/second to drain the backlog.
 
-**Handle persistent failure**
+**Explain it back**
 
-After bounded attempts, move a poison job to a monitored dead-letter path. Investigate and repair before controlled replay instead of retrying forever.
+Check your understanding. After bounded attempts, move a poison job to a monitored dead-letter path. Investigate and repair before controlled replay instead of retrying forever. Here is a challenge. A worker sends an email then crashes before acknowledging. What happens? Pause before the answer. Redelivery may send another email unless the consumer/provider has an idempotency or deduplication strategy. A durable order/event identity and reconciliation make this case explicit. For an interview, discuss backlog age, retries, poison jobs and idempotency. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A worker sends a receipt then crashes before acknowledgment. What can happen next?
+
+The job may be delivered again. A stable event ID and appropriate idempotency or reconciliation are needed around the external effect.
+
+### Correct a misconception
+
+At-least-once delivery means exactly one business effect.
+
+Delivery and the external effect have different failure gaps.
+
+### Practical task
+
+Calculate a queue backlog
+
+- Use arrivals of 90 jobs/second and four workers at 20 each.
+
+- Compute the 10-jobs/second backlog growth.
+
+- Add a fifth worker and calculate how slowly the old backlog drains.
+
+Expected outcome: At a constant arrival rate, five workers leave only about ten jobs/second to drain the backlog.
+
+### Choose interview depth
+
+**Foundation:** Explain producer, queue, consumer and acknowledgment.
+
+**Practical:** Discuss backlog age, retries, poison jobs and idempotency.
+
+**Advanced:** Defend outbox ownership, replay, provider quotas and reconciliation across crash gaps.
 
 ### Official references
 
@@ -1561,6 +2089,18 @@ After bounded attempts, move a poison job to a monitored dead-letter path. Inves
 ## 13. Event-driven architecture
 
 In event-driven architecture, components announce facts that happened and other components react. An event such as BookingConfirmed differs from a command such as ConfirmBooking, which asks an owner to perform an action.
+
+### Prerequisites
+
+Event identity, command and eventual consistency
+
+### Learning goals
+
+- Separate facts from requests
+
+- trace independent consumers
+
+- define replay policy
 
 ### Everyday explanation
 
@@ -1652,29 +2192,61 @@ Correct option: 2. An event describes something that already happened; a command
 
 ### Animation transcript
 
-**Commit a business fact**
+**Build an intuition**
 
-The booking owner establishes that the booking is confirmed, then reliably publishes the associated fact. Publication and storage must have an explicit failure strategy.
+Let us understand event-driven architecture. A school posts that sports day has been confirmed. Teachers arrange transport, the canteen plans food and students bring equipment. The announcement is one fact with several independent reactions. If the date is corrected, people need a clear update rather than silently rewriting an announcement they already acted on. In event-driven architecture, components announce facts that happened and other components react. An event such as BookingConfirmed differs from a command such as ConfirmBooking, which asks an owner to perform an action.
 
-**Fan out independently**
+**Follow the normal path**
 
-The event channel makes the fact available to separate subscribers. Each subscriber has a distinct business responsibility and its own processing state.
+Follow the normal path. The booking owner establishes that the booking is confirmed, then reliably publishes the associated fact. Publication and storage must have an explicit failure strategy. The event channel makes the fact available to separate subscribers. Each subscriber has a distinct business responsibility and its own processing state. SeatSpot booking confirmation can trigger receipts, analytics and loyalty updates without the booking service synchronously calling every consumer. This reduces direct coupling but introduces asynchronous coordination.
 
-**One subscriber lags**
+**Predict a failure**
 
-Analytics becomes slow while receipt processing continues. Subscriber delay is observable; it should not silently redefine the original booking outcome.
+Now change one condition. Analytics becomes slow while receipt processing continues. Subscriber delay is observable; it should not silently redefine the original booking outcome. A common misunderstanding is this: Publishing an event creates one atomic transaction across subscribers. Independent consumers have separate state, delay and failure boundaries. Think about this. BookingConfirmed is replayed. Should every subscriber repeat its old external action? Pause the video and make your prediction. No. Rebuilding analytics and resending old receipts have different consequences. Each consumer needs an explicit replay policy.
 
-**Deliver the event twice**
+**Work through an example**
 
-A repeated delivery uses the same logical event identity. Consumers must avoid awarding points or producing another external effect accidentally.
+Let us reason with a concrete example. BookingConfirmed has receipt, analytics and loyalty subscribers. A failed analytics consumer should not roll back a valid booking. Loyalty may remain eventually consistent, while seat ownership must stay authoritative. Document each subscriber obligation and recovery/replay rules. Replaying an analytics event is different from sending every historical receipt again. These figures are teaching examples, not production guarantees.
 
-**Evolve the contract**
+**Choose and apply**
 
-Add compatible fields carefully and test old consumers. Retained events and delayed subscribers may outlive the latest deployment.
+Turn the idea into a design decision. A repeated delivery uses the same logical event identity. Consumers must avoid awarding points or producing another external effect accidentally. Add compatible fields carefully and test old consumers. Retained events and delayed subscribers may outlive the latest deployment. When you try the practice task, look for this result. A repeated event must not award loyalty points twice; replay is a business decision.
 
-**Plan recovery and replay**
+**Explain it back**
 
-Replay analytics when appropriate, but do not resend historical receipts automatically. Reprocessing policy depends on the side effects owned by each subscriber.
+Check your understanding. Replay analytics when appropriate, but do not resend historical receipts automatically. Reprocessing policy depends on the side effects owned by each subscriber. Here is a challenge. A loyalty consumer receives BookingConfirmed twice. What must remain true? Pause before the answer. The booking should earn the intended points once. Deduplicate or make the update idempotent within a durable transaction; account for partial failure around external effects. For an interview, discuss versioned contracts, lag and idempotent consumers. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+BookingConfirmed is replayed. Should every subscriber repeat its old external action?
+
+No. Rebuilding analytics and resending old receipts have different consequences. Each consumer needs an explicit replay policy.
+
+### Correct a misconception
+
+Publishing an event creates one atomic transaction across subscribers.
+
+Independent consumers have separate state, delay and failure boundaries.
+
+### Practical task
+
+Classify messages and replay effects
+
+- Classify ConfirmBooking as a command and BookingConfirmed as a fact.
+
+- Draw receipt, analytics and loyalty subscribers.
+
+- Choose which effects can be replayed and how duplicates are handled.
+
+Expected outcome: A repeated event must not award loyalty points twice; replay is a business decision.
+
+### Choose interview depth
+
+**Foundation:** Explain a business fact and its reactions.
+
+**Practical:** Discuss versioned contracts, lag and idempotent consumers.
+
+**Advanced:** Defend workflow ownership, compensation, retained schemas and controlled replay.
 
 ### Official references
 
@@ -1686,6 +2258,18 @@ Replay analytics when appropriate, but do not resend historical receipts automat
 ## 14. Database replication
 
 Replication keeps copies of database data. It can improve resilience or serve reads, but asynchronous copies may lag. A replica is not the same as an independent backup.
+
+### Prerequisites
+
+Write acknowledgment, primary and read replica
+
+### Learning goals
+
+- Explain replication lag
+
+- route read-after-write
+
+- distinguish replica and backup
 
 ### Everyday explanation
 
@@ -1775,29 +2359,61 @@ Correct option: 2. Consistency and recovery guarantees depend on replication and
 
 ### Animation transcript
 
-**Write at the owner**
+**Build an intuition**
 
-A booking write reaches the current primary. Its acknowledgment policy determines what the application can assume about durability and replication at that moment.
+Let us understand database replication. Two students copy notes from one teacher. If copying takes time, one notebook may lack the last sentence. If the teacher accidentally deletes an important page and the students copy that deletion, every notebook can lose it. You still need a recoverable older copy. Replication keeps copies of database data. It can improve resilience or serve reads, but asynchronous copies may lag. A replica is not the same as an independent backup.
 
-**Ship changes**
+**Follow the normal path**
 
-Changes travel to replicas. With asynchronous replication, the primary can reply before all copies have applied the latest write.
+Follow the normal path. A booking write reaches the current primary. Its acknowledgment policy determines what the application can assume about durability and replication at that moment. Changes travel to replicas. With asynchronous replication, the primary can reply before all copies have applied the latest write. SeatSpot may serve public catalog reads from replicas while routing authoritative reservations to the write owner. A user reading immediately after a write must not be surprised by a stale confirmation state.
 
-**Read a lagging copy**
+**Predict a failure**
 
-A confirmation read reaches Replica A before the booking arrives there. The user may see an older state even though the primary accepted the write.
+Now change one condition. A confirmation read reaches Replica A before the booking arrives there. The user may see an older state even though the primary accepted the write. A common misunderstanding is this: Replication protects against every accidental deletion. A replica can copy the same deletion or corruption. Keep restore-tested recovery points separately. Think about this. The primary confirms at 12:00:00; the replica applies at 12:00:02. What can a read at 12:00:01 show? Pause the video and make your prediction. The earlier state, even though the primary accepted the write. Read-your-writes requires a suitable authoritative or documented consistency path.
 
-**Choose a consistent path**
+**Work through an example**
 
-Use the primary or an explicitly supported consistency mechanism for confirmation. Public catalog reads can have a different staleness allowance.
+Let us reason with a concrete example. The primary confirms a booking at 12:00:00. A read replica applies it at 12:00:02. A read at 12:00:01 may see the earlier state. Two seconds here is fictional teaching lag, not a product guarantee. Read the confirmation from an authoritative path or implement a documented consistency mechanism. Do not tell the user their purchase disappeared simply because a replica is behind. These figures are teaching examples, not production guarantees.
 
-**Coordinate failover**
+**Choose and apply**
 
-If the primary fails, promotion needs a clear election or orchestration process and fencing. Avoid letting an isolated old writer accept conflicting new changes.
+Turn the idea into a design decision. Use the primary or an explicitly supported consistency mechanism for confirmation. Public catalog reads can have a different staleness allowance. If the primary fails, promotion needs a clear election or orchestration process and fencing. Avoid letting an isolated old writer accept conflicting new changes. When you try the practice task, look for this result. Lag is different from a failed purchase; a replica is not an independent historical backup.
 
-**Keep recovery separate**
+**Explain it back**
 
-Replication also copies many mistakes. Maintain tested backups and recovery points independently rather than counting live copies as protection against every kind of data loss.
+Check your understanding. Replication also copies many mistakes. Maintain tested backups and recovery points independently rather than counting live copies as protection against every kind of data loss. Here is a challenge. Why can a replica show an order as missing just after checkout? Pause before the answer. Asynchronous replication may not have applied the write yet. Route that confirmation to an appropriate authoritative path or use a supported read-your-writes mechanism. Distinguish lag from a real failed write. For an interview, compare acknowledgment, read consistency and failover fencing. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+The primary confirms at 12:00:00; the replica applies at 12:00:02. What can a read at 12:00:01 show?
+
+The earlier state, even though the primary accepted the write. Read-your-writes requires a suitable authoritative or documented consistency path.
+
+### Correct a misconception
+
+Replication protects against every accidental deletion.
+
+A replica can copy the same deletion or corruption. Keep restore-tested recovery points separately.
+
+### Practical task
+
+Draw the write/read timeline
+
+- Mark primary acknowledgment at second zero.
+
+- Mark replica application at second two.
+
+- Place a confirmation read at second one and choose a safer read path.
+
+Expected outcome: Lag is different from a failed purchase; a replica is not an independent historical backup.
+
+### Choose interview depth
+
+**Foundation:** Explain copying changes and temporary lag.
+
+**Practical:** Compare acknowledgment, read consistency and failover fencing.
+
+**Advanced:** Defend recent-write loss windows, promotion safety and measured recovery procedures.
 
 ### Official references
 
@@ -1807,6 +2423,18 @@ Replication also copies many mistakes. Maintain tested backups and recovery poin
 ## 15. Database sharding
 
 Sharding divides records across separate database shards, often using a key. Each record needs a known home. It can spread storage and write load, but cross-shard operations and moving data become harder.
+
+### Prerequisites
+
+Record key, query pattern and database owner
+
+### Learning goals
+
+- Choose a shard key from access
+
+- explain hot tenants
+
+- plan data movement
 
 ### Everyday explanation
 
@@ -1894,29 +2522,61 @@ Correct option: 2. Data volume, request frequency and coordination are distinct 
 
 ### Animation transcript
 
-**Identify the record home**
+**Build an intuition**
 
-A request carries a tenant or entity key. The routing rule maps that key to an authoritative shard before data is read or written.
+Let us understand database sharding. A library splits books across buildings by a catalog rule. The catalog must tell you which building owns a book. A rule that sends every popular book to the same building still creates a queue. Finding books across all buildings is more work than visiting one shelf. Sharding divides records across separate database shards, often using a key. Each record needs a known home. It can spread storage and write load, but cross-shard operations and moving data become harder.
 
-**Distribute independent records**
+**Follow the normal path**
 
-Different record groups live on different database shards. This can spread storage and write work when the groups are actually independent enough.
+Follow the normal path. A request carries a tenant or entity key. The routing rule maps that key to an authoritative shard before data is read or written. Different record groups live on different database shards. This can spread storage and write work when the groups are actually independent enough. SeatSpot may eventually outgrow one database write/storage boundary. Sharding could place different tenants or events on different shards, but one extremely popular event can still create a hot shard.
 
-**Find a hot key**
+**Predict a failure**
 
-One popular event can overload its shard even when every shard has the same row count. Workload distribution matters more than counting keys.
+Now change one condition. One popular event can overload its shard even when every shard has the same row count. Workload distribution matters more than counting keys. A common misunderstanding is this: Hashing guarantees equal load. It distributes keys; uneven popularity and request cost can still make a hot shard. Think about this. Four shards have similar row counts, but one tenant sends half the traffic. Is the workload balanced? Pause the video and make your prediction. Not necessarily. Even row distribution is different from even traffic. A hot tenant may still dominate one shard.
 
-**Examine a global query**
+**Work through an example**
 
-A query across all events may contact every shard and merge results. Cross-shard joins, transactions and uniqueness require deliberate support or redesign.
+Let us reason with a concrete example. Ten tenants each produce similar load except one tenant generates half the total. Hashing tenant IDs across four shards can still put half the traffic on the hot tenant shard. Even key counts do not mean even traffic. Consider splitting that tenant workload using a suitable finer key, isolation or an alternative ownership model. Test query patterns and transaction boundaries before committing. These figures are teaching examples, not production guarantees.
 
-**Move ownership safely**
+**Choose and apply**
 
-Rebalancing needs copying, verification, a write/cutover policy and an updated routing map. Changing a modulo number does not move existing records.
+Turn the idea into a design decision. A query across all events may contact every shard and merge results. Cross-shard joins, transactions and uniqueness require deliberate support or redesign. Rebalancing needs copying, verification, a write/cutover policy and an updated routing map. Changing a modulo number does not move existing records. When you try the practice task, look for this result. A routing function alone does not migrate records, rebalance a hot tenant or preserve cross-shard transactions.
 
-**Choose the simplest fit**
+**Explain it back**
 
-Shard only when requirements and measurements justify the coordination cost. A suitable index or larger database may solve the current problem with much less complexity.
+Check your understanding. Shard only when requirements and measurements justify the coordination cost. A suitable index or larger database may solve the current problem with much less complexity. Here is a challenge. One event causes 70% of booking writes and eventId is the shard key. Does adding shards fix it? Pause before the answer. Not automatically. That event remains on one shard. Revisit seat ownership/partitioning and concurrency rules, or provide dedicated capacity, without weakening atomic reservation correctness. For an interview, choose a key and discuss joins, transactions and hot tenants. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Four shards have similar row counts, but one tenant sends half the traffic. Is the workload balanced?
+
+Not necessarily. Even row distribution is different from even traffic. A hot tenant may still dominate one shard.
+
+### Correct a misconception
+
+Hashing guarantees equal load.
+
+It distributes keys; uneven popularity and request cost can still make a hot shard.
+
+### Practical task
+
+Map tenants to owners
+
+- Draw four shards and route several tenant IDs.
+
+- Give one tenant half the requests.
+
+- Explain how a new shard changes routing and migration ownership.
+
+Expected outcome: A routing function alone does not migrate records, rebalance a hot tenant or preserve cross-shard transactions.
+
+### Choose interview depth
+
+**Foundation:** Explain why a record needs one known shard.
+
+**Practical:** Choose a key and discuss joins, transactions and hot tenants.
+
+**Advanced:** Defend ownership transfer, routing versions, rebalancing and simpler alternatives.
 
 ### Official references
 
@@ -1926,6 +2586,18 @@ Shard only when requirements and measurements justify the coordination cost. A s
 ## 16. Data partitioning
 
 Partitioning splits a dataset into manageable parts using rules such as date ranges or key hashes. Table partitions can remain inside one database; partitioning does not automatically mean physical sharding across servers.
+
+### Prerequisites
+
+Table, predicate and query plan
+
+### Learning goals
+
+- Explain pruning
+
+- separate partitions and shards
+
+- plan retention
 
 ### Everyday explanation
 
@@ -2016,29 +2688,61 @@ Correct option: 1. Useful pruning depends on predicates and the chosen partition
 
 ### Animation transcript
 
-**Define a partition rule**
+**Build an intuition**
 
-History rows are grouped by date. This organization can exist inside one database and should not be confused with distributing ownership across independent shards.
+Let us understand data partitioning. You organize school papers into folders by month. Finding November work becomes easier if you open only the November folder. Putting every folder on the same desk does not create more desks. Likewise, smaller table parts can improve maintenance or pruning without adding another database machine. Partitioning splits a dataset into manageable parts using rules such as date ranges or key hashes. Table partitions can remain inside one database; partitioning does not automatically mean physical sharding across servers.
 
-**Create ranges**
+**Follow the normal path**
 
-Each month has a defined range with explicit boundaries. Future data needs a matching partition or a deliberately configured default behavior.
+Follow the normal path. History rows are grouped by date. This organization can exist inside one database and should not be confused with distributing ownership across independent shards. Each month has a defined range with explicit boundaries. Future data needs a matching partition or a deliberately configured default behavior. SeatSpot stores an increasing audit/history table. Date partitions can make retention and time-bounded queries easier while keeping current reservation transactions on an appropriate authoritative path.
 
-**Ask for November**
+**Predict a failure**
 
-A date-bounded query reaches the planner. The engine can eliminate irrelevant ranges if its rules and the query expression permit partition pruning.
+Now change one condition. A date-bounded query reaches the planner. The engine can eliminate irrelevant ranges if its rules and the query expression permit partition pruning. A common misunderstanding is this: Table partitioning automatically scales across machines. Partitions can remain inside the same database on the same machine. Think about this. A monthly partitioned table is queried without a date predicate. Must it read only one month? Pause the video and make your prediction. No. Without a usable condition the database may inspect many partitions. Check the query plan instead of assuming pruning.
 
-**Read the useful part**
+**Work through an example**
 
-The November partition supplies the requested history. An appropriate index and query plan can still be necessary inside that partition.
+Let us reason with a concrete example. History contains one million rows per month over two years. A query requests one month. With useful pruning it may inspect a relevant partition rather than all 24 million rows, but actual I/O depends on predicates, indexes and plans. Use EXPLAIN in a test environment. Confirm pruning and retention behavior instead of assuming a partitioned table is always faster. These figures are teaching examples, not production guarantees.
 
-**Maintain the lifecycle**
+**Choose and apply**
 
-Retention can operate on old partitions, but removal is a data-policy decision. Verify dependencies, recovery requirements and correct boundaries before destructive maintenance.
+Turn the idea into a design decision. The November partition supplies the requested history. An appropriate index and query plan can still be necessary inside that partition. Retention can operate on old partitions, but removal is a data-policy decision. Verify dependencies, recovery requirements and correct boundaries before destructive maintenance. When you try the practice task, look for this result. Partitioning can aid pruning and lifecycle management without adding another database server.
 
-**Know the boundary**
+**Explain it back**
 
-A query without the partition key may still inspect many parts. More partitions do not automatically add machines, guarantee speed or fix one hot-row lock.
+Check your understanding. A query without the partition key may still inspect many parts. More partitions do not automatically add machines, guarantee speed or fix one hot-row lock. Here is a challenge. A table is partitioned by date, but a query filters only customer email. Must it be fast? Pause before the answer. No. The engine may inspect many partitions without a useful date restriction. Examine the actual plan and indexing/access pattern rather than assuming partitioning alone helps. For an interview, discuss partition keys, pruning, indexes and retention. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A monthly partitioned table is queried without a date predicate. Must it read only one month?
+
+No. Without a usable condition the database may inspect many partitions. Check the query plan instead of assuming pruning.
+
+### Correct a misconception
+
+Table partitioning automatically scales across machines.
+
+Partitions can remain inside the same database on the same machine.
+
+### Practical task
+
+Work a monthly history query
+
+- Draw 24 monthly partitions with one million rows each.
+
+- Write a predicate for one month and identify removable partitions.
+
+- Remove the predicate and compare the possible work.
+
+Expected outcome: Partitioning can aid pruning and lifecycle management without adding another database server.
+
+### Choose interview depth
+
+**Foundation:** Explain folders within a table.
+
+**Practical:** Discuss partition keys, pruning, indexes and retention.
+
+**Advanced:** Defend uniqueness constraints, planning overhead and partition lifecycle automation.
 
 ### Official references
 
@@ -2050,6 +2754,18 @@ A query without the partition key may still inspect many parts. More partitions 
 ## 17. Microservices
 
 Microservices split a system into independently deployable business services. The useful boundary is ownership of a capability and its data, not an arbitrary number of small functions or servers.
+
+### Prerequisites
+
+Business invariant, transaction and network call
+
+### Learning goals
+
+- Choose business ownership
+
+- compare synchronous/asynchronous work
+
+- justify a service boundary
 
 ### Everyday explanation
 
@@ -2139,29 +2855,61 @@ Correct option: 2. Autonomy must justify the added network and operational compl
 
 ### Animation transcript
 
-**Find the capabilities**
+**Build an intuition**
 
-Name business responsibilities before drawing services. Catalog descriptions and authoritative seat reservations have different ownership and correctness requirements.
+Let us understand microservices. A school has a library team, accounts team and transport team. Each owns a different responsibility and communicates through clear requests. If every tiny task needs a meeting with every team, work becomes slower. More teams are helpful only when their boundaries reduce coordination rather than create it. Microservices split a system into independently deployable business services. The useful boundary is ownership of a capability and its data, not an arbitrary number of small functions or servers.
 
-**Own the data**
+**Follow the normal path**
 
-Each capability owns its protected state and exposes contracts. Giving every service write access to every table defeats much of the intended independence.
+Follow the normal path. Name business responsibilities before drawing services. Catalog descriptions and authoritative seat reservations have different ownership and correctness requirements. Each capability owns its protected state and exposes contracts. Giving every service write access to every table defeats much of the intended independence. SeatSpot may separate booking, catalog and notifications when team ownership, scaling or deployment needs justify it. A small team can often start with a modular monolith and preserve those boundaries without network overhead.
 
-**Cross a network boundary**
+**Predict a failure**
 
-The booking workflow contacts payments. That call can time out or succeed remotely while its response is lost; it is not a local transaction.
+Now change one condition. The booking workflow contacts payments. That call can time out or succeed remotely while its response is lost; it is not a local transaction. A common misunderstanding is this: Every function should become a microservice. Fine-grained network boundaries can add latency, coordination and partial failures without useful autonomy. Think about this. Catalog, booking and payment must deploy together after every change. Are they operationally independent? Pause the video and make your prediction. Probably not yet. Inspect shared schemas and contracts before calling separate processes independent services.
 
-**Decouple optional work**
+**Work through an example**
 
-Confirmation can publish notification work after reliable business-state coordination. A slow email provider need not occupy the booking request indefinitely.
+Let us reason with a concrete example. A confirmation requires catalog lookup, seat reservation, payment and notification. Putting all four behind sequential network calls increases latency and failure combinations. Notification can be asynchronous; reservation/payment need an explicit state machine and reconciliation. Start with the required invariant and workflow. Separate a capability only when the autonomy benefit outweighs the distributed coordination cost. These figures are teaching examples, not production guarantees.
 
-**Deploy compatibly**
+**Choose and apply**
 
-Old and new callers may coexist. Test contract compatibility and observe version-specific errors instead of requiring every service to deploy in lockstep.
+Turn the idea into a design decision. Confirmation can publish notification work after reliable business-state coordination. A slow email provider need not occupy the booking request indefinitely. Old and new callers may coexist. Test contract compatibility and observe version-specific errors instead of requiring every service to deploy in lockstep. When you try the practice task, look for this result. Separate deployment earns its complexity only when ownership and autonomy are useful.
 
-**Justify the complexity**
+**Explain it back**
 
-For a small team, a modular monolith may satisfy the same domain boundaries with fewer moving parts. Choose services from requirements rather than fashion.
+Check your understanding. For a small team, a modular monolith may satisfy the same domain boundaries with fewer moving parts. Choose services from requirements rather than fashion. Here is a challenge. A two-person team has low traffic and no independent deployment needs. Must it use microservices? Pause before the answer. No. A modular monolith can keep clear domains with simpler transactions and operations. Revisit extraction when measured scaling, ownership or release constraints justify it. For an interview, discuss contracts, state machines and asynchronous notification. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Catalog, booking and payment must deploy together after every change. Are they operationally independent?
+
+Probably not yet. Inspect shared schemas and contracts before calling separate processes independent services.
+
+### Correct a misconception
+
+Every function should become a microservice.
+
+Fine-grained network boundaries can add latency, coordination and partial failures without useful autonomy.
+
+### Practical task
+
+Draw a booking ownership map
+
+- Assign catalog, booking, payment and notification ownership.
+
+- Mark which operations must protect seat allocation.
+
+- Compare a modular monolith with extracting one justified capability.
+
+Expected outcome: Separate deployment earns its complexity only when ownership and autonomy are useful.
+
+### Choose interview depth
+
+**Foundation:** Describe one capability and its owner.
+
+**Practical:** Discuss contracts, state machines and asynchronous notification.
+
+**Advanced:** Defend boundary choices, cross-service invariants, deployment independence and operating cost.
 
 ### Official references
 
@@ -2171,6 +2919,18 @@ For a small team, a modular monolith may satisfy the same domain boundaries with
 ## 18. Service discovery
 
 Service discovery maps a stable service name to current usable destinations. Instances change as they deploy, fail or scale. Discovery finds candidates; routing and health policies decide how requests reach them.
+
+### Prerequisites
+
+Service name, endpoint and readiness
+
+### Learning goals
+
+- Resolve a stable name
+
+- distinguish discovery and routing
+
+- handle stale endpoints
 
 ### Everyday explanation
 
@@ -2258,29 +3018,61 @@ Correct option: 2. Discovery does not replace health, network checks or authoriz
 
 ### Animation transcript
 
-**Ask for a stable name**
+**Build an intuition**
 
-The caller requests the payment capability by service name instead of storing an individual pod address that may disappear during the next deployment.
+Let us understand service discovery. A school directory lists which rooms currently host each club. Students ask for the chess club rather than memorizing an old room number. The directory can become stale, so someone must update it and decide what happens when a listed room is closed. Service discovery maps a stable service name to current usable destinations. Instances change as they deploy, fail or scale. Discovery finds candidates; routing and health policies decide how requests reach them.
 
-**Maintain endpoints**
+**Follow the normal path**
 
-The platform or registry tracks service destinations and readiness. Registration and removal need reliable ownership and observable convergence.
+Follow the normal path. The caller requests the payment capability by service name instead of storing an individual pod address that may disappear during the next deployment. The platform or registry tracks service destinations and readiness. Registration and removal need reliable ownership and observable convergence. SeatSpot booking replicas should find the payment service even when its pod addresses change. Hard-coded ephemeral IPs become stale during routine operations.
 
-**Choose a destination**
+**Predict a failure**
 
-Client or server routing selects a usable endpoint. Discovery and load balancing cooperate, but they describe different responsibilities.
+Now change one condition. Client or server routing selects a usable endpoint. Discovery and load balancing cooperate, but they describe different responsibilities. A common misunderstanding is this: Finding an endpoint authorizes access to it. Discovery provides destinations, not identity or business permissions. Think about this. DNS resolves the payment service. Does that prove every connection will succeed? Pause the video and make your prediction. No. Name resolution can succeed while endpoints are unhealthy, changing or unreachable. Timeouts and failure handling still apply.
 
-**Replace an instance**
+**Work through an example**
 
-An old instance becomes unready and a replacement joins. Cached addresses and existing connections can outlive the registry update.
+Let us reason with a concrete example. Three payment pods are replaced during a rolling deployment. Their individual IPs may change while a Kubernetes Service name remains stable. Endpoint/readiness propagation and existing connections still create a transition interval. Use the platform service abstraction and test replacement with live requests. Do not promise instantaneous convergence from a stable name. These figures are teaching examples, not production guarantees.
 
-**Retry within a budget**
+**Choose and apply**
 
-A failed connection may use a safe bounded retry against current membership. Do not hide repeated errors with unlimited retries.
+Turn the idea into a design decision. An old instance becomes unready and a replacement joins. Cached addresses and existing connections can outlive the registry update. A failed connection may use a safe bounded retry against current membership. Do not hide repeated errors with unlimited retries. When you try the practice task, look for this result. Stable naming helps callers, but does not imply instantaneous endpoint convergence.
 
-**Verify service identity**
+**Explain it back**
 
-Knowing an address does not authorize a request. Validate the relevant identity, transport security and resource permissions at the appropriate boundaries.
+Check your understanding. Knowing an address does not authorize a request. Validate the relevant identity, transport security and resource permissions at the appropriate boundaries. Here is a challenge. DNS resolves the service but requests fail. What do you check next? Pause before the answer. Check ready endpoints, target port, network reachability/policy, TLS identity and the dependency itself. Compare resolution with an actual bounded request and inspect traces. For an interview, compare client-side selection with a stable service/proxy address. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+DNS resolves the payment service. Does that prove every connection will succeed?
+
+No. Name resolution can succeed while endpoints are unhealthy, changing or unreachable. Timeouts and failure handling still apply.
+
+### Correct a misconception
+
+Finding an endpoint authorizes access to it.
+
+Discovery provides destinations, not identity or business permissions.
+
+### Practical task
+
+Follow a rolling endpoint replacement
+
+- Write a stable service name and three changing instance addresses.
+
+- Replace one instance and mark propagation/readiness delay.
+
+- Trace an existing connection and a newly resolved connection separately.
+
+Expected outcome: Stable naming helps callers, but does not imply instantaneous endpoint convergence.
+
+### Choose interview depth
+
+**Foundation:** Explain a stable name with changing instances.
+
+**Practical:** Compare client-side selection with a stable service/proxy address.
+
+**Advanced:** Discuss stale caches, connection reuse, registry security and convergence evidence.
 
 ### Official references
 
@@ -2292,6 +3084,18 @@ Knowing an address does not authorize a request. Validate the relevant identity,
 ## 19. Reverse proxy
 
 A reverse proxy receives requests on behalf of backend servers and forwards them. It can terminate TLS, route paths or hosts and manage forwarding behavior. It is different from a forward proxy used on behalf of clients.
+
+### Prerequisites
+
+HTTP request, backend and forwarded header
+
+### Learning goals
+
+- Trace proxy forwarding
+
+- align limits/timeouts
+
+- define trusted headers
 
 ### Everyday explanation
 
@@ -2385,29 +3189,61 @@ Correct option: 2. Untrusted clients can forge ordinary HTTP headers.
 
 ### Animation transcript
 
-**Receive the public request**
+**Build an intuition**
 
-The browser talks to one public address. The reverse proxy represents backend servers rather than acting as the browser own outbound proxy.
+Let us understand reverse proxy. A reception desk receives mail for several offices and forwards each envelope internally. Outside visitors know the public address rather than every room. The desk must preserve important information and must not believe a forged note saying that an envelope came from the principal. A reverse proxy receives requests on behalf of backend servers and forwards them. It can terminate TLS, route paths or hosts and manage forwarding behavior. It is different from a forward proxy used on behalf of clients.
 
-**Apply forwarding rules**
+**Follow the normal path**
 
-Host and path rules select a backend. Request size, deadlines, TLS termination and supported protocols must fit the actual workload.
+Follow the normal path. The browser talks to one public address. The reverse proxy represents backend servers rather than acting as the browser own outbound proxy. Host and path rules select a backend. Request size, deadlines, TLS termination and supported protocols must fit the actual workload. SeatSpot can expose one HTTPS hostname while forwarding application and static paths to different backends. This central entry layer needs deliberate timeout, buffering and trusted-header behavior.
 
-**Forward the request**
+**Predict a failure**
 
-API traffic reaches the API backend and asset traffic can reach another backend. A reverse proxy can also perform load-balancing duties.
+Now change one condition. API traffic reaches the API backend and asset traffic can reach another backend. A reverse proxy can also perform load-balancing duties. A common misunderstanding is this: A reverse proxy and load balancer cannot be the same component. These are roles that can overlap in one product. Think about this. A client sends X-Forwarded-For claiming to be an administrator. Should your backend trust it? Pause the video and make your prediction. Only through a verified proxy chain with controlled header rewriting. A client-supplied header is not trusted identity.
 
-**Preserve trusted context**
+**Work through an example**
 
-Forward useful request context, but do not accept forged identity or client-IP headers from arbitrary clients as trusted facts.
+Let us reason with a concrete example. A browser uploads a large image through a proxy to the application. The application body limit does not help if the proxy rejects it first; conversely, a permissive proxy does not bypass the application validation. The smallest relevant limit wins. Align intended limits and return understandable errors. For streaming, inspect buffering and timeouts along the full path. These figures are teaching examples, not production guarantees.
 
-**Handle streaming deliberately**
+**Choose and apply**
 
-Buffering and idle/read timeouts can change what a browser sees. Test streams and long-lived connections end to end instead of assuming default behavior fits.
+Turn the idea into a design decision. Forward useful request context, but do not accept forged identity or client-IP headers from arbitrary clients as trusted facts. Buffering and idle/read timeouts can change what a browser sees. Test streams and long-lived connections end to end instead of assuming default behavior fits. When you try the practice task, look for this result. The narrowest relevant limit can reject the request; streaming needs deliberate buffering and timeout choices.
 
-**Protect the proxy tier**
+**Explain it back**
 
-The public entry point needs its own capacity, redundancy and monitoring. Backend replicas do not help if the only proxy is unavailable.
+Check your understanding. The public entry point needs its own capacity, redundancy and monitoring. Backend replicas do not help if the only proxy is unavailable. Here is a challenge. An API stream produces tokens but the browser sees them all at once. What might be happening? Pause before the answer. A proxy/CDN may buffer the response. Verify streaming support, flush behavior, timeout and cache/compression policies across the actual path before changing application logic blindly. For an interview, discuss TLS termination, headers, limits and connection draining. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A client sends X-Forwarded-For claiming to be an administrator. Should your backend trust it?
+
+Only through a verified proxy chain with controlled header rewriting. A client-supplied header is not trusted identity.
+
+### Correct a misconception
+
+A reverse proxy and load balancer cannot be the same component.
+
+These are roles that can overlap in one product.
+
+### Practical task
+
+Inspect a proxy path
+
+- Draw browser → proxy → application.
+
+- Put body limits and timeouts at both boundaries.
+
+- Explain what changes for a long-lived stream or WebSocket.
+
+Expected outcome: The narrowest relevant limit can reject the request; streaming needs deliberate buffering and timeout choices.
+
+### Choose interview depth
+
+**Foundation:** Explain forwarding on behalf of servers.
+
+**Practical:** Discuss TLS termination, headers, limits and connection draining.
+
+**Advanced:** Defend trust boundaries, streaming behavior, redundancy and failure observability.
 
 ### Official references
 
@@ -2417,6 +3253,18 @@ The public entry point needs its own capacity, redundancy and monitoring. Backen
 ## 20. DNS management
 
 DNS translates names into records such as addresses. Managing DNS includes authoritative records, TTL, delegation and safe changes. It is not an HTTP redirect and does not instantly move every existing connection.
+
+### Prerequisites
+
+Domain name, resolver and cached record
+
+### Learning goals
+
+- Separate DNS and redirects
+
+- reason about old TTLs
+
+- validate changes
 
 ### Everyday explanation
 
@@ -2506,29 +3354,61 @@ Correct option: 2. Previously cached answers can remain valid according to their
 
 ### Animation transcript
 
-**Look up the name**
+**Build an intuition**
 
-The browser or operating system asks a resolver for the hostname. Existing local or resolver caches may already contain an answer.
+Let us understand dns management. A phone book maps a name to a number. People who wrote down yesterday number may keep using it until they check again. Changing the book cannot hang up every current call. DNS caches and existing network connections behave similarly. DNS translates names into records such as addresses. Managing DNS includes authoritative records, TTL, delegation and safe changes. It is not an HTTP redirect and does not instantly move every existing connection.
 
-**Query authority if needed**
+**Follow the normal path**
 
-A resolver without a usable cached answer follows DNS resolution to the authoritative records. Record type and delegation must be configured correctly.
+Follow the normal path. The browser or operating system asks a resolver for the hostname. Existing local or resolver caches may already contain an answer. A resolver without a usable cached answer follows DNS resolution to the authoritative records. Record type and delegation must be configured correctly. SeatSpot changes an application endpoint or validates a domain. A safe release must account for record type, current TTL, certificate/host configuration and rollback rather than assuming Save means every user changed immediately.
 
-**Use a cached answer**
+**Predict a failure**
 
-A client may connect to the old endpoint while its answer is still valid. Changing the authoritative record does not instantly erase that cached answer.
+Now change one condition. A client may connect to the old endpoint while its answer is still valid. Changing the authoritative record does not instantly erase that cached answer. A common misunderstanding is this: DNS is an HTTP redirect. DNS provides records before the HTTP connection; a redirect is a later HTTP response. Think about this. A resolver cached a one-hour answer ten minutes ago. Does lowering TTL now erase its cache? Pause the video and make your prediction. No. That cached answer can remain until its old expiry. The shorter TTL applies to answers fetched later.
 
-**Fetch the new answer**
+**Work through an example**
 
-Later lookups can obtain the new destination. Clients and resolvers change at different times, so old and new endpoints may both receive traffic.
+Let us reason with a concrete example. A record was cached at 10:00 with a 3,600 second TTL. You lower TTL at 10:10. That existing cache may retain the old answer until about 11:00. The new shorter TTL affects later fetched answers, not already cached copies. Reduce TTL in advance when appropriate, prepare both endpoints and monitor the transition. Keep domain ownership, DNS and hosting configuration separate in your explanation. These figures are teaching examples, not production guarantees.
 
-**Verify beyond DNS**
+**Choose and apply**
 
-The new address also needs the correct certificate, host routing and healthy application. Successful resolution alone does not prove the website works.
+Turn the idea into a design decision. Later lookups can obtain the new destination. Clients and resolvers change at different times, so old and new endpoints may both receive traffic. The new address also needs the correct certificate, host routing and healthy application. Successful resolution alone does not prove the website works. When you try the practice task, look for this result. The old cached answer can remain until about 11:00; existing connections are a separate issue.
 
-**Plan safe overlap**
+**Explain it back**
 
-Keep a rollback path and an appropriate overlap interval. Lower TTL in advance when useful; do not expect a last-second TTL edit to end existing connections.
+Check your understanding. Keep a rollback path and an appropriate overlap interval. Lower TTL in advance when useful; do not expect a last-second TTL edit to end existing connections. Here is a challenge. Why do two users reach different servers after a DNS update? Pause before the answer. Resolvers fetched answers at different times and may retain previous TTLs. Clients may also reuse existing connections. Inspect records and actual request routing before concluding the update failed. For an interview, discuss A/AAAA/CNAME/TXT, delegation and TTL planning. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A resolver cached a one-hour answer ten minutes ago. Does lowering TTL now erase its cache?
+
+No. That cached answer can remain until its old expiry. The shorter TTL applies to answers fetched later.
+
+### Correct a misconception
+
+DNS is an HTTP redirect.
+
+DNS provides records before the HTTP connection; a redirect is a later HTTP response.
+
+### Practical task
+
+Build a DNS migration timeline
+
+- Place a 3,600-second cached answer at 10:00.
+
+- Lower the authoritative TTL at 10:10.
+
+- Mark the old answer’s possible expiry and keep both endpoints safe.
+
+Expected outcome: The old cached answer can remain until about 11:00; existing connections are a separate issue.
+
+### Choose interview depth
+
+**Foundation:** Explain authoritative and recursive resolution.
+
+**Practical:** Discuss A/AAAA/CNAME/TXT, delegation and TTL planning.
+
+**Advanced:** Defend migration overlap, rollback, resolver differences and actual TLS/HTTP checks.
 
 ### Official references
 
@@ -2540,6 +3420,18 @@ Keep a rollback path and an appropriate overlap interval. Lower TTL in advance w
 ## 21. Disaster recovery
 
 Disaster recovery is a tested plan for restoring required service and data after a serious disruption. Define the acceptable recovery time and acceptable data-loss window, then prove your procedure can meet them.
+
+### Prerequisites
+
+Backup, restore and business operation
+
+### Learning goals
+
+- Define RTO and RPO
+
+- find missing recovery dependencies
+
+- measure a restore
 
 ### Everyday explanation
 
@@ -2630,29 +3522,61 @@ Correct option: 1. RTO concerns recovery duration; RPO concerns how far back rec
 
 ### Animation transcript
 
-**Set recovery objectives**
+**Build an intuition**
 
-Define how long the required user operation may be unavailable and how much recent data loss is acceptable. These are explicit business objectives, not product defaults.
+Let us understand disaster recovery. A student keeps a second copy of schoolwork in another safe place and practises opening it on a different computer. Knowing a copy exists is not enough if it is unreadable, its password is lost or it takes days to find. Recovery is the complete ability to resume useful work. Disaster recovery is a tested plan for restoring required service and data after a serious disruption. Define the acceptable recovery time and acceptable data-loss window, then prove your procedure can meet them.
 
-**Preserve recoverable state**
+**Follow the normal path**
 
-Capture suitable backups and change logs with recoverable keys and configuration. Live replication alone may copy deletion or corruption to every current replica.
+Follow the normal path. Define how long the required user operation may be unavailable and how much recent data loss is acceptable. These are explicit business objectives, not product defaults. Capture suitable backups and change logs with recoverable keys and configuration. Live replication alone may copy deletion or corruption to every current replica. SeatSpot needs a response to regional loss, accidental deletion or corruption. Application replicas alone do not restore deleted orders or missing secrets/configuration.
 
-**Lose production**
+**Predict a failure**
 
-A serious failure interrupts the production environment. Recovery needs an environment, permissions and an executable runbook, not merely a promise that a backup exists.
+Now change one condition. A serious failure interrupts the production environment. Recovery needs an environment, permissions and an executable runbook, not merely a promise that a backup exists. A common misunderstanding is this: Replication replaces recovery backups. Replication may reproduce corruption or deletion. Independent recovery points solve a different problem. Think about this. Hourly-only backups are available. Do they satisfy a 15-minute recovery-point objective by themselves? Pause the video and make your prediction. No. The missing-data window can approach an hour. Use a suitable capture/recovery strategy and prove it in a drill.
 
-**Restore in isolation**
+**Work through an example**
 
-Rebuild required infrastructure and restore data in a safe environment. Include secrets, certificates, queues and other dependencies required for actual user workflows.
+Let us reason with a concrete example. The business requires an illustrative RTO of 60 minutes and RPO of 15 minutes. Backups run every hour. Hourly-only backups can leave nearly an hour of missing data, exceeding a 15-minute RPO. A 60-minute RTO also includes provisioning, restore, validation and traffic recovery, not just file download time. Select a suitable backup/log capture strategy and rehearse the whole path. Targets are objectives; measured drill results establish whether the current plan meets them. These figures are teaching examples, not production guarantees.
 
-**Validate before routing**
+**Choose and apply**
 
-Query restored data and run correctness checks. A process reporting restore complete does not prove that bookings, ownership and payment reconciliation are usable.
+Turn the idea into a design decision. Rebuild required infrastructure and restore data in a safe environment. Include secrets, certificates, queues and other dependencies required for actual user workflows. Query restored data and run correctness checks. A process reporting restore complete does not prove that bookings, ownership and payment reconciliation are usable. When you try the practice task, look for this result. An existing backup is not proof of a usable recovery plan; measured restoration is the evidence.
 
-**Measure and improve**
+**Explain it back**
 
-Restore traffic safely and compare measured end-to-end recovery and data loss with the objectives. Record gaps, improve the runbook and repeat the drill.
+Check your understanding. Restore traffic safely and compare measured end-to-end recovery and data loss with the objectives. Record gaps, improve the runbook and repeat the drill. Here is a challenge. A restore finishes in 40 minutes but application validation and routing take another 35. Does it meet a 60-minute RTO? Pause before the answer. No: the measured end-to-end recovery is 75 minutes. Improve or revise the plan based on business requirements and repeat the drill. For an interview, choose a recovery strategy and measure the complete drill. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Hourly-only backups are available. Do they satisfy a 15-minute recovery-point objective by themselves?
+
+No. The missing-data window can approach an hour. Use a suitable capture/recovery strategy and prove it in a drill.
+
+### Correct a misconception
+
+Replication replaces recovery backups.
+
+Replication may reproduce corruption or deletion. Independent recovery points solve a different problem.
+
+### Practical task
+
+Plan a recovery drill on paper
+
+- Set RTO to 60 minutes and RPO to 15 minutes.
+
+- Budget provisioning, data restore, validation and traffic recovery.
+
+- List credentials, dependencies and people needed to finish.
+
+Expected outcome: An existing backup is not proof of a usable recovery plan; measured restoration is the evidence.
+
+### Choose interview depth
+
+**Foundation:** Explain acceptable downtime and data-loss windows.
+
+**Practical:** Choose a recovery strategy and measure the complete drill.
+
+**Advanced:** Defend recovery/failback dependencies, secret access and data-integrity evidence.
 
 ### Official references
 
@@ -2664,6 +3588,18 @@ Restore traffic safely and compare measured end-to-end recovery and data loss wi
 ## 22. Zero-downtime deployments
 
 A zero-downtime deployment aims to release a change without interrupting required user operations. Rolling or blue-green rollout helps, but database compatibility, readiness and connection draining are part of the design.
+
+### Prerequisites
+
+Readiness, old/new versions and schema compatibility
+
+### Learning goals
+
+- Trace a rollout
+
+- budget extra capacity
+
+- use expand/contract
 
 ### Everyday explanation
 
@@ -2755,29 +3691,61 @@ Correct option: 2. Controller settings do not prove readiness, compatibility or 
 
 ### Animation transcript
 
-**Serve the old version**
+**Build an intuition**
 
-Visitors use the existing version while the next release is prepared. Establish user-visible metrics and rollback conditions before shifting traffic.
+Let us understand zero-downtime deployments. A school repairs one classroom while students use another ready room. Moving students before the new room has desks causes disruption. Throwing away the old room key before every class moves makes rollback difficult. Old and new arrangements must coexist safely during the transition. A zero-downtime deployment aims to release a change without interrupting required user operations. Rolling or blue-green rollout helps, but database compatibility, readiness and connection draining are part of the design.
 
-**Start the replacement**
+**Follow the normal path**
 
-Create new capacity without immediately removing all old instances. Download, initialization and dependency setup take time and need spare resources.
+Follow the normal path. Visitors use the existing version while the next release is prepared. Establish user-visible metrics and rollback conditions before shifting traffic. Create new capacity without immediately removing all old instances. Download, initialization and dependency setup take time and need spare resources. SeatSpot must release a booking API while active users and old mobile clients remain. New code and old code may run simultaneously against the same data.
 
-**Check readiness**
+**Predict a failure**
 
-The readiness gate verifies the instance can serve the intended request. A running process with missing dependencies should not receive normal traffic yet.
+Now change one condition. The readiness gate verifies the instance can serve the intended request. A running process with missing dependencies should not receive normal traffic yet. A common misunderstanding is this: maxUnavailable: 0 guarantees the whole application is correct. It expresses a rollout constraint; readiness, data compatibility and spare capacity remain necessary. Think about this. Old code still reads a column while new code deploys. Can you drop that column immediately? Pause the video and make your prediction. No. Keep old/new versions compatible during coexistence and rollback. Remove obsolete structures only after the transition is proven safe.
 
-**Shift traffic gradually**
+**Work through an example**
 
-Send a bounded share to the new version and drain old work deliberately. Monitor errors and latency for real user operations, not only process health.
+Let us reason with a concrete example. Four replicas must remain available; one replacement is created before one old replica is removed. The rollout temporarily needs capacity for five. If no spare capacity exists, readiness and rollout policy can stall. This simple count excludes node limits and dependency capacity. Test old/new coexistence and rollback with real requests. Treat zero downtime as a measured release goal, not an unconditional Kubernetes flag. These figures are teaching examples, not production guarantees.
 
-**Keep data compatible**
+**Choose and apply**
 
-Both versions can access the database during rollout. Expand and migrate safely before removing fields or behavior the old version still needs.
+Turn the idea into a design decision. Send a bounded share to the new version and drain old work deliberately. Monitor errors and latency for real user operations, not only process health. Both versions can access the database during rollout. Expand and migrate safely before removing fields or behavior the old version still needs. When you try the practice task, look for this result. Rolling back code does not automatically reverse a destructive data migration.
 
-**Validate rollback**
+**Explain it back**
 
-Stop or reverse traffic movement if the release violates its criteria. Code rollback cannot magically reverse incompatible or destructive data changes.
+Check your understanding. Stop or reverse traffic movement if the release violates its criteria. Code rollback cannot magically reverse incompatible or destructive data changes. Here is a challenge. Version B renames a database field and Version A still runs. What safer migration sequence can you use? Pause before the answer. Expand with the new field, implement compatible reads/writes, backfill and validate, switch traffic/readers, then contract only when old users are gone. Plan failure/rollback at each step. For an interview, discuss surge capacity, draining and compatible schemas. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Old code still reads a column while new code deploys. Can you drop that column immediately?
+
+No. Keep old/new versions compatible during coexistence and rollback. Remove obsolete structures only after the transition is proven safe.
+
+### Correct a misconception
+
+maxUnavailable: 0 guarantees the whole application is correct.
+
+It expresses a rollout constraint; readiness, data compatibility and spare capacity remain necessary.
+
+### Practical task
+
+Stage an expand/contract rollout
+
+- Add a compatible new field without removing the old one.
+
+- Migrate/backfill, switch readers/writers and monitor.
+
+- Remove the obsolete representation in a later verified release.
+
+Expected outcome: Rolling back code does not automatically reverse a destructive data migration.
+
+### Choose interview depth
+
+**Foundation:** Explain replacing one ready replica at a time.
+
+**Practical:** Discuss surge capacity, draining and compatible schemas.
+
+**Advanced:** Defend canary evidence, irreversible migrations, long-lived requests and rollback limits.
 
 ### Official references
 
@@ -2787,6 +3755,18 @@ Stop or reverse traffic movement if the release violates its criteria. Code roll
 ## 23. Distributed tracing
 
 Distributed tracing follows one operation across multiple components using linked spans and propagated context. It helps locate time and errors, but traces are sampled evidence, not proof that every request behaved the same way.
+
+### Prerequisites
+
+Request duration, span and parallel work
+
+### Learning goals
+
+- Trace one request
+
+- find the critical path
+
+- protect telemetry data
 
 ### Everyday explanation
 
@@ -2877,29 +3857,61 @@ Correct option: 2. Parallel work and nested timing overlap; inspect the timeline
 
 ### Animation transcript
 
-**Start one operation**
+**Build an intuition**
 
-The gateway starts or receives trace context for checkout. Its span represents one part of the operation, not all system traffic.
+Let us understand distributed tracing. A parcel carries a tracking number through several delivery centres. Each centre records when its part began and ended. You can find where this parcel waited. That does not mean every parcel took the same path, and missing a tracking scan does not prove the parcel disappeared. Distributed tracing follows one operation across multiple components using linked spans and propagated context. It helps locate time and errors, but traces are sampled evidence, not proof that every request behaved the same way.
 
-**Propagate context**
+**Follow the normal path**
 
-Booking receives compatible context and creates a related span. Without propagation, downstream records can appear as unrelated operations.
+Follow the normal path. The gateway starts or receives trace context for checkout. Its span represents one part of the operation, not all system traffic. Booking receives compatible context and creates a related span. Without propagation, downstream records can appear as unrelated operations. SeatSpot checkout passes through gateway, booking, database and payment. One total latency number cannot show which hop waited or whether two operations ran in parallel.
 
-**Record parallel work**
+**Predict a failure**
 
-Database and payment calls run in parallel in this teaching example. Their intervals overlap, so adding both durations would overstate wall-clock time.
+Now change one condition. Database and payment calls run in parallel in this teaching example. Their intervals overlap, so adding both durations would overstate wall-clock time. A common misunderstanding is this: A sampled trace proves every request behaved the same way. Sampling selects evidence, not every operation. Missing context also creates incomplete traces. Think about this. A 100 ms database call overlaps a 300 ms payment call, with 40 ms overhead. Is total duration necessarily 440 ms? Pause the video and make your prediction. No. In the simplified parallel example it is about 340 ms. Inspect overlap and missing time rather than summing every child span.
 
-**Collect span evidence**
+**Work through an example**
 
-Instrumentation exports spans to an observability backend. Export buffering, sampling and failures mean a trace view is not a complete audit of every request.
+Let us reason with a concrete example. Checkout has a 100 ms database call and a 300 ms provider call in parallel, plus about 40 ms sequential overhead. A simplified total is about 340 ms, not 440 ms. Actual scheduling, serialization and network effects require measured traces. Investigate the critical path and compare slow traces with broader metrics. Do not optimize a fast database span just because it is easiest to see. These figures are teaching examples, not production guarantees.
 
-**Find the slow boundary**
+**Choose and apply**
 
-Compare the critical path, errors and dependency waits. Combine traces with aggregate metrics to determine whether the visible slow request reflects a widespread problem.
+Turn the idea into a design decision. Instrumentation exports spans to an observability backend. Export buffering, sampling and failures mean a trace view is not a complete audit of every request. Compare the critical path, errors and dependency waits. Combine traces with aggregate metrics to determine whether the visible slow request reflects a widespread problem. When you try the practice task, look for this result. Parallel work overlaps in wall-clock time; sampled traces must be compared with aggregate metrics.
 
-**Protect telemetry data**
+**Explain it back**
 
-Do not attach secrets or unnecessary personal data to spans. Keep attribute cardinality, access, sampling and retention within a deliberate observability budget.
+Check your understanding. Do not attach secrets or unnecessary personal data to spans. Keep attribute cardinality, access, sampling and retention within a deliberate observability budget. Here is a challenge. Two 200 ms spans run in parallel inside a 250 ms request. Is the request necessarily missing 150 ms? Pause before the answer. No. Parallel spans overlap, so their sum can exceed wall-clock request duration. Inspect start/end times and the critical path before inferring missing time. For an interview, discuss context propagation, critical paths and useful attributes. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A 100 ms database call overlaps a 300 ms payment call, with 40 ms overhead. Is total duration necessarily 440 ms?
+
+No. In the simplified parallel example it is about 340 ms. Inspect overlap and missing time rather than summing every child span.
+
+### Correct a misconception
+
+A sampled trace proves every request behaved the same way.
+
+Sampling selects evidence, not every operation. Missing context also creates incomplete traces.
+
+### Practical task
+
+Draw a trace timeline
+
+- Draw database from 20 to 120 ms.
+
+- Draw payment from 20 to 320 ms on a second row.
+
+- Add sequential overhead and identify the critical path.
+
+Expected outcome: Parallel work overlaps in wall-clock time; sampled traces must be compared with aggregate metrics.
+
+### Choose interview depth
+
+**Foundation:** Explain a trace ID and linked spans.
+
+**Practical:** Discuss context propagation, critical paths and useful attributes.
+
+**Advanced:** Defend sampling, cardinality, retention, privacy and observability cost.
 
 ### Official references
 
@@ -2911,6 +3923,18 @@ Do not attach secrets or unnecessary personal data to spans. Keep attribute card
 ## 24. Network segmentation
 
 Network segmentation limits which systems may communicate across network boundaries. It reduces reachability and blast radius. It does not replace identity checks, encryption or resource-level authorization.
+
+### Prerequisites
+
+Source, destination, port and application authorization
+
+### Learning goals
+
+- Map required flows
+
+- separate ingress/egress
+
+- test allowed and denied paths
 
 ### Everyday explanation
 
@@ -3005,29 +4029,61 @@ Correct option: 2. Intent and actual enforced network behavior must be verified.
 
 ### Animation transcript
 
-**Map required flows**
+**Build an intuition**
 
-The public client needs the web tier, which needs booking. Booking needs the database. Record required ports and dependencies before introducing isolation.
+Let us understand network segmentation. A school separates the public reception, classrooms and locked records room. A visitor can enter reception without getting a path to every room. A classroom door being reachable still does not authorize reading a student file. Network access and application permission remain different checks. Network segmentation limits which systems may communicate across network boundaries. It reduces reachability and blast radius. It does not replace identity checks, encryption or resource-level authorization.
 
-**Remove unnecessary paths**
+**Follow the normal path**
 
-The unrelated worker has no business requirement to contact the orders database. Blocking that path reduces reachability and potential blast radius.
+Follow the normal path. The public client needs the web tier, which needs booking. Booking needs the database. Record required ports and dependencies before introducing isolation. The unrelated worker has no business requirement to contact the orders database. Blocking that path reduces reachability and potential blast radius. SeatSpot public web traffic should not directly reach the orders database or administrative services. Booking may need a narrow database connection while an unrelated image worker does not.
 
-**Allow a narrow connection**
+**Predict a failure**
 
-Permit the actual booking workload to use the configured database port. Broad namespace-wide rules may allow more callers than intended.
+Now change one condition. Permit the actual booking workload to use the configured database port. Broad namespace-wide rules may allow more callers than intended. A common misunderstanding is this: NetworkPolicy automatically works in every Kubernetes cluster. Enforcement depends on the network implementation and correct selector semantics. Think about this. A database port is reachable from a booking pod. Does that authorize every SQL operation? Pause the video and make your prediction. No. Network reachability is one boundary. Database credentials and application resource authorization still matter.
 
-**Verify enforcement**
+**Work through an example**
 
-A policy object is only configuration intent. The cluster network implementation must support and enforce it, and selectors must match the intended workloads.
+Let us reason with a concrete example. Only the booking workload should initiate the database application connection on its configured port. A rule allowing the whole namespace may expose more callers than intended; a narrower pod selector can express the required source if labels and enforcement are trustworthy. Test a permitted booking connection and a denied unrelated-worker connection. Also verify DNS and any cross-namespace behavior in the actual cluster. These figures are teaching examples, not production guarantees.
 
-**Keep identity checks**
+**Choose and apply**
 
-An allowed TCP connection is not permission to read every order. Database credentials, encrypted transport and application ownership checks remain separate controls.
+Turn the idea into a design decision. A policy object is only configuration intent. The cluster network implementation must support and enforce it, and selectors must match the intended workloads. An allowed TCP connection is not permission to read every order. Database credentials, encrypted transport and application ownership checks remain separate controls. When you try the practice task, look for this result. A supporting network implementation must actually enforce the policy; a YAML file alone proves nothing.
 
-**Test both directions**
+**Explain it back**
 
-Verify allowed traffic, denied traffic and necessary DNS/monitoring dependencies. Observe unexpected failures and refine the policy without silently opening everything.
+Check your understanding. Verify allowed traffic, denied traffic and necessary DNS/monitoring dependencies. Observe unexpected failures and refine the policy without silently opening everything. Here is a challenge. A pod has a NetworkPolicy but unwanted traffic still reaches it. What do you verify? Pause before the answer. Verify enforcement support, labels/selectors, namespace semantics, ingress/egress direction and other allowed rules. Test from the real source workload rather than only inspecting YAML. For an interview, discuss ingress, egress, DNS and actual connection tests. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+A database port is reachable from a booking pod. Does that authorize every SQL operation?
+
+No. Network reachability is one boundary. Database credentials and application resource authorization still matter.
+
+### Correct a misconception
+
+NetworkPolicy automatically works in every Kubernetes cluster.
+
+Enforcement depends on the network implementation and correct selector semantics.
+
+### Practical task
+
+Create an allow/deny matrix
+
+- List booking → database and unrelated-worker → database.
+
+- Specify protocol/port and trustworthy selectors.
+
+- Test allowed and denied paths, including required DNS.
+
+Expected outcome: A supporting network implementation must actually enforce the policy; a YAML file alone proves nothing.
+
+### Choose interview depth
+
+**Foundation:** Explain reducing unnecessary reachability.
+
+**Practical:** Discuss ingress, egress, DNS and actual connection tests.
+
+**Advanced:** Defend lateral-movement limits, workload identity, encrypted transport and policy rollout.
 
 ### Official references
 
@@ -3037,6 +4093,18 @@ Verify allowed traffic, denied traffic and necessary DNS/monitoring dependencies
 ## 25. Multi-region setup
 
 A multi-region design runs required components in more than one geographic region. It can support regional recovery or lower user latency, but distant data coordination adds latency, consistency and operational trade-offs.
+
+### Prerequisites
+
+Write owner, replication lag and network partition
+
+### Learning goals
+
+- Separate read/write topology
+
+- preserve seat ownership
+
+- plan failover and failback
 
 ### Everyday explanation
 
@@ -3125,29 +4193,61 @@ Correct option: 2. Write ownership and coordination are business correctness dec
 
 ### Animation transcript
 
-**Define the regional goal**
+**Build an intuition**
 
-Decide whether another region is for disaster recovery, nearby reads or active writes. Each operation can have different latency, availability and consistency requirements.
+Let us understand multi-region setup. A school keeps a working campus in another city. Classes can move after a local disaster, but both campuses must agree which student records are current. If both sell the last seat in the same bus independently, simply having two campuses creates a conflict instead of solving it. A multi-region design runs required components in more than one geographic region. It can support regional recovery or lower user latency, but distant data coordination adds latency, consistency and operational trade-offs.
 
-**Copy suitable state**
+**Follow the normal path**
 
-Region A sends changes toward Region B. Asynchronous copying can lag; synchronous coordination adds waiting and depends on the communication path.
+Follow the normal path. Decide whether another region is for disaster recovery, nearby reads or active writes. Each operation can have different latency, availability and consistency requirements. Region A sends changes toward Region B. Asynchronous copying can lag; synchronous coordination adds waiting and depends on the communication path. SeatSpot might serve public catalog reads near users in two regions while keeping seat reservation ownership in one write region. Choosing active-active writes requires an explicit conflict/coordination strategy, not merely deploying the same containers twice.
 
-**Lose the connection**
+**Predict a failure**
 
-The regions cannot communicate. Allowing both to confirm the same last seat independently can violate correctness even though both applications are running.
+Now change one condition. The regions cannot communicate. Allowing both to confirm the same last seat independently can violate correctness even though both applications are running. A common misunderstanding is this: Two regions automatically double availability with no trade-off. Distant coordination adds latency and failure choices; shared dependencies can still fail both. Think about this. Two disconnected regions each see the same last seat. Can both confirm it independently while preserving uniqueness? Pause the video and make your prediction. No. Use a clear owner or coordinated decision, or choose a product model that explicitly accepts and reconciles conflicts.
 
-**Fence and promote**
+**Work through an example**
 
-A safe failover establishes which writer owns new decisions and prevents the old writer from conflicting. Routing alone does not settle database ownership.
+Let us reason with a concrete example. Two regions can both see one remaining seat while cross-region communication is interrupted. If both independently confirm the seat, availability was preserved but the uniqueness invariant was broken. Preventing that requires a single owner, coordinated decision or a product model that explicitly tolerates/reconciles conflict. Keep authoritative seat allocation under a clear ownership/consistency rule. Use regional catalog caches separately and test failover and failback with realistic lag. These figures are teaching examples, not production guarantees.
 
-**Route and validate**
+**Choose and apply**
 
-Direct eligible traffic to the recovery region and validate the actual booking workflow. Its capacity, credentials and dependencies must work independently enough for the failure scenario.
+Turn the idea into a design decision. A safe failover establishes which writer owns new decisions and prevents the old writer from conflicting. Routing alone does not settle database ownership. Direct eligible traffic to the recovery region and validate the actual booking workflow. Its capacity, credentials and dependencies must work independently enough for the failure scenario. When you try the practice task, look for this result. A second region is useful only if required dependencies and recovery procedures survive the chosen regional failure.
 
-**Plan reconciliation and failback**
+**Explain it back**
 
-After recovery, reconcile lag and in-flight work before moving ownership back. Test both failover and failback instead of treating the first traffic switch as the whole plan.
+Check your understanding. After recovery, reconcile lag and in-flight work before moving ownership back. Test both failover and failback instead of treating the first traffic switch as the whole plan. Here is a challenge. Both regions can independently book the last seat during a partition. What requirement is missing? Pause before the answer. There is no safe authoritative allocation/coordination rule for the uniqueness requirement. Define ownership, fencing and the partition policy; refuse or defer some writes if necessary rather than double-sell. For an interview, compare per-operation consistency, routing and recovery objectives. Say what you would measure, not only which tool you would buy.
+
+### Make a prediction
+
+Two disconnected regions each see the same last seat. Can both confirm it independently while preserving uniqueness?
+
+No. Use a clear owner or coordinated decision, or choose a product model that explicitly accepts and reconciles conflicts.
+
+### Correct a misconception
+
+Two regions automatically double availability with no trade-off.
+
+Distant coordination adds latency and failure choices; shared dependencies can still fail both.
+
+### Practical task
+
+Compare regional booking designs
+
+- Draw active-passive and active-active read paths.
+
+- Mark the authoritative owner of each seat and simulate a partition.
+
+- Explain promotion, fencing, lag and return to the original region.
+
+Expected outcome: A second region is useful only if required dependencies and recovery procedures survive the chosen regional failure.
+
+### Choose interview depth
+
+**Foundation:** Explain why a distant working copy can help.
+
+**Practical:** Compare per-operation consistency, routing and recovery objectives.
+
+**Advanced:** Defend ownership, fencing, partition behavior, failback and regional operating cost.
 
 ### Official references
 
@@ -3168,4 +4268,4 @@ Clarify requirements; estimate with units; draw a request and data path; explain
 
 ## Media and privacy
 
-MP4 clips contain offline computer-generated English narration (Flite SLT), animated architecture paths and readable captions. VTT caption files and transcripts accompany them. Videos are conceptual illustrations, not recordings of real clusters. No source-image portrait, music or social-media video was reused. Progress and notes in the integrated website are stored locally; export them before clearing browser storage.
+MP4 clips contain offline-generated synthetic English female narration (Kokoro v1.0, af_heart), animated architecture paths and readable captions. VTT caption files and transcripts accompany them. Videos are conceptual illustrations, not recordings of real clusters. No source-image portrait, music or social-media video was reused. Progress and notes in the integrated website are stored locally; export them before clearing browser storage.

@@ -1,0 +1,311 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.760
+Let us understand
+zero-downtime deployments.
+
+2
+00:00:03.560 --> 00:00:06.760
+A school repairs one classroom
+while students use another
+
+3
+00:00:06.760 --> 00:00:10.420
+ready room. Moving students
+before the new room has desks
+
+4
+00:00:10.420 --> 00:00:14.440
+causes disruption. Throwing
+away the old room key before
+
+5
+00:00:14.440 --> 00:00:16.840
+every class moves makes
+rollback difficult.
+
+6
+00:00:17.400 --> 00:00:20.800
+Old and new arrangements must
+coexist safely during the
+
+7
+00:00:20.800 --> 00:00:24.600
+transition. A zero-downtime
+deployment aims to release a
+
+8
+00:00:24.600 --> 00:00:27.900
+change without interrupting
+required user operations.
+
+9
+00:00:27.900 --> 00:00:31.920
+Rolling or blue-green
+rollout helps, but database
+
+10
+00:00:31.920 --> 00:00:35.820
+compatibility, readiness and
+connection draining are part of
+
+11
+00:00:35.820 --> 00:00:38.720
+the design. Follow the normal path.
+
+12
+00:00:39.540 --> 00:00:42.620
+Visitors use the existing
+version while the next release is
+
+13
+00:00:42.620 --> 00:00:46.180
+prepared. Establish user-visible
+metrics and rollback
+
+14
+00:00:46.180 --> 00:00:48.220
+conditions before shifting traffic.
+
+15
+00:00:48.820 --> 00:00:52.700
+Create new capacity without
+immediately removing all old
+
+16
+00:00:52.700 --> 00:00:56.640
+instances. Download,
+initialization and dependency setup
+
+17
+00:00:56.960 --> 00:00:59.200
+take time and need spare resources.
+
+18
+00:00:59.200 --> 00:01:04.300
+SeatSpot must release a booking
+API while active users and
+
+19
+00:01:04.300 --> 00:01:08.620
+old mobile clients remain.
+New code and old code may run
+
+20
+00:01:08.620 --> 00:01:10.900
+simultaneously against the same data.
+
+21
+00:01:11.840 --> 00:01:15.620
+Now change one condition. The
+readiness gate verifies the
+
+22
+00:01:15.620 --> 00:01:17.860
+instance can serve the intended request.
+
+23
+00:01:17.860 --> 00:01:21.300
+A running process with missing
+dependencies should not
+
+24
+00:01:21.300 --> 00:01:24.880
+receive normal traffic yet.
+A common misunderstanding is
+
+25
+00:01:24.880 --> 00:01:29.700
+this: maxUnavailable: 0 guarantees
+the whole application is
+
+26
+00:01:29.700 --> 00:01:34.120
+correct. It expresses a rollout
+constraint; readiness, data
+
+27
+00:01:34.120 --> 00:01:37.200
+compatibility and spare
+capacity remain necessary.
+
+28
+00:01:37.740 --> 00:01:41.180
+Think about this. Old code
+still reads a column while new
+
+29
+00:01:41.180 --> 00:01:44.360
+code deploys. Can you drop
+that column immediately?
+
+30
+00:01:44.880 --> 00:01:46.760
+Pause the video and make your prediction.
+
+31
+00:01:46.760 --> 00:01:52.020
+No. Keep old/new versions
+compatible during coexistence and
+
+32
+00:01:52.020 --> 00:01:55.780
+rollback. Remove obsolete
+structures only after the
+
+33
+00:01:55.780 --> 00:01:59.720
+transition is proven safe.
+Let us reason with a concrete
+
+34
+00:01:59.720 --> 00:02:03.660
+example. Four replicas
+must remain available; one
+
+35
+00:02:03.660 --> 00:02:07.100
+replacement is created before
+one old replica is removed.
+
+36
+00:02:07.700 --> 00:02:10.800
+The rollout temporarily
+needs capacity for five.
+
+37
+00:02:11.200 --> 00:02:14.940
+If no spare capacity exists,
+readiness and rollout policy
+
+38
+00:02:14.940 --> 00:02:18.660
+can stall. This simple count
+excludes node limits and
+
+39
+00:02:18.660 --> 00:02:23.520
+dependency capacity. Test
+old/new coexistence and rollback
+
+40
+00:02:23.520 --> 00:02:27.360
+with real requests. Treat
+zero downtime as a measured
+
+41
+00:02:27.360 --> 00:02:30.700
+release goal, not an
+unconditional Kubernetes flag.
+
+42
+00:02:31.280 --> 00:02:34.280
+These figures are teaching
+examples, not production
+
+43
+00:02:34.280 --> 00:02:38.040
+guarantees. Turn the idea
+into a design decision.
+
+44
+00:02:38.660 --> 00:02:42.180
+Send a bounded share to the
+new version and drain old work
+
+45
+00:02:42.180 --> 00:02:46.300
+deliberately. Monitor errors
+and latency for real user
+
+46
+00:02:46.300 --> 00:02:48.900
+operations, not only process health.
+
+47
+00:02:49.220 --> 00:02:52.220
+Both versions can access
+the database during rollout.
+
+48
+00:02:52.860 --> 00:02:56.800
+Expand and migrate safely before
+removing fields or behavior
+
+49
+00:02:56.800 --> 00:03:00.600
+the old version still needs.
+When you try the practice task,
+
+50
+00:03:00.900 --> 00:03:04.460
+look for this result.
+Rolling back code does not
+
+51
+00:03:04.460 --> 00:03:07.200
+automatically reverse a
+destructive data migration.
+
+52
+00:03:08.240 --> 00:03:11.780
+Check your understanding. Stop
+or reverse traffic movement
+
+53
+00:03:11.780 --> 00:03:13.840
+if the release violates its criteria.
+
+54
+00:03:14.800 --> 00:03:18.040
+Code rollback cannot magically
+reverse incompatible or
+
+55
+00:03:18.040 --> 00:03:20.840
+destructive data changes.
+Here is a challenge.
+
+56
+00:03:21.440 --> 00:03:25.300
+Version B renames a database
+field and Version A still runs.
+
+57
+00:03:25.940 --> 00:03:28.480
+What safer migration sequence can you use?
+
+58
+00:03:28.780 --> 00:03:31.740
+Pause before the answer.
+Expand with the new field,
+
+59
+00:03:31.980 --> 00:03:35.500
+implement compatible reads/writes,
+backfill and validate,
+
+60
+00:03:36.240 --> 00:03:39.660
+switch traffic/readers, then
+contract only when old users
+
+61
+00:03:39.660 --> 00:03:43.480
+are gone. Plan
+failure/rollback at each step.
+
+62
+00:03:44.000 --> 00:03:47.160
+For an interview, discuss
+surge capacity, draining and
+
+63
+00:03:47.160 --> 00:03:50.380
+compatible schemas. Say what
+you would measure, not only
+
+64
+00:03:50.380 --> 00:03:51.460
+which tool you would buy.

@@ -1,0 +1,288 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.780
+Let us understand message queues.
+A restaurant writes orders
+
+2
+00:00:03.780 --> 00:00:07.680
+on tickets. The cook takes a
+ticket when ready instead of
+
+3
+00:00:07.680 --> 00:00:09.780
+making every customer stand at the stove.
+
+4
+00:00:10.520 --> 00:00:13.900
+A ticket can be picked up
+twice after confusion, so the
+
+5
+00:00:13.900 --> 00:00:16.860
+kitchen needs an order
+number to avoid preparing and
+
+6
+00:00:16.860 --> 00:00:20.580
+charging the same order twice.
+A message queue holds work
+
+7
+00:00:20.580 --> 00:00:24.420
+until a consumer can process
+it. It separates accepting work
+
+8
+00:00:24.420 --> 00:00:28.800
+from finishing it. Durability,
+retries, ordering and
+
+9
+00:00:28.800 --> 00:00:32.380
+duplicate delivery depend on
+the queue and configuration.
+
+10
+00:00:33.440 --> 00:00:37.080
+Follow the normal path. A
+booking succeeds and records a
+
+11
+00:00:37.080 --> 00:00:40.720
+receipt job reliably. Coordinate
+this with business storage,
+
+12
+00:00:41.060 --> 00:00:44.700
+for example using an outbox,
+so a crash does not lose the
+
+13
+00:00:44.700 --> 00:00:48.600
+obligation. The queue stores
+work while consumers catch up.
+
+14
+00:00:48.940 --> 00:00:53.100
+Stored backlog buys time,
+but retention, storage and
+
+15
+00:00:53.100 --> 00:00:56.109
+acceptable delay remain
+finite. SeatSpot sends receipts
+
+16
+00:00:56.109 --> 00:01:00.920
+asynchronously after booking.
+The booking request should not
+
+17
+00:01:00.920 --> 00:01:04.620
+wait for an email provider, but
+it must reliably record that
+
+18
+00:01:04.620 --> 00:01:08.740
+a receipt needs to be sent.
+Now change one condition.
+
+19
+00:01:09.240 --> 00:01:13.280
+Workers pull jobs at a safe
+rate. Their combined concurrency
+
+20
+00:01:13.280 --> 00:01:16.960
+must respect email provider
+quotas and other downstream
+
+21
+00:01:16.960 --> 00:01:21.540
+capacity. A common misunderstanding
+is this: At-least-once
+
+22
+00:01:21.540 --> 00:01:24.260
+delivery means exactly
+one business effect.
+
+23
+00:01:24.260 --> 00:01:27.580
+Delivery and the external
+effect have different failure
+
+24
+00:01:27.580 --> 00:01:31.500
+gaps. Think about this. A
+worker sends a receipt then
+
+25
+00:01:31.500 --> 00:01:34.800
+crashes before acknowledgment.
+What can happen next?
+
+26
+00:01:35.180 --> 00:01:37.060
+Pause the video and make your prediction.
+
+27
+00:01:37.940 --> 00:01:41.920
+The job may be delivered
+again. A stable event ID and
+
+28
+00:01:41.920 --> 00:01:45.880
+appropriate idempotency or
+reconciliation are needed around
+
+29
+00:01:45.880 --> 00:01:50.240
+the external effect. Let us
+reason with a concrete example.
+
+30
+00:01:50.720 --> 00:01:54.580
+Jobs arrive at 90/second and
+each worker safely processes
+
+31
+00:01:54.580 --> 00:01:59.900
+20/second. Four workers provide
+80/second, so backlog grows
+
+32
+00:01:59.900 --> 00:02:05.540
+by about 10/second. Five provide
+100/second and drain only
+
+33
+00:02:05.540 --> 00:02:09.180
+about 10/second of existing
+backlog in the simplified model.
+
+34
+00:02:09.820 --> 00:02:13.300
+Add safe capacity or shed
+work, respecting the email
+
+35
+00:02:13.300 --> 00:02:16.960
+provider quota. More
+consumers are not safe if they
+
+36
+00:02:16.960 --> 00:02:19.440
+collectively exceed the
+next dependency limit.
+
+37
+00:02:20.120 --> 00:02:23.040
+These figures are teaching
+examples, not production
+
+38
+00:02:23.040 --> 00:02:26.900
+guarantees. Turn the idea
+into a design decision.
+
+39
+00:02:27.540 --> 00:02:31.180
+A worker can send an email and
+fail before acknowledging its
+
+40
+00:02:31.180 --> 00:02:35.320
+job. The queue may deliver
+that same logical job again.
+
+41
+00:02:35.320 --> 00:02:39.720
+Use stable job identity and
+an appropriate idempotency or
+
+42
+00:02:39.720 --> 00:02:43.880
+reconciliation strategy. A
+delivery guarantee alone does not
+
+43
+00:02:43.880 --> 00:02:46.340
+guarantee exactly one external effect.
+
+44
+00:02:46.900 --> 00:02:49.780
+When you try the practice
+task, look for this result.
+
+45
+00:02:49.780 --> 00:02:54.120
+At a constant arrival rate,
+five workers leave only about
+
+46
+00:02:54.120 --> 00:02:56.560
+ten jobs/second to drain the backlog.
+
+47
+00:02:57.620 --> 00:03:01.140
+Check your understanding.
+After bounded attempts, move a
+
+48
+00:03:01.140 --> 00:03:03.820
+poison job to a monitored
+dead-letter path.
+
+49
+00:03:04.560 --> 00:03:07.660
+Investigate and repair before
+controlled replay instead of
+
+50
+00:03:07.660 --> 00:03:09.980
+retrying forever. Here is a challenge.
+
+51
+00:03:10.640 --> 00:03:13.560
+A worker sends an email then
+crashes before acknowledging.
+
+52
+00:03:13.560 --> 00:03:16.540
+What happens? Pause before the answer.
+
+53
+00:03:16.540 --> 00:03:20.020
+Redelivery may send
+another email unless the
+
+54
+00:03:20.020 --> 00:03:23.640
+consumer/provider has an
+idempotency or deduplication
+
+55
+00:03:23.640 --> 00:03:28.180
+strategy. A durable order/event
+identity and reconciliation
+
+56
+00:03:28.180 --> 00:03:32.320
+make this case explicit. For
+an interview, discuss backlog
+
+57
+00:03:32.320 --> 00:03:36.500
+age, retries, poison jobs and idempotency.
+
+58
+00:03:36.500 --> 00:03:39.000
+Say what you would measure,
+not only which tool you would
+
+59
+00:03:39.000 --> 00:03:39.300
+buy.

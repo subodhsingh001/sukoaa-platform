@@ -1,0 +1,295 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.140
+Let us understand reverse
+proxy. A reception desk receives
+
+2
+00:00:04.140 --> 00:00:07.480
+mail for several offices
+and forwards each envelope
+
+3
+00:00:07.480 --> 00:00:11.560
+internally. Outside visitors
+know the public address rather
+
+4
+00:00:11.560 --> 00:00:14.580
+than every room. The desk
+must preserve important
+
+5
+00:00:14.580 --> 00:00:18.320
+information and must not believe
+a forged note saying that
+
+6
+00:00:18.320 --> 00:00:19.880
+an envelope came from the principal.
+
+7
+00:00:20.420 --> 00:00:23.520
+A reverse proxy receives
+requests on behalf of backend
+
+8
+00:00:23.520 --> 00:00:28.760
+servers and forwards them. It
+can terminate TLS, route paths
+
+9
+00:00:28.760 --> 00:00:31.460
+or hosts and manage forwarding behavior.
+
+10
+00:00:32.180 --> 00:00:35.900
+It is different from a forward
+proxy used on behalf of
+
+11
+00:00:35.900 --> 00:00:39.640
+clients. Follow the normal
+path. The browser talks to one
+
+12
+00:00:39.640 --> 00:00:43.460
+public address. The reverse
+proxy represents backend servers
+
+13
+00:00:43.460 --> 00:00:46.880
+rather than acting as the
+browser own outbound proxy.
+
+14
+00:00:47.600 --> 00:00:49.600
+Host and path rules select a backend.
+
+15
+00:00:50.380 --> 00:00:54.740
+Request size, deadlines, TLS
+termination and supported
+
+16
+00:00:54.740 --> 00:00:57.200
+protocols must fit the actual workload.
+
+17
+00:00:57.200 --> 00:01:02.060
+SeatSpot can expose one HTTPS
+hostname while forwarding
+
+18
+00:01:02.060 --> 00:01:05.020
+application and static
+paths to different backends.
+
+19
+00:01:05.820 --> 00:01:09.620
+This central entry layer needs
+deliberate timeout, buffering
+
+20
+00:01:09.740 --> 00:01:13.600
+and trusted-header behavior.
+Now change one condition.
+
+21
+00:01:13.600 --> 00:01:18.600
+API traffic reaches the API
+backend and asset traffic can
+
+22
+00:01:18.600 --> 00:01:22.440
+reach another backend. A
+reverse proxy can also perform
+
+23
+00:01:22.440 --> 00:01:27.100
+load-balancing duties. A common
+misunderstanding is this: A
+
+24
+00:01:27.100 --> 00:01:30.140
+reverse proxy and load
+balancer cannot be the same
+
+25
+00:01:30.140 --> 00:01:33.680
+component. These are roles that
+can overlap in one product.
+
+26
+00:01:34.120 --> 00:01:37.880
+Think about this. A client sends
+X-Forwarded-For claiming to
+
+27
+00:01:37.880 --> 00:01:40.780
+be an administrator. Should
+your backend trust it?
+
+28
+00:01:41.000 --> 00:01:42.960
+Pause the video and make your prediction.
+
+29
+00:01:43.880 --> 00:01:47.020
+Only through a verified proxy
+chain with controlled header
+
+30
+00:01:47.020 --> 00:01:51.060
+rewriting. A client-supplied
+header is not trusted identity.
+
+31
+00:01:51.060 --> 00:01:54.040
+Let us reason with a concrete example.
+
+32
+00:01:54.640 --> 00:01:57.480
+A browser uploads a large
+image through a proxy to the
+
+33
+00:01:57.480 --> 00:02:00.840
+application. The application
+body limit does not help if the
+
+34
+00:02:00.840 --> 00:02:04.600
+proxy rejects it first;
+conversely, a permissive proxy does
+
+35
+00:02:04.600 --> 00:02:06.400
+not bypass the application validation.
+
+36
+00:02:07.060 --> 00:02:10.760
+The smallest relevant limit
+wins. Align intended limits and
+
+37
+00:02:10.760 --> 00:02:14.240
+return understandable errors.
+For streaming, inspect
+
+38
+00:02:14.240 --> 00:02:16.560
+buffering and timeouts
+along the full path.
+
+39
+00:02:17.100 --> 00:02:19.840
+These figures are teaching
+examples, not production
+
+40
+00:02:19.840 --> 00:02:23.860
+guarantees. Turn the idea
+into a design decision.
+
+41
+00:02:24.340 --> 00:02:27.860
+Forward useful request context,
+but do not accept forged
+
+42
+00:02:27.860 --> 00:02:32.080
+identity or client-IP headers
+from arbitrary clients as
+
+43
+00:02:32.080 --> 00:02:36.960
+trusted facts. Buffering and
+idle/read timeouts can change
+
+44
+00:02:36.960 --> 00:02:40.660
+what a browser sees. Test streams
+and long-lived connections
+
+45
+00:02:40.660 --> 00:02:44.000
+end to end instead of assuming
+default behavior fits.
+
+46
+00:02:44.580 --> 00:02:47.400
+When you try the practice
+task, look for this result.
+
+47
+00:02:47.960 --> 00:02:50.880
+The narrowest relevant limit
+can reject the request;
+
+48
+00:02:51.460 --> 00:02:54.620
+streaming needs deliberate
+buffering and timeout choices.
+
+49
+00:02:55.620 --> 00:02:59.020
+Check your understanding. The
+public entry point needs its
+
+50
+00:02:59.020 --> 00:03:01.780
+own capacity, redundancy and monitoring.
+
+51
+00:03:02.580 --> 00:03:05.520
+Backend replicas do not
+help if the only proxy is
+
+52
+00:03:05.520 --> 00:03:09.720
+unavailable. Here is a
+challenge. An API stream produces
+
+53
+00:03:09.720 --> 00:03:12.480
+tokens but the browser
+sees them all at once.
+
+54
+00:03:13.000 --> 00:03:15.460
+What might be happening?
+Pause before the answer.
+
+55
+00:03:16.020 --> 00:03:18.920
+A proxy/CDN may buffer the response.
+
+56
+00:03:19.620 --> 00:03:23.200
+Verify streaming support,
+flush behavior, timeout and
+
+57
+00:03:23.200 --> 00:03:26.700
+cache/compression policies
+across the actual path before
+
+58
+00:03:26.700 --> 00:03:28.840
+changing application logic blindly.
+
+59
+00:03:29.680 --> 00:03:33.720
+For an interview, discuss TLS
+termination, headers, limits
+
+60
+00:03:33.740 --> 00:03:36.940
+and connection draining. Say
+what you would measure, not
+
+61
+00:03:36.940 --> 00:03:38.280
+only which tool you would buy.

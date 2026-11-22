@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:13.083
+00:00:00.000 --> 00:00:40.000
 Observe demand. The application serves visitors while metrics record utilization and request behavior. Select a signal related to the constrained resource, not simply the easiest chart.
 
 2
-00:00:13.083 --> 00:00:22.583
+00:00:40.000 --> 00:01:18.000
 Choose a target. The controller compares the observed signal with a configured target and computes a desired replica count within minimum and maximum limits.
 
 3
-00:00:22.583 --> 00:00:34.833
+00:01:18.000 --> 00:02:00.917
 Request capacity. The controller requests more replicas. Scheduling, image download, initialization and health checks take time. Desired capacity and ready capacity can differ.
 
 4
-00:00:34.833 --> 00:00:46.167
+00:02:00.917 --> 00:02:42.167
 Wait for readiness. Only ready replicas should receive normal traffic. If nodes or quotas are exhausted, a controller cannot create the missing physical capacity by itself.
 
 5
-00:00:46.167 --> 00:00:58.333
+00:02:42.167 --> 00:03:16.250
 Check dependencies. More application copies can increase database connections. Limit aggregate concurrency so solving an application bottleneck does not create a database outage.
 
 6
-00:00:58.333 --> 00:01:10.667
+00:03:16.250 --> 00:04:03.417
 Scale down carefully. After demand falls, stabilization prevents rapid shrinking and regrowth. Drain work before removing replicas and keep enough minimum capacity for the next burst.

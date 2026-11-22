@@ -17,7 +17,7 @@ Each lesson includes:
 - An exercise with progressive hints and a worked solution; a multiple-choice knowledge check.
 - Local notes and a self-assessed completion marker. The course page exports and imports progress JSON.
 
-There are 25 videos, 150 chapters, 50 interview prompts, 25 exercises and 25 knowledge checks. Total video duration is 1,759 seconds (about 29 minutes). The written handbook is approximately 18,500 words. Plan about 20–35 minutes of reading, explanation and practice per lesson; the videos introduce mechanisms rather than replace the written lessons.
+There are 25 videos, 150 chapters, 50 interview prompts, 25 exercises and 25 knowledge checks. Total refreshed video duration is 5718 seconds (about 95.3 minutes). The exported handbook includes the original lessons plus expanded teaching notes and full refreshed narration. Plan about 20–35 minutes of reading, explanation and practice per lesson; the videos introduce mechanisms rather than replace the written lessons.
 
 ## Mentor approach and scope
 
@@ -71,7 +71,7 @@ python3 scripts/system-design/export-guide.py --output /absolute/path/to/offline
 
 To render one known lesson, set `LESSON_ID=load-balancing` when invoking the renderer. Other manifest entries are preserved. Run the exporter after any lesson or media edit. It generates `public/learn/system-design/course-guide.md` and a standalone HTML/video folder. Zip the entire exported folder; learners extract it and open `index.html`. The offline edition includes explanations, videos, transcripts, answers and quizzes. The integrated website additionally supplies persistent notes, progress import/export and the timed interview interface. Native captions on `file://` can depend on the browser; the video itself contains readable step text and each page has a full transcript.
 
-Narration is synthesized locally with Flite SLT, not a human narrator. Diagrams and scripts are original. The source image was used to identify topic names; its portrait, social-media footage and music are not included. Tool/font attribution accompanies the media in `MEDIA-NOTICES.txt`.
+Narration is generated offline with Kokoro v1.0 af_heart, a synthetic English female voice, not a human recording. Diagrams and scripts are original. The source image was used to identify topic names; its portrait, social-media footage and music are not included. Tool/font attribution accompanies the media in `MEDIA-NOTICES.txt`.
 
 ## Verification and limits
 

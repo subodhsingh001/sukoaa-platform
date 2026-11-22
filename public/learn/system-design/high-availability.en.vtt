@@ -1,0 +1,307 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.960
+Let us understand high availability.
+
+2
+00:00:02.840 --> 00:00:05.720
+A school keeps two water
+pumps so one can help when the
+
+3
+00:00:05.720 --> 00:00:09.920
+other stops. If both use the
+same broken power line, two
+
+4
+00:00:09.920 --> 00:00:13.660
+pumps do not solve the problem.
+Availability depends on the
+
+5
+00:00:13.660 --> 00:00:16.700
+whole chain and on how quickly
+people notice and recover,
+
+6
+00:00:16.700 --> 00:00:20.680
+not just the number of pumps.
+High availability means
+
+7
+00:00:20.680 --> 00:00:24.280
+meeting an agreed target for
+successful service over time.
+
+8
+00:00:24.880 --> 00:00:28.480
+Redundant components and
+recovery reduce downtime, but a
+
+9
+00:00:28.480 --> 00:00:31.540
+system can never promise
+that nothing will ever fail.
+
+10
+00:00:32.440 --> 00:00:36.420
+Follow the normal path. For
+this example, success means a
+
+11
+00:00:36.420 --> 00:00:39.260
+correct booking response
+within its latency objective.
+
+12
+00:00:39.960 --> 00:00:43.320
+A homepage response alone
+does not measure the same user
+
+13
+00:00:43.320 --> 00:00:47.540
+outcome. Applications run
+in separate zones behind a
+
+14
+00:00:47.540 --> 00:00:51.500
+resilient entry point. The
+goal is to avoid losing every
+
+15
+00:00:51.500 --> 00:00:54.160
+application copy to
+the same local failure.
+
+16
+00:00:54.160 --> 00:00:58.380
+SeatSpot must keep ticket
+browsing and booking usable when a
+
+17
+00:00:58.380 --> 00:01:02.420
+machine or zone fails. Different
+features can have different
+
+18
+00:01:02.420 --> 00:01:06.340
+objectives: cached event
+descriptions may remain available
+
+19
+00:01:06.340 --> 00:01:09.820
+even if booking is temporarily
+paused to protect correct
+
+20
+00:01:09.820 --> 00:01:13.200
+seat allocation. Now change one condition.
+
+21
+00:01:14.140 --> 00:01:17.660
+Zone A becomes unavailable.
+Detection and rerouting consume
+
+22
+00:01:17.660 --> 00:01:20.460
+time, and requests already
+in flight may fail.
+
+23
+00:01:20.460 --> 00:01:23.900
+The objective allows an
+explicitly measured error budget.
+
+24
+00:01:24.540 --> 00:01:27.980
+A common misunderstanding is
+this: Two replicas guarantee
+
+25
+00:01:27.980 --> 00:01:32.500
+availability. Shared power,
+data, credentials or control
+
+26
+00:01:32.500 --> 00:01:35.820
+planes can fail both
+replicas. Think about this.
+
+27
+00:01:36.220 --> 00:01:39.560
+Two apps run on different
+machines but use one unprotected
+
+28
+00:01:39.560 --> 00:01:42.720
+database. Is the complete
+booking path redundant?
+
+29
+00:01:43.260 --> 00:01:45.120
+Pause the video and make your prediction.
+
+30
+00:01:45.880 --> 00:01:49.200
+No. A database failure
+can still stop both apps.
+
+31
+00:01:49.200 --> 00:01:53.180
+Follow the entire user
+operation, not only the web tier.
+
+32
+00:01:54.020 --> 00:01:56.100
+Let us reason with a concrete example.
+
+33
+00:01:56.680 --> 00:02:01.580
+An agreed objective is 99.9%
+time availability over an
+
+34
+00:02:01.580 --> 00:02:08.840
+illustrative 30-day month. 30
+× 24 × 60 = 43,200 minutes.
+
+35
+00:02:09.560 --> 00:02:14.400
+A 0.1% unavailability
+budget is 43.2 minutes.
+
+36
+00:02:14.400 --> 00:02:18.100
+Request-based indicators
+use failed eligible requests
+
+37
+00:02:18.100 --> 00:02:20.760
+instead, so do not mix
+the two measurements.
+
+38
+00:02:21.560 --> 00:02:24.840
+Choose the objective from
+business needs and recovery cost.
+
+39
+00:02:25.640 --> 00:02:28.340
+Measure actual booking success
+separately from whether the
+
+40
+00:02:28.340 --> 00:02:32.780
+homepage responds. These figures
+are teaching examples, not
+
+41
+00:02:32.780 --> 00:02:37.060
+production guarantees. Turn the
+idea into a design decision.
+
+42
+00:02:37.800 --> 00:02:41.260
+Zone B receives new work. It
+must have enough capacity,
+
+43
+00:02:42.080 --> 00:02:45.280
+network access and working
+credentials to serve the actual
+
+44
+00:02:45.280 --> 00:02:49.720
+user operation. Both application
+copies need a suitable data
+
+45
+00:02:49.720 --> 00:02:53.460
+service. A single unprotected
+database can still interrupt
+
+46
+00:02:53.460 --> 00:02:56.680
+bookings even when both
+application zones are healthy.
+
+47
+00:02:57.300 --> 00:03:00.220
+When you try the practice
+task, look for this result.
+
+48
+00:03:00.820 --> 00:03:04.880
+The illustrative time
+budget is 43.2 minutes; a
+
+49
+00:03:04.880 --> 00:03:07.520
+request-based SLI uses different units.
+
+50
+00:03:08.500 --> 00:03:11.720
+Check your understanding.
+Run a controlled failure and
+
+51
+00:03:11.720 --> 00:03:14.020
+measure booking success and recovery time.
+
+52
+00:03:14.020 --> 00:03:18.180
+Availability is demonstrated
+by user outcomes, not by
+
+53
+00:03:18.180 --> 00:03:21.380
+counting boxes in a diagram.
+Here is a challenge.
+
+54
+00:03:21.920 --> 00:03:24.440
+Two application replicas run in one zone.
+
+55
+00:03:25.060 --> 00:03:28.620
+A second zone is added. List
+three things to verify before
+
+56
+00:03:28.620 --> 00:03:30.500
+calling the service highly available.
+
+57
+00:03:31.060 --> 00:03:35.031
+Pause before the answer. Check
+traffic failover/detection,
+
+58
+00:03:35.031 --> 00:03:38.440
+data-layer availability and
+consistency, and survivor
+
+59
+00:03:38.440 --> 00:03:43.280
+capacity. Also test shared
+authentication, DNS and
+
+60
+00:03:43.280 --> 00:03:46.500
+configuration dependencies
+using the agreed user-visible
+
+61
+00:03:46.500 --> 00:03:50.720
+indicator. For an interview,
+define the SLI, time window,
+
+62
+00:03:51.100 --> 00:03:54.240
+failover and survivor capacity.
+Say what you would measure,
+
+63
+00:03:54.620 --> 00:03:56.180
+not only which tool you would buy.

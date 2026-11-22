@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:12.750
+00:00:00.000 --> 00:00:37.250
 Serve the old version. Visitors use the existing version while the next release is prepared. Establish user-visible metrics and rollback conditions before shifting traffic.
 
 2
-00:00:12.750 --> 00:00:24.667
+00:00:37.250 --> 00:01:11.750
 Start the replacement. Create new capacity without immediately removing all old instances. Download, initialization and dependency setup take time and need spare resources.
 
 3
-00:00:24.667 --> 00:00:35.167
+00:01:11.750 --> 00:01:58.083
 Check readiness. The readiness gate verifies the instance can serve the intended request. A running process with missing dependencies should not receive normal traffic yet.
 
 4
-00:00:35.167 --> 00:00:46.833
+00:01:58.083 --> 00:02:35.833
 Shift traffic gradually. Send a bounded share to the new version and drain old work deliberately. Monitor errors and latency for real user operations, not only process health.
 
 5
-00:00:46.833 --> 00:00:58.167
+00:02:35.833 --> 00:03:08.167
 Keep data compatible. Both versions can access the database during rollout. Expand and migrate safely before removing fields or behavior the old version still needs.
 
 6
-00:00:58.167 --> 00:01:10.083
+00:03:08.167 --> 00:03:52.417
 Validate rollback. Stop or reverse traffic movement if the release violates its criteria. Code rollback cannot magically reverse incompatible or destructive data changes.

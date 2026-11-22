@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:11.167
+00:00:00.000 --> 00:00:36.083
 Look up the name. The browser or operating system asks a resolver for the hostname. Existing local or resolver caches may already contain an answer.
 
 2
-00:00:11.167 --> 00:00:23.250
+00:00:36.083 --> 00:01:15.250
 Query authority if needed. A resolver without a usable cached answer follows DNS resolution to the authoritative records. Record type and delegation must be configured correctly.
 
 3
-00:00:23.250 --> 00:00:34.167
+00:01:15.250 --> 00:01:58.500
 Use a cached answer. A client may connect to the old endpoint while its answer is still valid. Changing the authoritative record does not instantly erase that cached answer.
 
 4
-00:00:34.167 --> 00:00:45.750
+00:01:58.500 --> 00:02:37.833
 Fetch the new answer. Later lookups can obtain the new destination. Clients and resolvers change at different times, so old and new endpoints may both receive traffic.
 
 5
-00:00:45.750 --> 00:00:57.000
+00:02:37.833 --> 00:03:11.583
 Verify beyond DNS. The new address also needs the correct certificate, host routing and healthy application. Successful resolution alone does not prove the website works.
 
 6
-00:00:57.000 --> 00:01:10.083
+00:03:11.583 --> 00:03:56.083
 Plan safe overlap. Keep a rollback path and an appropriate overlap interval. Lower TTL in advance when useful; do not expect a last-second TTL edit to end existing connections.

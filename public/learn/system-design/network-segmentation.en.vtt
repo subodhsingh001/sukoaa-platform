@@ -1,0 +1,312 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.400
+Let us understand network segmentation.
+
+2
+00:00:03.160 --> 00:00:06.520
+A school separates the public
+reception, classrooms and
+
+3
+00:00:06.520 --> 00:00:10.320
+locked records room. A visitor
+can enter reception without
+
+4
+00:00:10.320 --> 00:00:13.760
+getting a path to every
+room. A classroom door being
+
+5
+00:00:13.760 --> 00:00:17.260
+reachable still does not
+authorize reading a student file.
+
+6
+00:00:17.840 --> 00:00:21.120
+Network access and application
+permission remain different
+
+7
+00:00:21.120 --> 00:00:24.960
+checks. Network segmentation
+limits which systems may
+
+8
+00:00:24.960 --> 00:00:26.800
+communicate across network boundaries.
+
+9
+00:00:26.800 --> 00:00:30.260
+It reduces reachability and blast radius.
+
+10
+00:00:30.920 --> 00:00:34.220
+It does not replace identity
+checks, encryption or
+
+11
+00:00:34.220 --> 00:00:38.220
+resource-level authorization.
+Follow the normal path.
+
+12
+00:00:38.740 --> 00:00:42.060
+The public client needs the
+web tier, which needs booking.
+
+13
+00:00:42.620 --> 00:00:46.520
+Booking needs the database.
+Record required ports and
+
+14
+00:00:46.520 --> 00:00:49.020
+dependencies before introducing isolation.
+
+15
+00:00:49.840 --> 00:00:53.240
+The unrelated worker has no
+business requirement to contact
+
+16
+00:00:53.240 --> 00:00:57.320
+the orders database. Blocking
+that path reduces reachability
+
+17
+00:00:57.320 --> 00:01:01.760
+and potential blast radius.
+SeatSpot public web traffic
+
+18
+00:01:01.760 --> 00:01:05.100
+should not directly reach
+the orders database or
+
+19
+00:01:05.100 --> 00:01:08.980
+administrative services. Booking
+may need a narrow database
+
+20
+00:01:08.980 --> 00:01:12.480
+connection while an unrelated
+image worker does not.
+
+21
+00:01:13.220 --> 00:01:16.940
+Now change one condition. Permit
+the actual booking workload
+
+22
+00:01:16.940 --> 00:01:19.480
+to use the configured database port.
+
+23
+00:01:19.940 --> 00:01:23.100
+Broad namespace-wide rules
+may allow more callers than
+
+24
+00:01:23.100 --> 00:01:27.600
+intended. A common misunderstanding
+is this: NetworkPolicy
+
+25
+00:01:27.600 --> 00:01:30.540
+automatically works in
+every Kubernetes cluster.
+
+26
+00:01:31.540 --> 00:01:34.240
+Enforcement depends on the
+network implementation and
+
+27
+00:01:34.240 --> 00:01:37.160
+correct selector semantics.
+Think about this.
+
+28
+00:01:37.580 --> 00:01:40.100
+A database port is reachable
+from a booking pod.
+
+29
+00:01:40.640 --> 00:01:43.060
+Does that authorize every SQL operation?
+
+30
+00:01:43.580 --> 00:01:45.480
+Pause the video and make your prediction.
+
+31
+00:01:46.320 --> 00:01:49.040
+No. Network reachability is one boundary.
+
+32
+00:01:49.040 --> 00:01:53.020
+Database credentials and
+application resource authorization
+
+33
+00:01:53.020 --> 00:01:57.220
+still matter. Let us reason
+with a concrete example.
+
+34
+00:01:58.000 --> 00:02:00.400
+Only the booking workload
+should initiate the database
+
+35
+00:02:00.400 --> 00:02:03.440
+application connection
+on its configured port.
+
+36
+00:02:04.080 --> 00:02:07.680
+A rule allowing the whole
+namespace may expose more callers
+
+37
+00:02:07.680 --> 00:02:11.600
+than intended; a narrower
+pod selector can express the
+
+38
+00:02:11.600 --> 00:02:14.860
+required source if labels and
+enforcement are trustworthy.
+
+39
+00:02:14.860 --> 00:02:18.200
+Test a permitted booking
+connection and a denied
+
+40
+00:02:18.200 --> 00:02:23.160
+unrelated-worker connection.
+Also verify DNS and any
+
+41
+00:02:23.160 --> 00:02:25.660
+cross-namespace behavior
+in the actual cluster.
+
+42
+00:02:26.440 --> 00:02:29.480
+These figures are teaching
+examples, not production
+
+43
+00:02:29.480 --> 00:02:33.300
+guarantees. Turn the idea
+into a design decision.
+
+44
+00:02:33.980 --> 00:02:36.940
+A policy object is only
+configuration intent.
+
+45
+00:02:37.760 --> 00:02:41.140
+The cluster network implementation
+must support and enforce
+
+46
+00:02:41.140 --> 00:02:45.320
+it, and selectors must match
+the intended workloads.
+
+47
+00:02:45.360 --> 00:02:49.100
+An allowed TCP connection is
+not permission to read every
+
+48
+00:02:49.100 --> 00:02:52.880
+order. Database credentials,
+encrypted transport and
+
+49
+00:02:52.880 --> 00:02:55.740
+application ownership checks
+remain separate controls.
+
+50
+00:02:56.400 --> 00:02:59.220
+When you try the practice
+task, look for this result.
+
+51
+00:02:59.900 --> 00:03:03.180
+A supporting network implementation
+must actually enforce
+
+52
+00:03:03.180 --> 00:03:06.700
+the policy; a YAML file
+alone proves nothing.
+
+53
+00:03:07.660 --> 00:03:11.340
+Check your understanding.
+Verify allowed traffic, denied
+
+54
+00:03:11.340 --> 00:03:15.280
+traffic and necessary
+DNS/monitoring dependencies.
+
+55
+00:03:16.100 --> 00:03:19.520
+Observe unexpected failures
+and refine the policy without
+
+56
+00:03:19.520 --> 00:03:22.700
+silently opening everything.
+Here is a challenge.
+
+57
+00:03:23.280 --> 00:03:26.900
+A pod has a NetworkPolicy but
+unwanted traffic still reaches
+
+58
+00:03:26.900 --> 00:03:30.040
+it. What do you verify?
+Pause before the answer.
+
+59
+00:03:30.740 --> 00:03:34.700
+Verify enforcement support,
+labels/selectors, namespace
+
+60
+00:03:34.700 --> 00:03:38.700
+semantics, ingress/egress
+direction and other allowed rules.
+
+61
+00:03:39.300 --> 00:03:41.900
+Test from the real source
+workload rather than only
+
+62
+00:03:41.900 --> 00:03:45.960
+inspecting YAML. For an interview,
+discuss ingress, egress,
+
+63
+00:03:46.600 --> 00:03:49.800
+DNS and actual connection tests.
+Say what you would measure,
+
+64
+00:03:50.240 --> 00:03:51.780
+not only which tool you would buy.

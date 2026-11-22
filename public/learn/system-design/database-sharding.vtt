@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:11.083
+00:00:00.000 --> 00:00:33.583
 Identify the record home. A request carries a tenant or entity key. The routing rule maps that key to an authoritative shard before data is read or written.
 
 2
-00:00:11.083 --> 00:00:22.083
+00:00:33.583 --> 00:01:06.750
 Distribute independent records. Different record groups live on different database shards. This can spread storage and write work when the groups are actually independent enough.
 
 3
-00:00:22.083 --> 00:00:32.500
+00:01:06.750 --> 00:01:47.333
 Find a hot key. One popular event can overload its shard even when every shard has the same row count. Workload distribution matters more than counting keys.
 
 4
-00:00:32.500 --> 00:00:45.083
+00:01:47.333 --> 00:02:21.250
 Examine a global query. A query across all events may contact every shard and merge results. Cross-shard joins, transactions and uniqueness require deliberate support or redesign.
 
 5
-00:00:45.083 --> 00:00:57.917
+00:02:21.250 --> 00:02:57.667
 Move ownership safely. Rebalancing needs copying, verification, a write/cutover policy and an updated routing map. Changing a modulo number does not move existing records.
 
 6
-00:00:57.917 --> 00:01:10.167
+00:02:57.667 --> 00:03:42.500
 Choose the simplest fit. Shard only when requirements and measurements justify the coordination cost. A suitable index or larger database may solve the current problem with much less complexity.

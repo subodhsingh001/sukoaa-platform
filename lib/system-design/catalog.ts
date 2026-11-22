@@ -1,9 +1,11 @@
 import raw from './lessons.json';
 import mediaRaw from './media.json';
-import type {Lesson} from './types';
+import type {Lesson,Teaching} from './types';
+import teachingRaw from './teaching.json';
+export const teaching=teachingRaw as Record<string,Teaching>;
 export const lessons = raw as Lesson[];
 export type Chapter={start:number;end:number;title:string;text:string};
-export type Media={duration:number;chapters:Chapter[];bytes:number;width:number;height:number;fps:number;narration:string};
+export type Media={duration:number;chapters:Chapter[];bytes:number;width:number;height:number;fps:number;narration:string;version?:number;audioFile?:string;captionsFile?:string;voice?:string;sampleRate?:number;audioBitrate?:number;captionCues?:number};
 export const media=mediaRaw as Record<string,Media>;
 export const lessonHref=(id:string)=>'/learn/system-design/'+id;
 export const summaries=lessons.map(({id,title,group,simple},index)=>({id,title,group,simple,index}));

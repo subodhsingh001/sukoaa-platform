@@ -1,0 +1,286 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.440
+Let us understand caching. You
+keep a timetable on your desk
+
+2
+00:00:03.440 --> 00:00:05.560
+instead of walking to
+the office every time.
+
+3
+00:00:05.940 --> 00:00:09.000
+It is fast, but a changed
+timetable makes your copy wrong.
+
+4
+00:00:09.580 --> 00:00:12.480
+The expiry time tells you when
+to check again; it does not
+
+5
+00:00:12.480 --> 00:00:16.000
+make the copy correct until
+then. A cache keeps a reusable
+
+6
+00:00:16.000 --> 00:00:18.940
+copy so future reads
+can avoid slower work.
+
+7
+00:00:19.400 --> 00:00:21.620
+Copies can become stale or disappear.
+
+8
+00:00:22.260 --> 00:00:25.220
+Decide what may be cached, for
+how long and who is allowed
+
+9
+00:00:25.220 --> 00:00:28.060
+to read it. Follow the normal path.
+
+10
+00:00:28.060 --> 00:00:31.000
+The reader asks for a
+public event description.
+
+11
+00:00:31.760 --> 00:00:35.500
+The key identifies the resource
+and representation; private
+
+12
+00:00:35.500 --> 00:00:38.060
+results need appropriate identity scoping.
+
+13
+00:00:38.700 --> 00:00:41.240
+A reusable cached value returns quickly.
+
+14
+00:00:41.760 --> 00:00:45.680
+Its age matters: a fast response
+can still be too stale for
+
+15
+00:00:45.680 --> 00:00:49.780
+the business operation. SeatSpot
+event descriptions change
+
+16
+00:00:49.780 --> 00:00:53.520
+rarely and are read often.
+They are good cache candidates.
+
+17
+00:00:53.520 --> 00:00:57.760
+Available-seat ownership and
+payment outcomes need stricter
+
+18
+00:00:57.760 --> 00:01:00.140
+correctness rules than
+a public description.
+
+19
+00:01:01.360 --> 00:01:05.300
+Now change one condition. If
+the value is absent or expired,
+
+20
+00:01:05.640 --> 00:01:09.000
+fetch from the source of truth.
+A miss is normal and must
+
+21
+00:01:09.000 --> 00:01:11.660
+have bounded latency
+and safe error handling.
+
+22
+00:01:12.400 --> 00:01:16.240
+A common misunderstanding is
+this: A cache copy is always
+
+23
+00:01:16.240 --> 00:01:20.600
+current until TTL expires. It
+can become stale immediately
+
+24
+00:01:20.600 --> 00:01:23.960
+after a source update;
+expiry is not a correctness
+
+25
+00:01:23.960 --> 00:01:28.340
+guarantee. Think about this. A
+popular key expires for every
+
+26
+00:01:28.340 --> 00:01:31.240
+visitor at once. What
+load reaches the database?
+
+27
+00:01:31.860 --> 00:01:33.820
+Pause the video and make your prediction.
+
+28
+00:01:34.640 --> 00:01:37.300
+Many concurrent misses
+can refill the same value.
+
+29
+00:01:37.820 --> 00:01:41.820
+Coalesce work, stagger expiry
+or serve controlled stale data
+
+30
+00:01:41.820 --> 00:01:45.660
+where allowed. Let us reason
+with a concrete example.
+
+31
+00:01:46.260 --> 00:01:50.520
+An illustrative endpoint receives
+1,000 reads/second with an
+
+32
+00:01:50.520 --> 00:01:55.400
+80% cache hit rate. About 200
+reads/second reach the source
+
+33
+00:01:55.400 --> 00:01:59.320
+in the simplified model. After
+a cache outage, the source
+
+34
+00:01:59.320 --> 00:02:03.520
+may suddenly receive all 1,000.
+Test the cold-cache path,
+
+35
+00:02:04.140 --> 00:02:07.100
+bound concurrent refill
+work and specify acceptable
+
+36
+00:02:07.100 --> 00:02:10.680
+staleness for descriptions.
+Do not use the estimate to
+
+37
+00:02:10.680 --> 00:02:14.140
+promise production capacity.
+These figures are teaching
+
+38
+00:02:14.140 --> 00:02:16.340
+examples, not production guarantees.
+
+39
+00:02:17.060 --> 00:02:19.680
+Turn the idea into a design decision.
+
+40
+00:02:20.320 --> 00:02:23.020
+Many readers may miss the
+same hot key together.
+
+41
+00:02:23.020 --> 00:02:27.340
+Coalesce loads or bound refill
+work so the cache does not
+
+42
+00:02:27.340 --> 00:02:31.300
+amplify pressure on the database.
+Populate the cache with an
+
+43
+00:02:31.300 --> 00:02:35.220
+explicit lifetime. Plan what
+happens after an update and
+
+44
+00:02:35.220 --> 00:02:38.380
+whether serving an older value
+is acceptable during refresh.
+
+45
+00:02:39.020 --> 00:02:41.920
+When you try the practice
+task, look for this result.
+
+46
+00:02:41.920 --> 00:02:47.020
+At 1,000 reads/second, source
+demand can jump from about 200
+
+47
+00:02:47.020 --> 00:02:49.420
+to 1,000 when the cache disappears.
+
+48
+00:02:50.520 --> 00:02:53.720
+Check your understanding.
+Remove the cache in a safe test.
+
+49
+00:02:54.220 --> 00:02:56.760
+Observe source traffic,
+latency and errors.
+
+50
+00:02:57.440 --> 00:03:00.440
+A warm hit-rate chart alone
+does not prove the architecture
+
+51
+00:03:00.440 --> 00:03:04.780
+can recover. Here is a challenge.
+An event title changes but
+
+52
+00:03:04.780 --> 00:03:08.200
+users still see the old
+title. Explain two remedies.
+
+53
+00:03:08.840 --> 00:03:12.560
+Pause before the answer.
+Invalidate or version the affected
+
+54
+00:03:12.560 --> 00:03:16.200
+cache entry on a successful
+update, or accept the documented
+
+55
+00:03:16.200 --> 00:03:20.760
+TTL staleness. Consider races
+between refill and update;
+
+56
+00:03:21.180 --> 00:03:23.300
+test the chosen consistency behavior.
+
+57
+00:03:24.000 --> 00:03:27.480
+For an interview, choose
+key scope, invalidation and
+
+58
+00:03:27.480 --> 00:03:31.020
+stampede control. Say what you
+would measure, not only which
+
+59
+00:03:31.020 --> 00:03:31.860
+tool you would buy.

@@ -1,2 +1,4 @@
 export type FlowStep={title:string;detail:string;edges:number[];failed?:number[];metric:string};
 export type Lesson={id:string;title:string;group:string;simple:string;analogy:string;why:string;engineering:string[];worked:{scenario:string;calculation:string;decision:string};implementation:{language:string;code:string;explanation:string};useCases:string[];pitfalls:string[];exercise:{prompt:string;hints:string[];solution:string};interview:{question:string;answer:string;followUp:string}[];quiz:{question:string;options:string[];correct:number;explanation:string};flow:{nodes:string[];edges:[number,number][];steps:FlowStep[]};references:{title:string;url:string}[]};
+
+export type Teaching = {prerequisites:string; goals:string[]; prediction:{question:string;answer:string}; lab:{title:string;steps:string[];expected:string}; misconception:{claim:string;correction:string}; interviewLevels:{foundation:string;practical:string;advanced:string}; narration:string[]};

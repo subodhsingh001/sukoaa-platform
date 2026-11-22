@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:12.833
+00:00:00.000 --> 00:00:36.583
 Start with one copy. One application serves event pages. Its safe measured capacity is finite, and a restart can interrupt every request reaching that copy.
 
 2
-00:00:12.833 --> 00:00:24.333
+00:00:36.583 --> 00:01:14.250
 Add another copy. Deploy the same application on another machine or process. Horizontal scaling adds peers rather than increasing resources inside the original machine.
 
 3
-00:00:24.333 --> 00:00:35.500
+00:01:14.250 --> 00:01:58.083
 Share incoming work. Routing sends requests to ready replicas. Balance according to workload characteristics; more boxes are useful only when requests can reach them.
 
 4
-00:00:35.500 --> 00:00:47.250
+00:01:58.083 --> 00:02:38.500
 Move durable state. Both replicas use the same appropriate storage for files, sessions or records. A file written only to Replica A will not magically appear on Replica B.
 
 5
-00:00:47.250 --> 00:00:58.417
+00:02:38.500 --> 00:03:12.250
 Find serial work. If every request waits on one locked database operation, extra applications may add waiting instead of throughput. Trace and load-test the complete path.
 
 6
-00:00:58.417 --> 00:01:10.167
+00:03:12.250 --> 00:03:58.667
 Test the gain. Compare throughput and tail latency before and after scaling. Also remove one replica to check that remaining copies serve users correctly with available capacity.

@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:14.500
+00:00:00.000 --> 00:00:37.833
 Define the regional goal. Decide whether another region is for disaster recovery, nearby reads or active writes. Each operation can have different latency, availability and consistency requirements.
 
 2
-00:00:14.500 --> 00:00:26.083
+00:00:37.833 --> 00:01:19.250
 Copy suitable state. Region A sends changes toward Region B. Asynchronous copying can lag; synchronous coordination adds waiting and depends on the communication path.
 
 3
-00:00:26.083 --> 00:00:37.417
+00:01:19.250 --> 00:02:04.417
 Lose the connection. The regions cannot communicate. Allowing both to confirm the same last seat independently can violate correctness even though both applications are running.
 
 4
-00:00:37.417 --> 00:00:48.417
+00:02:04.417 --> 00:02:45.667
 Fence and promote. A safe failover establishes which writer owns new decisions and prevents the old writer from conflicting. Routing alone does not settle database ownership.
 
 5
-00:00:48.417 --> 00:01:02.167
+00:02:45.667 --> 00:03:23.000
 Route and validate. Direct eligible traffic to the recovery region and validate the actual booking workflow. Its capacity, credentials and dependencies must work independently enough for the failure scenario.
 
 6
-00:01:02.167 --> 00:01:15.583
+00:03:23.000 --> 00:04:08.583
 Plan reconciliation and failback. After recovery, reconcile lag and in-flight work before moving ownership back. Test both failover and failback instead of treating the first traffic switch as the whole plan.

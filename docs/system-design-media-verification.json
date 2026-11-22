@@ -1,0 +1,280 @@
+{
+  "scope": "Technical verification, not a human listening or teaching-effectiveness review",
+  "lessons": [
+    {
+      "lesson": "load-balancing",
+      "durationSeconds": 231.802,
+      "integratedLUFS": -16.16,
+      "truePeakDBTP": -1.38,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9761
+    },
+    {
+      "lesson": "auto-scaling",
+      "durationSeconds": 243.499,
+      "integratedLUFS": -16.15,
+      "truePeakDBTP": -1.38,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9735
+    },
+    {
+      "lesson": "high-availability",
+      "durationSeconds": 237.2,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.36,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9615
+    },
+    {
+      "lesson": "fault-tolerance",
+      "durationSeconds": 233.8,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.25,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9722
+    },
+    {
+      "lesson": "horizontal-scaling",
+      "durationSeconds": 238.701,
+      "integratedLUFS": -16.15,
+      "truePeakDBTP": -1.22,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9714
+    },
+    {
+      "lesson": "vertical-scaling",
+      "durationSeconds": 214.499,
+      "integratedLUFS": -16.16,
+      "truePeakDBTP": -1.38,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9824
+    },
+    {
+      "lesson": "caching",
+      "durationSeconds": 212.899,
+      "integratedLUFS": -16.12,
+      "truePeakDBTP": -1.26,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9627
+    },
+    {
+      "lesson": "cdn",
+      "durationSeconds": 224.501,
+      "integratedLUFS": -16.16,
+      "truePeakDBTP": -1.12,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9443
+    },
+    {
+      "lesson": "api-gateway",
+      "durationSeconds": 222.801,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.12,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9624
+    },
+    {
+      "lesson": "rate-limiting",
+      "durationSeconds": 233.9,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.4,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9755
+    },
+    {
+      "lesson": "circuit-breaker",
+      "durationSeconds": 206.8,
+      "integratedLUFS": -16.16,
+      "truePeakDBTP": -1.33,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9892
+    },
+    {
+      "lesson": "message-queues",
+      "durationSeconds": 220.299,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.31,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.949
+    },
+    {
+      "lesson": "event-driven-architecture",
+      "durationSeconds": 220.901,
+      "integratedLUFS": -16.15,
+      "truePeakDBTP": -1.31,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9616
+    },
+    {
+      "lesson": "database-replication",
+      "durationSeconds": 231.1,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.33,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9507
+    },
+    {
+      "lesson": "database-sharding",
+      "durationSeconds": 222.498,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.35,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9766
+    },
+    {
+      "lesson": "data-partitioning",
+      "durationSeconds": 226.8,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.32,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9737
+    },
+    {
+      "lesson": "microservices",
+      "durationSeconds": 232.701,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.37,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9794
+    },
+    {
+      "lesson": "service-discovery",
+      "durationSeconds": 210.999,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.33,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.98
+    },
+    {
+      "lesson": "reverse-proxy",
+      "durationSeconds": 219.299,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.31,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9635
+    },
+    {
+      "lesson": "dns-management",
+      "durationSeconds": 236.101,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.22,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9465
+    },
+    {
+      "lesson": "disaster-recovery",
+      "durationSeconds": 241.9,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.35,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9575
+    },
+    {
+      "lesson": "zero-downtime-deployments",
+      "durationSeconds": 232.501,
+      "integratedLUFS": -16.12,
+      "truePeakDBTP": -1.34,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9719
+    },
+    {
+      "lesson": "distributed-tracing",
+      "durationSeconds": 241.999,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.34,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9458
+    },
+    {
+      "lesson": "network-segmentation",
+      "durationSeconds": 232.802,
+      "integratedLUFS": -16.13,
+      "truePeakDBTP": -1.41,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9751
+    },
+    {
+      "lesson": "multi-region-setup",
+      "durationSeconds": 248.601,
+      "integratedLUFS": -16.14,
+      "truePeakDBTP": -1.39,
+      "sampleRate": 24000,
+      "audioCodec": "AAC",
+      "videoCodec": "H.264",
+      "decodedWithoutErrors": true,
+      "referenceWordMatchRatio": 0.9586
+    }
+  ]
+}

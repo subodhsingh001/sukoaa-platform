@@ -1,0 +1,298 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.200
+Let us understand database sharding.
+
+2
+00:00:02.880 --> 00:00:06.460
+A library splits books across
+buildings by a catalog rule.
+
+3
+00:00:07.020 --> 00:00:09.540
+The catalog must tell you
+which building owns a book.
+
+4
+00:00:10.180 --> 00:00:13.120
+A rule that sends every popular
+book to the same building
+
+5
+00:00:13.120 --> 00:00:17.080
+still creates a queue. Finding
+books across all buildings is
+
+6
+00:00:17.080 --> 00:00:20.800
+more work than visiting one
+shelf. Sharding divides records
+
+7
+00:00:20.800 --> 00:00:24.260
+across separate database
+shards, often using a key.
+
+8
+00:00:24.760 --> 00:00:28.380
+Each record needs a known
+home. It can spread storage and
+
+9
+00:00:28.380 --> 00:00:31.920
+write load, but cross-shard
+operations and moving data
+
+10
+00:00:31.920 --> 00:00:35.020
+become harder. Follow the normal path.
+
+11
+00:00:35.500 --> 00:00:38.380
+A request carries a tenant or entity key.
+
+12
+00:00:38.820 --> 00:00:41.840
+The routing rule maps that
+key to an authoritative shard
+
+13
+00:00:41.840 --> 00:00:46.240
+before data is read or written.
+Different record groups live
+
+14
+00:00:46.240 --> 00:00:49.760
+on different database shards.
+This can spread storage and
+
+15
+00:00:49.760 --> 00:00:52.520
+write work when the groups are
+actually independent enough.
+
+16
+00:00:52.520 --> 00:00:56.960
+SeatSpot may eventually outgrow
+one database write/storage
+
+17
+00:00:56.960 --> 00:01:00.420
+boundary. Sharding could place
+different tenants or events
+
+18
+00:01:00.420 --> 00:01:04.440
+on different shards, but one
+extremely popular event can
+
+19
+00:01:04.440 --> 00:01:08.280
+still create a hot shard.
+Now change one condition.
+
+20
+00:01:08.980 --> 00:01:12.280
+One popular event can overload
+its shard even when every
+
+21
+00:01:12.280 --> 00:01:16.060
+shard has the same row count.
+Workload distribution matters
+
+22
+00:01:16.060 --> 00:01:20.400
+more than counting keys. A
+common misunderstanding is this:
+
+23
+00:01:20.600 --> 00:01:24.800
+Hashing guarantees equal load.
+It distributes keys; uneven
+
+24
+00:01:24.800 --> 00:01:28.220
+popularity and request cost
+can still make a hot shard.
+
+25
+00:01:28.720 --> 00:01:32.320
+Think about this. Four shards
+have similar row counts, but
+
+26
+00:01:32.320 --> 00:01:35.800
+one tenant sends half the
+traffic. Is the workload balanced?
+
+27
+00:01:36.320 --> 00:01:38.200
+Pause the video and make your prediction.
+
+28
+00:01:39.080 --> 00:01:42.420
+Not necessarily. Even row
+distribution is different from
+
+29
+00:01:42.420 --> 00:01:46.460
+even traffic. A hot tenant
+may still dominate one shard.
+
+30
+00:01:47.440 --> 00:01:49.640
+Let us reason with a concrete example.
+
+31
+00:01:49.640 --> 00:01:53.700
+Ten tenants each produce
+similar load except one tenant
+
+32
+00:01:53.700 --> 00:01:57.860
+generates half the total.
+Hashing tenant IDs across four
+
+33
+00:01:57.860 --> 00:02:00.840
+shards can still put half
+the traffic on the hot tenant
+
+34
+00:02:00.840 --> 00:02:04.260
+shard. Even key counts
+do not mean even traffic.
+
+35
+00:02:04.920 --> 00:02:07.700
+Consider splitting that tenant
+workload using a suitable
+
+36
+00:02:07.700 --> 00:02:11.980
+finer key, isolation or an
+alternative ownership model.
+
+37
+00:02:12.920 --> 00:02:15.640
+Test query patterns and
+transaction boundaries before
+
+38
+00:02:15.640 --> 00:02:19.220
+committing. These figures
+are teaching examples, not
+
+39
+00:02:19.220 --> 00:02:23.560
+production guarantees. Turn the
+idea into a design decision.
+
+40
+00:02:24.200 --> 00:02:27.600
+A query across all events may
+contact every shard and merge
+
+41
+00:02:27.600 --> 00:02:31.800
+results. Cross-shard joins,
+transactions and uniqueness
+
+42
+00:02:31.800 --> 00:02:34.380
+require deliberate support or redesign.
+
+43
+00:02:35.200 --> 00:02:39.460
+Rebalancing needs copying,
+verification, a write/cutover
+
+44
+00:02:39.460 --> 00:02:43.700
+policy and an updated routing
+map. Changing a modulo number
+
+45
+00:02:43.700 --> 00:02:47.160
+does not move existing records.
+When you try the practice
+
+46
+00:02:47.160 --> 00:02:51.320
+task, look for this result.
+A routing function alone does
+
+47
+00:02:51.320 --> 00:02:55.260
+not migrate records, rebalance
+a hot tenant or preserve
+
+48
+00:02:55.260 --> 00:02:58.780
+cross-shard transactions.
+Check your understanding.
+
+49
+00:02:59.460 --> 00:03:02.600
+Shard only when requirements
+and measurements justify the
+
+50
+00:03:02.600 --> 00:03:06.800
+coordination cost. A suitable
+index or larger database may
+
+51
+00:03:06.800 --> 00:03:09.220
+solve the current problem
+with much less complexity.
+
+52
+00:03:09.220 --> 00:03:14.000
+Here is a challenge. One event
+causes 70% of booking writes
+
+53
+00:03:14.000 --> 00:03:18.120
+and eventId is the shard key.
+Does adding shards fix it?
+
+54
+00:03:18.360 --> 00:03:20.900
+Pause before the answer.
+Not automatically.
+
+55
+00:03:21.640 --> 00:03:24.620
+That event remains on
+one shard. Revisit seat
+
+56
+00:03:24.620 --> 00:03:28.380
+ownership/partitioning and
+concurrency rules, or provide
+
+57
+00:03:28.380 --> 00:03:31.880
+dedicated capacity, without
+weakening atomic reservation
+
+58
+00:03:31.880 --> 00:03:35.520
+correctness. For an interview,
+choose a key and discuss
+
+59
+00:03:35.520 --> 00:03:38.100
+joins, transactions and hot tenants.
+
+60
+00:03:38.780 --> 00:03:41.340
+Say what you would measure,
+not only which tool you would
+
+61
+00:03:41.340 --> 00:03:41.580
+buy.

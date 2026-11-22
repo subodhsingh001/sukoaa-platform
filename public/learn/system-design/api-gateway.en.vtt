@@ -1,0 +1,297 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.200
+Let us understand api gateway.
+A school reception desk
+
+2
+00:00:04.200 --> 00:00:07.520
+checks visitor identity and
+sends visitors to the right
+
+3
+00:00:07.520 --> 00:00:11.620
+office. Passing reception does
+not mean a visitor can open
+
+4
+00:00:11.620 --> 00:00:15.660
+every cupboard. Services
+still decide which records or
+
+5
+00:00:15.660 --> 00:00:18.120
+actions that person is
+permitted to access.
+
+6
+00:00:18.120 --> 00:00:22.420
+An API gateway is an entry
+layer that applies shared API
+
+7
+00:00:22.420 --> 00:00:24.880
+policies and routes requests to services.
+
+8
+00:00:25.920 --> 00:00:29.340
+Authentication, quotas and
+request validation may live
+
+9
+00:00:29.340 --> 00:00:33.060
+there, but business authorization
+still belongs near the
+
+10
+00:00:33.060 --> 00:00:35.960
+protected data. Follow the normal path.
+
+11
+00:00:36.520 --> 00:00:38.920
+The client calls a public API address.
+
+12
+00:00:39.540 --> 00:00:42.980
+The gateway provides a shared
+routing boundary instead of
+
+13
+00:00:42.980 --> 00:00:46.500
+requiring clients to know every
+internal service location.
+
+14
+00:00:47.160 --> 00:00:50.760
+Validate the request and supported
+identity credentials with
+
+15
+00:00:50.760 --> 00:00:55.060
+maintained security libraries.
+Reject oversized or invalid
+
+16
+00:00:55.060 --> 00:00:57.620
+traffic before forwarding expensive work.
+
+17
+00:00:57.620 --> 00:01:02.300
+SeatSpot exposes event, order
+and payment services through
+
+18
+00:01:02.300 --> 00:01:07.000
+one public API. Shared routing
+and coarse policies can be
+
+19
+00:01:07.000 --> 00:01:10.360
+managed consistently, while
+each service owns its business
+
+20
+00:01:10.360 --> 00:01:15.260
+rules. Now change one condition.
+Event requests go to the
+
+21
+00:01:15.260 --> 00:01:18.340
+event service; order requests
+go to the order service.
+
+22
+00:01:18.340 --> 00:01:22.340
+API versions and paths should
+have deliberate routing rules.
+
+23
+00:01:22.340 --> 00:01:27.080
+A common misunderstanding is
+this: The gateway replaces all
+
+24
+00:01:27.080 --> 00:01:30.440
+service authorization. Each
+service must protect its
+
+25
+00:01:30.440 --> 00:01:33.800
+business actions and
+resources. Think about this.
+
+26
+00:01:34.140 --> 00:01:39.960
+A valid user changes
+/orders/17 to /orders/18.
+
+27
+00:01:39.960 --> 00:01:42.280
+Which boundary must
+still verify ownership?
+
+28
+00:01:42.840 --> 00:01:44.760
+Pause the video and make your prediction.
+
+29
+00:01:45.420 --> 00:01:48.700
+The order service or data-access
+boundary must authorize
+
+30
+00:01:48.700 --> 00:01:52.700
+that record. Passing gateway
+authentication is insufficient.
+
+31
+00:01:53.780 --> 00:01:55.900
+Let us reason with a concrete example.
+
+32
+00:01:56.460 --> 00:01:59.580
+A mobile screen calls events
+and orders through one gateway.
+
+33
+00:02:00.180 --> 00:02:04.460
+Its latency includes gateway
+work plus downstream waits.
+
+34
+00:02:04.460 --> 00:02:07.760
+Two parallel calls take
+approximately the slower path plus
+
+35
+00:02:07.760 --> 00:02:11.000
+overhead; two sequential
+calls add their delays.
+
+36
+00:02:11.860 --> 00:02:15.240
+Real dependency behavior and
+timeouts determine the result.
+
+37
+00:02:15.240 --> 00:02:19.700
+Keep routing/coarse policy
+central but preserve domain
+
+38
+00:02:19.700 --> 00:02:22.120
+authorization and tracing in services.
+
+39
+00:02:22.800 --> 00:02:26.200
+Test a gateway outage and a
+single unhealthy downstream
+
+40
+00:02:26.200 --> 00:02:30.420
+service. These figures are
+teaching examples, not production
+
+41
+00:02:30.420 --> 00:02:33.960
+guarantees. Turn the idea
+into a design decision.
+
+42
+00:02:34.540 --> 00:02:37.640
+The order service checks ownership
+and allowed actions using
+
+43
+00:02:37.640 --> 00:02:41.320
+verified identity. Passing
+gateway authentication does not
+
+44
+00:02:41.320 --> 00:02:43.280
+grant access to another visitor order.
+
+45
+00:02:43.280 --> 00:02:47.080
+If one API request fans
+out, set deadlines and
+
+46
+00:02:47.080 --> 00:02:50.800
+partial-failure behavior. A
+slow optional service should not
+
+47
+00:02:50.800 --> 00:02:52.720
+hold every gateway worker indefinitely.
+
+48
+00:02:53.380 --> 00:02:56.160
+When you try the practice
+task, look for this result.
+
+49
+00:02:56.760 --> 00:03:00.100
+A verified identity does not
+grant access to every record.
+
+50
+00:03:01.040 --> 00:03:03.900
+Check your understanding.
+Trace requests through the
+
+51
+00:03:03.900 --> 00:03:06.980
+boundary and test gateway
+capacity and redundancy.
+
+52
+00:03:07.800 --> 00:03:11.300
+Centralizing policy is
+useful, but it also creates an
+
+53
+00:03:11.300 --> 00:03:14.720
+important operational
+dependency. Here is a challenge.
+
+54
+00:03:15.320 --> 00:03:18.480
+A signed-in user changes
+an order ID in the URL.
+
+55
+00:03:19.140 --> 00:03:21.760
+Which component must
+stop cross-user access?
+
+56
+00:03:22.160 --> 00:03:25.440
+Pause before the answer. The
+order service must perform
+
+57
+00:03:25.440 --> 00:03:28.660
+resource-level authorization
+using verified identity.
+
+58
+00:03:29.560 --> 00:03:32.120
+Gateway checks are useful
+but cannot replace ownership
+
+59
+00:03:32.120 --> 00:03:36.260
+enforcement. For an interview,
+explain token checks, quotas,
+
+60
+00:03:36.860 --> 00:03:39.640
+deadlines and resource
+ownership. Say what you would
+
+61
+00:03:39.640 --> 00:03:41.920
+measure, not only which
+tool you would buy.

@@ -1,0 +1,305 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.280
+Let us understand horizontal scaling.
+
+2
+00:00:02.940 --> 00:00:06.320
+A teacher asks three helpers
+to check homework instead of
+
+3
+00:00:06.320 --> 00:00:10.320
+giving one helper a faster pen.
+This helps if papers can be
+
+4
+00:00:10.320 --> 00:00:14.020
+divided. It does not help much
+if every paper must wait for
+
+5
+00:00:14.020 --> 00:00:17.600
+one locked answer book. Shared
+resources and coordination
+
+6
+00:00:17.600 --> 00:00:21.080
+decide whether more helpers
+actually increase throughput.
+
+7
+00:00:21.760 --> 00:00:25.260
+Horizontal scaling adds more
+machines or application copies.
+
+8
+00:00:25.940 --> 00:00:28.060
+Work must be shareable between them.
+
+9
+00:00:28.060 --> 00:00:32.320
+It differs from auto scaling:
+horizontal describes the
+
+10
+00:00:32.320 --> 00:00:35.420
+direction of growth; automatic
+describes how the decision is
+
+11
+00:00:35.420 --> 00:00:40.260
+made. Follow the normal path.
+One application serves event
+
+12
+00:00:40.260 --> 00:00:44.660
+pages. Its safe measured
+capacity is finite, and a restart
+
+13
+00:00:44.660 --> 00:00:47.420
+can interrupt every
+request reaching that copy.
+
+14
+00:00:48.060 --> 00:00:51.460
+Deploy the same application
+on another machine or process.
+
+15
+00:00:52.220 --> 00:00:55.200
+Horizontal scaling adds
+peers rather than increasing
+
+16
+00:00:55.200 --> 00:00:57.680
+resources inside the original machine.
+
+17
+00:00:57.680 --> 00:01:01.140
+SeatSpot can run several
+stateless event-page replicas
+
+18
+00:01:01.140 --> 00:01:05.200
+during a sale. A user may reach
+a different copy on the next
+
+19
+00:01:05.200 --> 00:01:09.560
+request, so login state,
+uploaded files and reservations
+
+20
+00:01:10.100 --> 00:01:13.400
+cannot silently live only
+in one replica memory.
+
+21
+00:01:14.340 --> 00:01:18.180
+Now change one condition.
+Routing sends requests to ready
+
+22
+00:01:18.180 --> 00:01:21.580
+replicas. Balance according
+to workload characteristics;
+
+23
+00:01:21.580 --> 00:01:25.620
+more boxes are useful only
+when requests can reach them.
+
+24
+00:01:25.980 --> 00:01:29.260
+A common misunderstanding
+is this: More app copies
+
+25
+00:01:29.260 --> 00:01:31.920
+automatically scale database writes.
+
+26
+00:01:31.920 --> 00:01:35.120
+The write owner, locks and
+connection limits can still
+
+27
+00:01:35.120 --> 00:01:37.620
+constrain throughput. Think about this.
+
+28
+00:01:37.920 --> 00:01:42.480
+Four copies reach 250
+requests/second when one reaches 100.
+
+29
+00:01:43.080 --> 00:01:46.740
+Did capacity grow four times?
+Pause the video and make your
+
+30
+00:01:46.740 --> 00:01:52.380
+prediction. No. The measured
+efficiency is 62.5% of the
+
+31
+00:01:52.380 --> 00:01:56.280
+ideal 400. Investigate the
+shared bottleneck before adding
+
+32
+00:01:56.280 --> 00:02:00.420
+more replicas. Let us reason
+with a concrete example.
+
+33
+00:02:01.100 --> 00:02:05.060
+One replica safely serves
+100 requests/second.
+
+34
+00:02:05.060 --> 00:02:08.760
+A load test with four
+replicas reaches only 250.
+
+35
+00:02:09.740 --> 00:02:13.400
+Ideal linear scaling would
+suggest 400, but the measured
+
+36
+00:02:13.400 --> 00:02:20.880
+efficiency is 250/400 = 62.5%.
+This number describes the
+
+37
+00:02:20.880 --> 00:02:24.640
+experiment, not a universal
+law. Investigate database
+
+38
+00:02:24.640 --> 00:02:29.240
+locking, shared CPU, connection
+limits and the serial part
+
+39
+00:02:29.240 --> 00:02:31.120
+before adding another four replicas.
+
+40
+00:02:32.040 --> 00:02:35.300
+Re-test after each change.
+These figures are teaching
+
+41
+00:02:35.300 --> 00:02:37.480
+examples, not production guarantees.
+
+42
+00:02:38.540 --> 00:02:40.720
+Turn the idea into a design decision.
+
+43
+00:02:41.300 --> 00:02:44.700
+Both replicas use the same
+appropriate storage for files,
+
+44
+00:02:45.060 --> 00:02:49.540
+sessions or records. A file
+written only to Replica A will
+
+45
+00:02:49.540 --> 00:02:53.480
+not magically appear on Replica
+B. If every request waits on
+
+46
+00:02:53.480 --> 00:02:57.400
+one locked database operation,
+extra applications may add
+
+47
+00:02:57.400 --> 00:03:00.960
+waiting instead of throughput.
+Trace and load-test the
+
+48
+00:03:00.960 --> 00:03:04.520
+complete path. When you try the
+practice task, look for this
+
+49
+00:03:04.520 --> 00:03:09.520
+result. A gap from ideal scaling
+is a diagnostic clue, not
+
+50
+00:03:09.520 --> 00:03:13.420
+proof which dependency is
+slow. Check your understanding.
+
+51
+00:03:14.000 --> 00:03:16.780
+Compare throughput and tail
+latency before and after
+
+52
+00:03:16.780 --> 00:03:20.360
+scaling. Also remove one
+replica to check that remaining
+
+53
+00:03:20.360 --> 00:03:23.380
+copies serve users correctly
+with available capacity.
+
+54
+00:03:24.080 --> 00:03:27.940
+Here is a challenge. An upload
+is saved to App A local disk.
+
+55
+00:03:28.580 --> 00:03:31.420
+The next download request reaches App B.
+
+56
+00:03:31.580 --> 00:03:34.120
+Propose a fix. Pause before the answer.
+
+57
+00:03:34.680 --> 00:03:37.900
+Store the file in a shared
+durable object store and keep
+
+58
+00:03:37.900 --> 00:03:41.160
+metadata/access rules in
+an authoritative store.
+
+59
+00:03:41.660 --> 00:03:44.820
+Stream or redirect authorized
+downloads from that shared
+
+60
+00:03:44.820 --> 00:03:48.340
+location. Do not depend on
+sticky sessions for durability.
+
+61
+00:03:49.060 --> 00:03:52.580
+For an interview, discuss
+state, job ownership, database
+
+62
+00:03:52.580 --> 00:03:56.380
+limits and real load tests.
+Say what you would measure, not
+
+63
+00:03:56.380 --> 00:03:57.720
+only which tool you would buy.

@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:11.500
+00:00:00.000 --> 00:00:36.250
 Start one operation. The gateway starts or receives trace context for checkout. Its span represents one part of the operation, not all system traffic.
 
 2
-00:00:11.500 --> 00:00:22.667
+00:00:36.250 --> 00:01:09.083
 Propagate context. Booking receives compatible context and creates a related span. Without propagation, downstream records can appear as unrelated operations.
 
 3
-00:00:22.667 --> 00:00:34.083
+00:01:09.083 --> 00:02:00.167
 Record parallel work. Database and payment calls run in parallel in this teaching example. Their intervals overlap, so adding both durations would overstate wall-clock time.
 
 4
-00:00:34.083 --> 00:00:45.917
+00:02:00.167 --> 00:02:39.583
 Collect span evidence. Instrumentation exports spans to an observability backend. Export buffering, sampling and failures mean a trace view is not a complete audit of every request.
 
 5
-00:00:45.917 --> 00:00:57.917
+00:02:39.583 --> 00:03:15.000
 Find the slow boundary. Compare the critical path, errors and dependency waits. Combine traces with aggregate metrics to determine whether the visible slow request reflects a widespread problem.
 
 6
-00:00:57.917 --> 00:01:10.250
+00:03:15.000 --> 00:04:02.000
 Protect telemetry data. Do not attach secrets or unnecessary personal data to spans. Keep attribute cardinality, access, sampling and retention within a deliberate observability budget.

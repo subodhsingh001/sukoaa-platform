@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:13.583
+00:00:00.000 --> 00:00:37.917
 Define a partition rule. History rows are grouped by date. This organization can exist inside one database and should not be confused with distributing ownership across independent shards.
 
 2
-00:00:13.583 --> 00:00:24.083
+00:00:37.917 --> 00:01:14.917
 Create ranges. Each month has a defined range with explicit boundaries. Future data needs a matching partition or a deliberately configured default behavior.
 
 3
-00:00:24.083 --> 00:00:35.167
+00:01:14.917 --> 00:01:56.167
 Ask for November. A date-bounded query reaches the planner. The engine can eliminate irrelevant ranges if its rules and the query expression permit partition pruning.
 
 4
-00:00:35.167 --> 00:00:46.083
+00:01:56.167 --> 00:02:30.000
 Read the useful part. The November partition supplies the requested history. An appropriate index and query plan can still be necessary inside that partition.
 
 5
-00:00:46.083 --> 00:00:59.750
+00:02:30.000 --> 00:03:03.917
 Maintain the lifecycle. Retention can operate on old partitions, but removal is a data-policy decision. Verify dependencies, recovery requirements and correct boundaries before destructive maintenance.
 
 6
-00:00:59.750 --> 00:01:11.250
+00:03:03.917 --> 00:03:46.750
 Know the boundary. A query without the partition key may still inspect many parts. More partitions do not automatically add machines, guarantee speed or fix one hot-row lock.

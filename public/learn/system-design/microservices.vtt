@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:13.667
+00:00:00.000 --> 00:00:37.083
 Find the capabilities. Name business responsibilities before drawing services. Catalog descriptions and authoritative seat reservations have different ownership and correctness requirements.
 
 2
-00:00:13.667 --> 00:00:24.500
+00:00:37.083 --> 00:01:16.250
 Own the data. Each capability owns its protected state and exposes contracts. Giving every service write access to every table defeats much of the intended independence.
 
 3
-00:00:24.500 --> 00:00:35.917
+00:01:16.250 --> 00:01:58.833
 Cross a network boundary. The booking workflow contacts payments. That call can time out or succeed remotely while its response is lost; it is not a local transaction.
 
 4
-00:00:35.917 --> 00:00:48.417
+00:01:58.833 --> 00:02:36.250
 Decouple optional work. Confirmation can publish notification work after reliable business-state coordination. A slow email provider need not occupy the booking request indefinitely.
 
 5
-00:00:48.417 --> 00:01:00.167
+00:02:36.250 --> 00:03:10.583
 Deploy compatibly. Old and new callers may coexist. Test contract compatibility and observe version-specific errors instead of requiring every service to deploy in lockstep.
 
 6
-00:01:00.167 --> 00:01:12.000
+00:03:10.583 --> 00:03:52.667
 Justify the complexity. For a small team, a modular monolith may satisfy the same domain boundaries with fewer moving parts. Choose services from requirements rather than fashion.

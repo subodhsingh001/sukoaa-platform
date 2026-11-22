@@ -1,6 +1,19 @@
+CURRENT MEDIA (refresh: 22 November 2026)
+Original Sukoaa diagrams, lesson scripts and synthetic narration. Current voice: Kokoro v1.0, af_heart, English female, generated offline using kokoro-onnx 0.6.1 and ONNX Runtime. No person is being impersonated. Models, voice weights, executables and training datasets are NOT distributed in this project. FFmpeg encodes the generated videos and DejaVu Sans renders diagram text.
+
+Model: https://huggingface.co/hexgrad/Kokoro-82M (Apache-2.0 model weights).
+Quantized ONNX export: https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX (Apache-2.0).
+Inference wrapper: https://github.com/thewh1teagle/kokoro-onnx (MIT).
+Caption alignment: https://github.com/SYSTRAN/faster-whisper (MIT), using a local tiny.en recognition model for authoring only. Authored text is retained; recognition output is not used as lesson content.
+The Kokoro model card also acknowledges CC BY training sources including Koniwa and SIWIS. Source attribution: https://huggingface.co/hexgrad/Kokoro-82M#creative-commons-attribution. Training-data attribution does not mean that recordings from those datasets are included in these videos. Original Sukoaa instructional text supplies the generated speech.
+This notice describes provenance, not endorsement or a guarantee about every downstream use. Retain upstream license notices if redistributing models separately.
+
+HISTORICAL TOOL NOTICES
+The following notices were retained from the earlier Flite-based course for attribution history. Flite is no longer the narrator in any of the 25 current videos.
+
 Sukoaa system-design media generation notices
 
-Original diagrams, lesson text and animation scripts were prepared for Sukoaa. Narration is computer-generated English using Flite SLT through FFmpeg. Fonts used for rasterized video text: DejaVu Sans. No Flite/FFmpeg/font executable or font file is bundled with these media assets. These tools do not endorse Sukoaa.
+Original diagrams, lesson text and animation scripts were prepared for Sukoaa. Earlier course versions used Flite SLT; the current narration is described above. Fonts used for rasterized video text: DejaVu Sans. No Flite/FFmpeg/font executable or font file is bundled with these media assets. These tools do not endorse Sukoaa.
 
 The following installed-package notices are retained for attribution and reference.
 

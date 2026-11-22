@@ -7,6 +7,7 @@ export const primaryLinks: SiteLink[] = [
   {label: 'Project Studio', href: '/studio'},
 ];
 export const learningLinks: SiteLink[] = [
+  {label: 'GenAI engineering course', href: '/learn/gen-ai'},
   {label: 'System design tutorials', href: '/learn/system-design'},
   {label: 'Interview preparation', href: '/interview-prep'},
   {label: 'GenAI interview preparation', href: '/interview-prep/genai'},

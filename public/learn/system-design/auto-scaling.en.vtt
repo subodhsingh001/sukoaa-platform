@@ -1,0 +1,317 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.280
+Let us understand auto scaling.
+A shop manager sees a long
+
+2
+00:00:04.280 --> 00:00:06.620
+checkout queue and opens another counter.
+
+3
+00:00:07.280 --> 00:00:11.400
+Opening takes time: someone
+must arrive, sign in and prepare
+
+4
+00:00:11.400 --> 00:00:15.000
+the till. Closing every quiet
+counter immediately would
+
+5
+00:00:15.000 --> 00:00:18.300
+cause a new queue a minute
+later. The manager needs minimum
+
+6
+00:00:18.300 --> 00:00:22.100
+staffing and patience, not just
+a rule that reacts to every
+
+7
+00:00:22.100 --> 00:00:26.100
+small change. Auto scaling
+changes capacity automatically
+
+8
+00:00:26.100 --> 00:00:30.300
+when measured demand changes.
+A controller observes a
+
+9
+00:00:30.300 --> 00:00:33.460
+signal, chooses a replica count
+and waits for new capacity
+
+10
+00:00:33.460 --> 00:00:37.900
+to become ready. It is a delayed
+feedback loop, not instant
+
+11
+00:00:37.900 --> 00:00:41.440
+unlimited capacity.
+Follow the normal path.
+
+12
+00:00:41.920 --> 00:00:44.880
+The application serves
+visitors while metrics record
+
+13
+00:00:44.880 --> 00:00:49.440
+utilization and request behavior.
+Select a signal related to
+
+14
+00:00:49.440 --> 00:00:52.800
+the constrained resource,
+not simply the easiest chart.
+
+15
+00:00:52.800 --> 00:00:55.880
+The controller compares
+the observed signal with a
+
+16
+00:00:55.880 --> 00:00:59.220
+configured target and computes
+a desired replica count
+
+17
+00:00:59.220 --> 00:01:03.080
+within minimum and maximum
+limits. SeatSpot traffic grows
+
+18
+00:01:03.080 --> 00:01:07.160
+before a popular sale. Manual
+scaling may arrive too late,
+
+19
+00:01:07.160 --> 00:01:10.420
+while leaving peak capacity
+running all day wastes
+
+20
+00:01:10.420 --> 00:01:14.620
+resources. Automatic control
+can help, provided start-up
+
+21
+00:01:14.620 --> 00:01:17.120
+delay and dependency limits are included.
+
+22
+00:01:18.100 --> 00:01:21.540
+Now change one condition.
+The controller requests more
+
+23
+00:01:21.540 --> 00:01:25.840
+replicas. Scheduling, image
+download, initialization and
+
+24
+00:01:25.840 --> 00:01:29.620
+health checks take time. Desired
+capacity and ready capacity
+
+25
+00:01:29.620 --> 00:01:33.580
+can differ. A common
+misunderstanding is this: Automatic
+
+26
+00:01:33.580 --> 00:01:38.200
+scaling is instant. Observation,
+scheduling, image startup
+
+27
+00:01:38.200 --> 00:01:41.340
+and readiness all take
+time. Think about this.
+
+28
+00:01:41.680 --> 00:01:44.380
+CPU is low while requests
+wait on a database.
+
+29
+00:01:45.140 --> 00:01:47.340
+Should CPU scaling be your only signal?
+
+30
+00:01:47.340 --> 00:01:49.720
+Pause the video and make your prediction.
+
+31
+00:01:50.880 --> 00:01:54.800
+No. CPU can be low during I/O waits.
+
+32
+00:01:54.800 --> 00:01:58.800
+Inspect latency, concurrency,
+database waits and the actual
+
+33
+00:01:58.800 --> 00:02:03.060
+constrained resource. Let us
+reason with a concrete example.
+
+34
+00:02:03.620 --> 00:02:09.080
+Four replicas average 80% CPU.
+The target is 50%, assuming
+
+35
+00:02:09.080 --> 00:02:12.000
+similar replicas and CPU-bound work.
+
+36
+00:02:12.700 --> 00:02:18.840
+A simplified estimate is
+ceil(4 × 80 / 50) = 7 replicas.
+
+37
+00:02:19.540 --> 00:02:22.480
+This is a teaching estimate;
+real controllers apply
+
+38
+00:02:22.480 --> 00:02:25.660
+tolerances, readiness
+handling and other policies.
+
+39
+00:02:26.440 --> 00:02:29.700
+Check whether seven replicas
+can start, whether their total
+
+40
+00:02:29.700 --> 00:02:33.100
+database connections fit,
+and whether latency improves.
+
+41
+00:02:33.860 --> 00:02:37.060
+A replica recommendation is
+not proof the system is safe.
+
+42
+00:02:37.680 --> 00:02:40.560
+These figures are teaching
+examples, not production
+
+43
+00:02:40.560 --> 00:02:44.360
+guarantees. Turn the idea
+into a design decision.
+
+44
+00:02:44.360 --> 00:02:47.880
+Only ready replicas should
+receive normal traffic.
+
+45
+00:02:48.460 --> 00:02:52.680
+If nodes or quotas are exhausted,
+a controller cannot create
+
+46
+00:02:52.680 --> 00:02:55.080
+the missing physical capacity by itself.
+
+47
+00:02:55.740 --> 00:02:59.060
+More application copies can
+increase database connections.
+
+48
+00:02:59.640 --> 00:03:03.100
+Limit aggregate concurrency
+so solving an application
+
+49
+00:03:03.100 --> 00:03:05.840
+bottleneck does not
+create a database outage.
+
+50
+00:03:06.480 --> 00:03:09.360
+When you try the practice
+task, look for this result.
+
+51
+00:03:09.360 --> 00:03:13.820
+Seven is a simplified
+recommendation, not seven instantly
+
+52
+00:03:13.820 --> 00:03:17.340
+ready or safe servers.
+Check your understanding.
+
+53
+00:03:18.120 --> 00:03:21.420
+After demand falls, stabilization
+prevents rapid shrinking
+
+54
+00:03:21.420 --> 00:03:25.220
+and regrowth. Drain work before
+removing replicas and keep
+
+55
+00:03:25.220 --> 00:03:27.500
+enough minimum capacity
+for the next burst.
+
+56
+00:03:27.960 --> 00:03:32.560
+Here is a challenge. A queue
+receives 120 jobs/second.
+
+57
+00:03:32.560 --> 00:03:36.040
+Each worker handles 20. How
+many workers stop backlog
+
+58
+00:03:36.040 --> 00:03:38.000
+growth, and why might you need more?
+
+59
+00:03:38.200 --> 00:03:41.820
+Pause before the answer. Six
+workers match the average under
+
+60
+00:03:41.820 --> 00:03:45.500
+ideal assumptions. More are
+needed to drain existing backlog
+
+61
+00:03:45.500 --> 00:03:48.960
+and tolerate failures or
+variable duration, within
+
+62
+00:03:48.960 --> 00:03:53.480
+downstream safety limits.
+Monitor oldest-job age, not just
+
+63
+00:03:53.480 --> 00:03:57.300
+queue size. For an interview,
+choose metrics, minimums,
+
+64
+00:03:57.640 --> 00:04:01.160
+maximums and stabilization.
+Say what you would measure, not
+
+65
+00:04:01.160 --> 00:04:02.620
+only which tool you would buy.

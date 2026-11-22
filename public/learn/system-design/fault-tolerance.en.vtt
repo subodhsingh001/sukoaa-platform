@@ -1,0 +1,315 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.760
+Let us understand fault
+tolerance. A bicycle with a spare
+
+2
+00:00:03.760 --> 00:00:06.420
+light can still be seen
+when the main light breaks.
+
+3
+00:00:06.940 --> 00:00:09.660
+But that spare light
+cannot fix a broken frame.
+
+4
+00:00:10.200 --> 00:00:13.200
+A useful plan names the
+fault and the remaining safe
+
+5
+00:00:13.200 --> 00:00:16.460
+behavior. A website might
+keep showing events when its
+
+6
+00:00:16.460 --> 00:00:19.880
+recommendation feature fails
+while refusing to sell a seat
+
+7
+00:00:20.180 --> 00:00:24.040
+it cannot confirm. Fault
+tolerance is the ability to keep
+
+8
+00:00:24.040 --> 00:00:27.820
+required behavior correct when
+specified components fail.
+
+9
+00:00:27.820 --> 00:00:31.820
+Name the failure you tolerate
+and the degraded behavior you
+
+10
+00:00:31.820 --> 00:00:35.320
+allow. It is not a claim of
+immunity to every possible
+
+11
+00:00:35.320 --> 00:00:40.080
+fault. Follow the normal path.
+The event page needs correct
+
+12
+00:00:40.080 --> 00:00:43.260
+booking information, but
+recommendations are optional.
+
+13
+00:00:43.760 --> 00:00:46.820
+Give these paths different
+deadlines and resource budgets.
+
+14
+00:00:47.780 --> 00:00:51.320
+Recommendations stop responding.
+Without a boundary, waiting
+
+15
+00:00:51.320 --> 00:00:55.000
+calls can consume all
+connections or workers and affect
+
+16
+00:00:55.000 --> 00:00:58.820
+otherwise healthy operations.
+A slow optional recommendation
+
+17
+00:00:58.820 --> 00:01:02.420
+service should not use every
+request thread and prevent
+
+18
+00:01:02.420 --> 00:01:07.160
+checkout. SeatSpot isolates
+optional work and keeps a safe
+
+19
+00:01:07.160 --> 00:01:10.640
+core path instead of treating
+every dependency as equally
+
+20
+00:01:10.640 --> 00:01:13.700
+critical. Now change one condition.
+
+21
+00:01:14.340 --> 00:01:17.160
+The timeout guard ends
+waiting for optional work.
+
+22
+00:01:17.600 --> 00:01:21.040
+This protects local resources
+but does not prove a remote
+
+23
+00:01:21.040 --> 00:01:23.420
+write was cancelled or never happened.
+
+24
+00:01:23.420 --> 00:01:27.660
+A common misunderstanding
+is this: A timeout means the
+
+25
+00:01:27.660 --> 00:01:30.960
+remote action did not happen.
+A timeout describes your
+
+26
+00:01:30.960 --> 00:01:33.460
+observation, not the remote side effect.
+
+27
+00:01:33.980 --> 00:01:36.840
+Think about this. A
+payment call times out.
+
+28
+00:01:37.100 --> 00:01:39.580
+Is it safe to retry with a fresh order ID?
+
+29
+00:01:40.020 --> 00:01:41.860
+Pause the video and make your prediction.
+
+30
+00:01:42.620 --> 00:01:44.980
+No. The first charge may have succeeded.
+
+31
+00:01:45.640 --> 00:01:49.180
+Reuse a stable idempotency
+identity and reconcile the
+
+32
+00:01:49.180 --> 00:01:53.180
+unknown outcome. Let us reason
+with a concrete example.
+
+33
+00:01:53.780 --> 00:01:57.340
+A page fans out to three
+optional services with an overall
+
+34
+00:01:57.340 --> 00:02:02.220
+800 ms deadline. One dependency
+stalls for ten seconds.
+
+35
+00:02:02.900 --> 00:02:07.140
+A 200 ms dependency timeout
+can preserve some page budget,
+
+36
+00:02:07.560 --> 00:02:11.700
+but sequential calls, retries
+and rendering time must also
+
+37
+00:02:11.700 --> 00:02:16.200
+fit inside 800 ms. Timeouts
+are not independent free
+
+38
+00:02:16.200 --> 00:02:19.300
+budgets. Return the
+essential event page without
+
+39
+00:02:19.300 --> 00:02:23.240
+recommendations; keep seat
+reservations and payment outcomes
+
+40
+00:02:23.240 --> 00:02:27.520
+authoritative. Isolate resource
+pools so optional failures
+
+41
+00:02:27.520 --> 00:02:31.560
+cannot consume core capacity.
+These figures are teaching
+
+42
+00:02:31.560 --> 00:02:33.760
+examples, not production guarantees.
+
+43
+00:02:34.800 --> 00:02:37.020
+Turn the idea into a design decision.
+
+44
+00:02:37.720 --> 00:02:40.020
+Render the essential
+page without suggestions.
+
+45
+00:02:40.740 --> 00:02:43.800
+Do not turn an uncertain
+payment outcome into a success
+
+46
+00:02:43.800 --> 00:02:46.460
+message just to make
+the page appear healthy.
+
+47
+00:02:46.460 --> 00:02:50.720
+If a retry is appropriate,
+limit attempts and use backoff
+
+48
+00:02:50.720 --> 00:02:54.120
+with jitter. Preserve one
+operation identity for side
+
+49
+00:02:54.120 --> 00:02:57.880
+effects so retries do not create
+duplicate business actions.
+
+50
+00:02:58.500 --> 00:03:01.440
+When you try the practice
+task, look for this result.
+
+51
+00:03:02.200 --> 00:03:05.940
+Recommendations can be omitted;
+a confirmed payment must not
+
+52
+00:03:05.940 --> 00:03:08.660
+be invented. Check your understanding.
+
+53
+00:03:09.300 --> 00:03:12.640
+Inject a slow response and
+a lost reply in a safe test
+
+54
+00:03:12.640 --> 00:03:16.360
+environment. Verify core
+capacity and user-visible
+
+55
+00:03:16.360 --> 00:03:19.400
+correctness rather than
+only testing a clean server
+
+56
+00:03:19.400 --> 00:03:23.480
+shutdown. Here is a challenge.
+The payment provider times
+
+57
+00:03:23.480 --> 00:03:27.180
+out after you send a charge.
+What should the booking UI say
+
+58
+00:03:27.180 --> 00:03:30.060
+and what should the backend
+do? Pause before the answer.
+
+59
+00:03:30.720 --> 00:03:34.540
+Show a pending/unknown
+outcome rather than success or
+
+60
+00:03:34.540 --> 00:03:38.448
+automatic failure. Reconcile
+by the same idempotency
+
+61
+00:03:38.448 --> 00:03:41.440
+key/provider reference and
+update the order state.
+
+62
+00:03:41.440 --> 00:03:44.260
+Avoid issuing a new independent charge.
+
+63
+00:03:44.800 --> 00:03:48.100
+For an interview, bound
+retries, cancellation and
+
+64
+00:03:48.100 --> 00:03:51.480
+concurrency independently. Say
+what you would measure, not
+
+65
+00:03:51.480 --> 00:03:52.800
+only which tool you would buy.

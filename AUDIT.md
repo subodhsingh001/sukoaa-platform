@@ -1722,3 +1722,8 @@ The owner explicitly requested the earlier layered browser/editor composition on
 No additional hard-coded product count, external dependency or backend change. Browser checks at 375/768/1280 px found no document overflow; existing Data/All tools filters work. Typecheck, 322 tests and production build pass. Existing tests and SEO definitions are retained. No live deployment performed.
 
 Homepage discovery follow-up: Data filtering derives membership from workbenchTools so all five file/data utilities appear, retaining each primary category and avoiding duplicate cards. Counts continue to derive from the filtered array.
+
+
+## Learning course follow-up — 22 November 2026
+
+The GenAI course and refreshed system-design course are documented in docs/36-GENAI-PREPARATION.md and docs/35-SYSTEM-DESIGN-REFRESH.md. New course styles reset a legacy unscoped header rule only inside the new course. Existing route metadata, compiler functionality and question banks were retained. Current checks: 336 tests, type checking and production build pass; 25 media files decode and meet the documented audio-level range. New counts are derived from lesson data. Browser checks at three widths found no document-level horizontal overflow after the scoped fix. These checks do not assert subjective audio quality or guarantee interview outcomes.

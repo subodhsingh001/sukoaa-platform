@@ -27,3 +27,24 @@ test('progress merge retains existing non-empty notes and combines completion wi
  const incoming={...emptyProgress(),completed:[ids[0],ids[1]],notes:{[ids[0]]:'backup answer',[ids[1]]:'imported answer'}};
  const result=mergeProgress(local,incoming);assert.deepEqual(result.completed,[ids[0],ids[1]]);assert.equal(result.notes[ids[0]],'local answer');assert.equal(result.notes[ids[1]],'imported answer');assert.equal(local.notes[ids[0]],'local answer');
 });
+
+import {teaching} from '../lib/system-design/catalog';
+import {activePaths} from '../lib/system-design/walkthrough';
+test('every system-design topic has specific goals, a prediction and a practical task',()=>{
+ assert.deepEqual(Object.keys(teaching).sort(),[...ids].sort());
+ for(const l of lessons){const t=teaching[l.id];assert.equal(t.goals.length,3);assert.equal(new Set(t.goals).size,3);assert.equal(t.lab.steps.length,3);assert.ok(t.prerequisites.length>15);assert.ok(t.prediction.question.length>30);assert.ok(t.prediction.answer.length>60);assert.ok(t.lab.expected.length>40);assert.notEqual(t.misconception.claim,t.misconception.correction);for(const v of Object.values(t.interviewLevels))assert.ok(v.length>25);}
+});
+test('narration teaches the analogy, concrete reasoning and the actual lesson exercise',()=>{
+ for(const l of lessons){const t=teaching[l.id];assert.equal(t.narration.length,6);assert.ok(t.narration[0].includes(l.analogy));assert.ok(t.narration[3].includes(l.worked.calculation));assert.ok(t.narration[5].includes(l.exercise.prompt));assert.ok(t.narration[5].includes(l.exercise.solution));for(const n of t.narration)assert.ok(n.length>120);assert.ok(new Set(t.narration).size===6);}
+});
+test('conceptual animation never presents an unavailable node as a live request path',()=>{
+ for(const l of lessons)for(let i=0;i<l.flow.steps.length;i++){const failed=new Set(l.flow.steps[i].failed||[]),active=activePaths(l,i);for(const e of active){const [a,b]=l.flow.edges[e];assert.ok(!failed.has(a)&&!failed.has(b));}assert.deepEqual(active,l.flow.steps[i].edges.filter(e=>!l.flow.edges[e].some(n=>failed.has(n))));}
+ assert.deepEqual(activePaths(lessons[0],-1),[]);
+});
+
+
+test('all refreshed lessons ship neural audio with aligned bounded caption cues',()=>{
+ const manifest=JSON.parse(readFileSync('public/learn/system-design/manifest.json','utf8'));
+ const seconds=(s:string)=>{const [h,m,v]=s.split(':').map(Number);return h*3600+m*60+v;};
+ for(const lesson of lessons){const clip=manifest[lesson.id];assert.equal(clip.version,2);assert.equal(clip.sampleRate,24000);assert.equal(clip.chapters.length,6);assert.equal(clip.captionAlignment.method,'whisper-reference-word-alignment-v1');assert.ok(clip.captionAlignment.referenceWordMatchRatio>=.7);assert.ok(existsSync('public/learn/system-design/'+clip.audioFile));const vtt=readFileSync('public/learn/system-design/'+clip.captionsFile,'utf8');let last=0,count=0;for(const block of vtt.trim().split(/\n\n/).slice(1)){const rows=block.split('\n');const at=rows.findIndex((x:string)=>x.includes(' --> '));assert.ok(at>=0);const [a,b]=rows[at].split(' --> ').map(seconds);assert.ok(a>=last-.01);assert.ok(b>a);assert.ok(b<=clip.duration+.1);assert.ok(rows.slice(at+1).length<=2);last=b;count++;}assert.equal(count,clip.captionCues);}
+});

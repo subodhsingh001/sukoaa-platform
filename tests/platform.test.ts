@@ -1,3 +1,4 @@
+import './genai-course.test';
 import './workbench.test';
 import './system-design.test';
 import './navigation.test';

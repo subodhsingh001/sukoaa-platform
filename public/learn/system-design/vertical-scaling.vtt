@@ -1,25 +1,25 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:12.250
+00:00:00.000 --> 00:00:34.417
 Measure the wait. The application is slow. Inspect whether requests wait on CPU, memory, storage, locks or another service before selecting a bigger machine.
 
 2
-00:00:12.250 --> 00:00:22.750
+00:00:34.417 --> 00:01:09.167
 Increase resources. Give the same database more appropriate resources. This is vertical scaling because the number of independent database copies has not increased.
 
 3
-00:00:22.750 --> 00:00:32.333
+00:01:09.167 --> 00:01:46.083
 Watch useful memory. More memory can hold more of the hot working set. If disk reads were the bottleneck, the experiment may show lower latency.
 
 4
-00:00:32.333 --> 00:00:42.750
+00:01:46.083 --> 00:02:22.333
 Plan interruption. A size change may restart or fail over the database. Use the actual platform procedure and verify what users see during the transition.
 
 5
-00:00:42.750 --> 00:00:53.750
+00:02:22.333 --> 00:02:54.750
 Retest the result. Repeat the same controlled workload. Compare throughput, tail latency, waits and cost; do not use machine size as the success metric.
 
 6
-00:00:53.750 --> 00:01:04.000
+00:02:54.750 --> 00:03:34.417
 Keep a recovery plan. The larger machine still needs redundancy and backups. If the machine fails or reaches its size ceiling, a different design decision is needed.

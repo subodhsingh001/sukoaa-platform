@@ -1,0 +1,342 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.480
+Let us understand multi-region setup.
+
+2
+00:00:03.120 --> 00:00:05.840
+A school keeps a working
+campus in another city.
+
+3
+00:00:06.440 --> 00:00:10.040
+Classes can move after a local
+disaster, but both campuses
+
+4
+00:00:10.040 --> 00:00:12.540
+must agree which student
+records are current.
+
+5
+00:00:13.240 --> 00:00:16.300
+If both sell the last seat in
+the same bus independently,
+
+6
+00:00:16.980 --> 00:00:20.200
+simply having two campuses
+creates a conflict instead of
+
+7
+00:00:20.200 --> 00:00:24.340
+solving it. A multi-region
+design runs required components
+
+8
+00:00:24.340 --> 00:00:26.580
+in more than one geographic region.
+
+9
+00:00:26.580 --> 00:00:31.320
+It can support regional recovery
+or lower user latency, but
+
+10
+00:00:31.320 --> 00:00:35.980
+distant data coordination
+adds latency, consistency and
+
+11
+00:00:35.980 --> 00:00:39.280
+operational trade-offs.
+Follow the normal path.
+
+12
+00:00:39.740 --> 00:00:42.680
+Decide whether another region
+is for disaster recovery,
+
+13
+00:00:43.100 --> 00:00:46.760
+nearby reads or active writes.
+Each operation can have
+
+14
+00:00:46.760 --> 00:00:49.660
+different latency,
+availability and consistency
+
+15
+00:00:49.660 --> 00:00:53.680
+requirements. Region A sends
+changes toward Region B.
+
+16
+00:00:53.680 --> 00:00:58.020
+Asynchronous copying can lag;
+synchronous coordination adds
+
+17
+00:00:58.020 --> 00:01:00.600
+waiting and depends on
+the communication path.
+
+18
+00:01:01.220 --> 00:01:04.720
+SeatSpot might serve public
+catalog reads near users in two
+
+19
+00:01:04.720 --> 00:01:08.220
+regions while keeping seat
+reservation ownership in one
+
+20
+00:01:08.220 --> 00:01:12.380
+write region. Choosing
+active-active writes requires an
+
+21
+00:01:12.380 --> 00:01:16.300
+explicit conflict/coordination
+strategy, not merely
+
+22
+00:01:16.300 --> 00:01:18.400
+deploying the same containers twice.
+
+23
+00:01:18.400 --> 00:01:23.000
+Now change one condition. The
+regions cannot communicate.
+
+24
+00:01:23.660 --> 00:01:26.660
+Allowing both to confirm the
+same last seat independently
+
+25
+00:01:26.660 --> 00:01:30.100
+can violate correctness even
+though both applications are
+
+26
+00:01:30.100 --> 00:01:34.080
+running. A common misunderstanding
+is this: Two regions
+
+27
+00:01:34.080 --> 00:01:37.620
+automatically double
+availability with no trade-off.
+
+28
+00:01:37.620 --> 00:01:41.000
+Distant coordination adds
+latency and failure choices;
+
+29
+00:01:41.800 --> 00:01:43.820
+shared dependencies can still fail both.
+
+30
+00:01:44.140 --> 00:01:47.760
+Think about this. Two disconnected
+regions each see the same
+
+31
+00:01:47.760 --> 00:01:51.020
+last seat. Can both confirm
+it independently while
+
+32
+00:01:51.020 --> 00:01:54.220
+preserving uniqueness? Pause
+the video and make your
+
+33
+00:01:54.220 --> 00:01:58.820
+prediction. No. Use a clear
+owner or coordinated decision,
+
+34
+00:01:58.820 --> 00:02:02.360
+or choose a product model
+that explicitly accepts and
+
+35
+00:02:02.360 --> 00:02:06.720
+reconciles conflicts. Let us
+reason with a concrete example.
+
+36
+00:02:07.440 --> 00:02:10.480
+Two regions can both see
+one remaining seat while
+
+37
+00:02:10.480 --> 00:02:12.740
+cross-region communication is interrupted.
+
+38
+00:02:12.740 --> 00:02:17.200
+If both independently confirm
+the seat, availability was
+
+39
+00:02:17.200 --> 00:02:20.100
+preserved but the uniqueness
+invariant was broken.
+
+40
+00:02:20.600 --> 00:02:23.580
+Preventing that requires a
+single owner, coordinated
+
+41
+00:02:23.580 --> 00:02:26.580
+decision or a product
+model that explicitly
+
+42
+00:02:26.580 --> 00:02:30.880
+tolerates/reconciles conflict.
+Keep authoritative seat
+
+43
+00:02:30.880 --> 00:02:34.360
+allocation under a clear
+ownership/consistency rule.
+
+44
+00:02:34.920 --> 00:02:38.780
+Use regional catalog caches
+separately and test failover and
+
+45
+00:02:38.780 --> 00:02:42.400
+failback with realistic lag.
+These figures are teaching
+
+46
+00:02:42.400 --> 00:02:44.720
+examples, not production guarantees.
+
+47
+00:02:45.740 --> 00:02:47.960
+Turn the idea into a design decision.
+
+48
+00:02:48.640 --> 00:02:52.100
+A safe failover establishes
+which writer owns new decisions
+
+49
+00:02:52.100 --> 00:02:54.580
+and prevents the old
+writer from conflicting.
+
+50
+00:02:55.480 --> 00:02:58.320
+Routing alone does not
+settle database ownership.
+
+51
+00:02:58.960 --> 00:03:02.380
+Direct eligible traffic to the
+recovery region and validate
+
+52
+00:03:02.380 --> 00:03:06.440
+the actual booking workflow.
+Its capacity, credentials and
+
+53
+00:03:06.440 --> 00:03:09.620
+dependencies must work
+independently enough for the failure
+
+54
+00:03:09.620 --> 00:03:13.460
+scenario. When you try the
+practice task, look for this
+
+55
+00:03:13.460 --> 00:03:17.400
+result. A second region
+is useful only if required
+
+56
+00:03:17.400 --> 00:03:21.040
+dependencies and recovery
+procedures survive the chosen
+
+57
+00:03:21.040 --> 00:03:24.100
+regional failure. Check
+your understanding.
+
+58
+00:03:24.880 --> 00:03:28.060
+After recovery, reconcile
+lag and in-flight work before
+
+59
+00:03:28.060 --> 00:03:31.940
+moving ownership back. Test
+both failover and failback
+
+60
+00:03:31.940 --> 00:03:34.700
+instead of treating the first
+traffic switch as the whole
+
+61
+00:03:34.700 --> 00:03:38.560
+plan. Here is a challenge.
+Both regions can independently
+
+62
+00:03:38.560 --> 00:03:40.580
+book the last seat during a partition.
+
+63
+00:03:41.300 --> 00:03:44.360
+What requirement is missing?
+Pause before the answer.
+
+64
+00:03:44.940 --> 00:03:48.620
+There is no safe authoritative
+allocation/coordination rule
+
+65
+00:03:48.620 --> 00:03:52.580
+for the uniqueness requirement.
+Define ownership, fencing
+
+66
+00:03:52.900 --> 00:03:56.600
+and the partition policy;
+refuse or defer some writes if
+
+67
+00:03:56.600 --> 00:04:00.360
+necessary rather than double-sell.
+For an interview, compare
+
+68
+00:04:00.360 --> 00:04:04.120
+per-operation consistency,
+routing and recovery objectives.
+
+69
+00:04:04.120 --> 00:04:07.400
+Say what you would measure,
+not only which tool you would
+
+70
+00:04:07.400 --> 00:04:07.660
+buy.
