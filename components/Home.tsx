@@ -62,8 +62,8 @@ export default function Home({stats}: {stats: HomeStats}){
  <main id="main-content" tabIndex={-1} className="home-page">
   <section className="home-intro" aria-labelledby="home-title">
    <div className="home-intro-copy">
-   <h1 id="home-title">Online coding tools. Learn by running real examples.</h1>
-   <p>Run JavaScript and Python, build React interfaces, and practise with explained examples. Browser playgrounds work without an account; check each tool’s runtime requirements.</p>
+   <h1 id="home-title">Online compilers and online coding tools</h1>
+   <p>Run JavaScript, Python and PHP in your browser. Choose an online compiler, build React interfaces or practise with explained examples. Browser playgrounds work without an account. Check each tool’s browser requirements before you start.</p>
    <a className="home-primary" href="/workspace?language=javascript">Open JavaScript compiler</a>
    {!accountLoading && user && <p className="home-session">You’re signed in. <a href="/workspace?language=javascript">Open your workspace</a>.</p>}
    </div>
@@ -108,7 +108,7 @@ export default function Home({stats}: {stats: HomeStats}){
     <tr><th scope="row">Browser playgrounds</th><td>JavaScript, TypeScript, Python, HTML/CSS, SQL and JSON work without sign-in. PHP, Laravel, PostgreSQL, Tailwind CSS and FastAPI have dedicated labs with stated compatibility limits.</td></tr>
     <tr><th scope="row">Project Studio</th><td>React and React Native Web support multi-file projects and local previews. Angular and Next.js download project packages and need a compatible browser Node runtime.</td></tr>
     <tr><th scope="row">Remote compilers</th><td>C, C++, Java, C#, Rust and Go execution requires a configured isolated runner and sign-in. Read the language page before using it.</td></tr>
-    <tr><th scope="row">AI learning tools</th><td>Token counting and RAG retrieval run in your browser. Embedding mode downloads a model; optional generation uses an external provider and your API key. Hosted platform AI agents are unavailable. The optional Gemini wording feature is restricted to explicitly enabled local development.</td></tr>
+    <tr><th scope="row">AI learning tools</th><td>Count tokens and explore RAG retrieval in your browser. Embedding mode downloads a model. To generate an answer, connect an external provider with your own API key in the RAG playground.</td></tr>
     <tr><th scope="row">Browser and extensions</th><td>Check <a href="/downloads">Downloads</a> for published packages and checksums, or visit the <a href="/extensions">extension pages</a> for store availability.</td></tr>
    </tbody></table></div>
   </section>

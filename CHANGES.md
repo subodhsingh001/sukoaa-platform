@@ -368,3 +368,13 @@ Homepage follow-up: Data now includes all five entries in the shared file/data c
 - Updated offline exports, handbooks, media provenance and per-topic review documentation.
 - No existing test assertion was removed or weakened. Existing slogan assertions were not changed. Added 14 new tests relative to the delivered 322-test baseline, including three teaching tests, one media/caption test and ten GenAI curriculum/behavior/example tests. All 336 pass on Node 24. Type checking and production build also pass.
 - Compiler and app/api source files remain unchanged from the delivered baseline. No deployment, database migration or new runtime AI service was performed.
+
+
+## Homepage SEO copy — 24 November 2026
+
+- app/page.tsx: shortened the homepage description to 154 characters and added online compilers naturally. Retained PHP, Laravel, PostgreSQL, Python, JavaScript, FastAPI, Tailwind, RAG playground, token counter and developer tools. Open Graph and Twitter descriptions use the same updated description. The existing title is unchanged.
+- components/Home.tsx: changed the H1 to “Online compilers and online coding tools”, preserving the existing online coding tools keyword and adding the compiler phrase. Updated the introduction and simplified the AI-learning runtime row, removing the visitor-facing local-development Gemini note while preserving its implementation and restrictions.
+- Retained all sections, FAQ copy, tool destinations, approved homepage visual, code examples, dynamic counts and styling. No section longer than 150 words was deleted.
+- Typecheck, all 336 tests and production build passed on Node 24. No existing test or string assertion was changed, and no new mirror test was added for these copy edits. Rendered SEO fields were compared for 367 pages: only the homepage H1 and description changed; all titles, canonicals and JSON-LD remained identical.
+- Before/after browser captures covered 375, 768 and 1280-pixel containers. Search/category controls and the primary compiler link were checked. No document-level horizontal overflow was found.
+- Compiler/API/runtime and learning implementations remain unchanged. Apply and deploy the source update through the existing workflow; the deliverable does not publish itself.

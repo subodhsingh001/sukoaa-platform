@@ -1727,3 +1727,14 @@ Homepage discovery follow-up: Data filtering derives membership from workbenchTo
 ## Learning course follow-up — 22 November 2026
 
 The GenAI course and refreshed system-design course are documented in docs/36-GENAI-PREPARATION.md and docs/35-SYSTEM-DESIGN-REFRESH.md. New course styles reset a legacy unscoped header rule only inside the new course. Existing route metadata, compiler functionality and question banks were retained. Current checks: 336 tests, type checking and production build pass; 25 media files decode and meet the documented audio-level range. New counts are derived from lesson data. Browser checks at three widths found no document-level horizontal overflow after the scoped fix. These checks do not assert subjective audio quality or guarantee interview outcomes.
+
+
+## Homepage audit remediation — 24 November 2026
+
+| File | Finding | Completed change |
+|---|---|---|
+| app/page.tsx | Homepage description was verbose and omitted the online compiler phrase | Replaced it with a 154-character description retaining the supported-language and utility keywords; preserved the title and canonical |
+| components/Home.tsx | H1 emphasized generic coding tools; introduction could describe compiler intent more directly | Preserved online coding tools and added online compilers to the H1; clarified the introduction and account/browser requirements |
+| components/Home.tsx | AI-learning runtime row exposed local-development implementation notes | Replaced that note with concise facts about local retrieval, model downloads and optional external generation; no feature or API change |
+
+The third-party density/readability results include joined navigation labels. No site-wide navigation rewrite, artificial keyword-density target or ranking claim was introduced. Existing FAQ/SEO sections, artwork, code samples and all routes remain. No section longer than 150 words was deleted. No test assertion changed. Validation: 336 tests, typecheck and production build pass; rendered title/description/H1/canonical/JSON-LD comparison covers 367 pages; responsive captures cover 375, 768 and 1280 pixels. Only the homepage H1 and description differ in the SEO-field comparison.
