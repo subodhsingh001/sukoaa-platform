@@ -9,10 +9,11 @@ import {RagPlayground} from '@/components/tools/RagPlayground';
 import '@/components/tools/utility-tools.css';
 export function utilityMetadata(slug:string){const t=utilityBySlug[slug];return pageMetadata(t.title,t.description,'/tools/'+slug)}
 export function UtilityPage({slug}:{slug:string}){
+ // Keep existing structured-data copy stable when only the visible/search summary changes.
  const t=utilityBySlug[slug],origin=canonicalOrigin();
  return <SiteFrame>
   <StructuredData data={breadcrumbs([{name:'Home',path:'/'},{name:'Tools',path:'/tools'},{name:t.name,path:'/tools/'+slug}])}/>
-  {origin&&<StructuredData data={{'@context':'https://schema.org','@type':'WebApplication',name:t.name,url:origin+'/tools/'+slug,description:t.description,applicationCategory:'DeveloperApplication',operatingSystem:'Any (web browser)',offers:{'@type':'Offer',price:'0',priceCurrency:'USD'},publisher:{'@id':origin+'/#organization'}}}/>}
+  {origin&&<StructuredData data={{'@context':'https://schema.org','@type':'WebApplication',name:t.name,url:origin+'/tools/'+slug,description:t.structuredDescription??t.description,applicationCategory:'DeveloperApplication',operatingSystem:'Any (web browser)',offers:{'@type':'Offer',price:'0',priceCurrency:'USD'},publisher:{'@id':origin+'/#organization'}}}/>}
   <div className="pl"><Crumbs name={t.name} parent={{label:'Tools',href:'/tools'}}/>
    <div className="lab-intro"><div><h1>{t.h1}</h1><p>{t.description}</p></div></div>
    {t.kind==='schema'?<ToolSchemaStudio/>:t.kind==='rag'?<RagPlayground/>:<UtilityTool kind={t.kind}/>}

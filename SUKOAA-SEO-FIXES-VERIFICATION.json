@@ -1,0 +1,2179 @@
+{
+  "staticHtmlPagesCompared": 367,
+  "protectedFieldsUnchanged": [
+    "titles",
+    "H1s",
+    "canonicals",
+    "JSON-LD"
+  ],
+  "changedStaticDescriptions": [
+    "tools/token-counter.html"
+  ],
+  "sitemapURLs": 351,
+  "staticPublicPagesChecked": 348,
+  "dynamicPublicPages": [
+    "/play/daily",
+    "/extensions",
+    "/downloads"
+  ],
+  "dates": {
+    "2026-11-18T00:00:00.000Z": 199,
+    "2026-11-24T00:00:00.000Z": 152
+  },
+  "oldQuestionContentPreserved": true,
+  "genaiLessonDataUnchanged": true,
+  "portalPagesDifferentiated": true,
+  "brokenPostgresqlLinkRemoved": true,
+  "httpChecks": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 76766,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "bytes": 31503,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "bytes": 38641,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/publishing",
+      "status": 200,
+      "bytes": 25151,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/downloads",
+      "status": 200,
+      "bytes": 26046,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/token-counter",
+      "status": 200,
+      "bytes": 34179,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/portal-ready",
+      "status": 200,
+      "bytes": 50364,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/portal-ready/custom-photo",
+      "status": 200,
+      "bytes": 50592,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/json-studio",
+      "status": 200,
+      "bytes": 26490,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/text-compare",
+      "status": 200,
+      "bytes": 25874,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/tokens",
+      "status": 200,
+      "bytes": 50071,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/rag",
+      "status": 200,
+      "bytes": 50356,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/cursor-pagination-table",
+      "status": 200,
+      "bytes": 45487,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/labs/postgresql",
+      "status": 200,
+      "bytes": 40441,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/daily",
+      "status": 200,
+      "bytes": 25616,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "bytes": 62318,
+      "contentType": "application/xml"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "bytes": 113,
+      "contentType": "text/plain"
+    },
+    {
+      "path": "/brand/logo-transparent-v1.webp",
+      "status": 200,
+      "bytes": 152542,
+      "contentType": "image/webp"
+    },
+    {
+      "path": "/learn/gen-ai",
+      "status": 200,
+      "bytes": 54187,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/embeddings",
+      "status": 200,
+      "bytes": 50444,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/attention",
+      "status": 200,
+      "bytes": 50013,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/next-token",
+      "status": 200,
+      "bytes": 49902,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/temperature",
+      "status": 200,
+      "bytes": 49996,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/context-window",
+      "status": 200,
+      "bytes": 50004,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/hallucination",
+      "status": 200,
+      "bytes": 49886,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/reasoning-models",
+      "status": 200,
+      "bytes": 50492,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/system-prompt",
+      "status": 200,
+      "bytes": 50142,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/few-shot",
+      "status": 200,
+      "bytes": 49666,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/structured-output",
+      "status": 200,
+      "bytes": 50160,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/tool-calling",
+      "status": 200,
+      "bytes": 50109,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/context-engineering",
+      "status": 200,
+      "bytes": 50219,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/lost-in-the-middle",
+      "status": 200,
+      "bytes": 50550,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/memory",
+      "status": 200,
+      "bytes": 50531,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/prompt-caching",
+      "status": 200,
+      "bytes": 50380,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/document-parsing",
+      "status": 200,
+      "bytes": 50392,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/chunking",
+      "status": 200,
+      "bytes": 49986,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/vector-search",
+      "status": 200,
+      "bytes": 49994,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/hybrid-search",
+      "status": 200,
+      "bytes": 49903,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/reranking",
+      "status": 200,
+      "bytes": 50323,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/query-rewriting",
+      "status": 200,
+      "bytes": 50018,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/evidence-grounded-abstention",
+      "status": 200,
+      "bytes": 50579,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/workflow-vs-agent",
+      "status": 200,
+      "bytes": 50362,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/agent-loop",
+      "status": 200,
+      "bytes": 50052,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/mcp",
+      "status": 200,
+      "bytes": 50165,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/human-in-the-loop",
+      "status": 200,
+      "bytes": 50149,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/planning",
+      "status": 200,
+      "bytes": 50013,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/reflection",
+      "status": 200,
+      "bytes": 50088,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/multi-agent",
+      "status": 200,
+      "bytes": 50250,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/compounding-errors",
+      "status": 200,
+      "bytes": 50127,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/evals",
+      "status": 200,
+      "bytes": 50739,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/llm-as-judge",
+      "status": 200,
+      "bytes": 50145,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/prompt-injection",
+      "status": 200,
+      "bytes": 51040,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/guardrails",
+      "status": 200,
+      "bytes": 50370,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/token-cost",
+      "status": 200,
+      "bytes": 50583,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/kv-cache",
+      "status": 200,
+      "bytes": 50623,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/quantization",
+      "status": 200,
+      "bytes": 50273,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/gen-ai/fine-tuning-and-lora",
+      "status": 200,
+      "bytes": 51324,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/data-workbench",
+      "status": 200,
+      "bytes": 33892,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/csv-cleaner",
+      "status": 200,
+      "bytes": 38059,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/spreadsheet-compare",
+      "status": 200,
+      "bytes": 38402,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/batch-images",
+      "status": 200,
+      "bytes": 35428,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/pdf-organizer",
+      "status": 200,
+      "bytes": 35084,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/test-data-generator",
+      "status": 200,
+      "bytes": 50170,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design",
+      "status": 200,
+      "bytes": 57871,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/load-balancing",
+      "status": 200,
+      "bytes": 76885,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/auto-scaling",
+      "status": 200,
+      "bytes": 77779,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/high-availability",
+      "status": 200,
+      "bytes": 77405,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/fault-tolerance",
+      "status": 200,
+      "bytes": 77792,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/horizontal-scaling",
+      "status": 200,
+      "bytes": 77134,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/vertical-scaling",
+      "status": 200,
+      "bytes": 74574,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/caching",
+      "status": 200,
+      "bytes": 74760,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/cdn",
+      "status": 200,
+      "bytes": 75199,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/api-gateway",
+      "status": 200,
+      "bytes": 76007,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/rate-limiting",
+      "status": 200,
+      "bytes": 76482,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/circuit-breaker",
+      "status": 200,
+      "bytes": 74755,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/message-queues",
+      "status": 200,
+      "bytes": 75720,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/event-driven-architecture",
+      "status": 200,
+      "bytes": 77018,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/database-replication",
+      "status": 200,
+      "bytes": 76360,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/database-sharding",
+      "status": 200,
+      "bytes": 76059,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/data-partitioning",
+      "status": 200,
+      "bytes": 76631,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/microservices",
+      "status": 200,
+      "bytes": 76781,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/service-discovery",
+      "status": 200,
+      "bytes": 75322,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/reverse-proxy",
+      "status": 200,
+      "bytes": 75462,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/dns-management",
+      "status": 200,
+      "bytes": 75733,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/disaster-recovery",
+      "status": 200,
+      "bytes": 77545,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/zero-downtime-deployments",
+      "status": 200,
+      "bytes": 77192,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/distributed-tracing",
+      "status": 200,
+      "bytes": 76675,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/network-segmentation",
+      "status": 200,
+      "bytes": 77052,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/learn/system-design/multi-region-setup",
+      "status": 200,
+      "bytes": 79520,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep",
+      "status": 200,
+      "bytes": 90331,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai",
+      "status": 200,
+      "bytes": 90862,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend",
+      "status": 200,
+      "bytes": 91293,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/tokens-and-context",
+      "status": 200,
+      "bytes": 42100,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/embeddings",
+      "status": 200,
+      "bytes": 41731,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/prompt-structure",
+      "status": 200,
+      "bytes": 42046,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/rag-or-finetuning",
+      "status": 200,
+      "bytes": 42096,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/chunking-basics",
+      "status": 200,
+      "bytes": 41633,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/retrieval-ranking",
+      "status": 200,
+      "bytes": 41845,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/python-concurrency",
+      "status": 200,
+      "bytes": 41974,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/structured-output",
+      "status": 200,
+      "bytes": 42163,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/evaluation-baseline",
+      "status": 200,
+      "bytes": 41962,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/genai-vs-ml",
+      "status": 200,
+      "bytes": 41622,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/python-copying",
+      "status": 200,
+      "bytes": 44706,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/python-json-boundary",
+      "status": 200,
+      "bytes": 44682,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/python-exception-boundaries",
+      "status": 200,
+      "bytes": 44952,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/coroutine-task-lifecycle",
+      "status": 200,
+      "bytes": 44749,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/http-response-contract",
+      "status": 200,
+      "bytes": 45580,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/streaming-batches",
+      "status": 200,
+      "bytes": 45259,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/rag-pipeline",
+      "status": 200,
+      "bytes": 41882,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/validate-chunking",
+      "status": 200,
+      "bytes": 42092,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/exact-product-codes",
+      "status": 200,
+      "bytes": 42175,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/bi-cross-encoder",
+      "status": 200,
+      "bytes": 42489,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/missing-evidence",
+      "status": 200,
+      "bytes": 42542,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/rag-metrics",
+      "status": 200,
+      "bytes": 42339,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/support-eval-pipeline",
+      "status": 200,
+      "bytes": 42502,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/agents-and-workflows",
+      "status": 200,
+      "bytes": 42174,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/production-failure",
+      "status": 200,
+      "bytes": 41838,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/notice-and-expectations",
+      "status": 200,
+      "bytes": 41921,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/retry-backoff",
+      "status": 200,
+      "bytes": 42867,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/paginated-ingestion",
+      "status": 200,
+      "bytes": 42831,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/retrieval-failure-trace",
+      "status": 200,
+      "bytes": 43388,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/hybrid-rank-fusion",
+      "status": 200,
+      "bytes": 43369,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/duplicate-evidence",
+      "status": 200,
+      "bytes": 43164,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/metadata-filter-recall",
+      "status": 200,
+      "bytes": 43141,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/context-budget-order",
+      "status": 200,
+      "bytes": 42999,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/evaluation-leakage",
+      "status": 200,
+      "bytes": 42744,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/llm-judge-reliability",
+      "status": 200,
+      "bytes": 42659,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/two-point-gain",
+      "status": 200,
+      "bytes": 42729,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/tenant-isolation",
+      "status": 200,
+      "bytes": 42368,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/latency-cost-budget",
+      "status": 200,
+      "bytes": 42494,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/tool-side-effects",
+      "status": 200,
+      "bytes": 42422,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/prompt-injection",
+      "status": 200,
+      "bytes": 42328,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/safe-rollout",
+      "status": 200,
+      "bytes": 41841,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/freshness-drift",
+      "status": 200,
+      "bytes": 42159,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/two-year-direction",
+      "status": 200,
+      "bytes": 41922,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/defend-your-project",
+      "status": 200,
+      "bytes": 42779,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/correctness-vs-grounding",
+      "status": 200,
+      "bytes": 43222,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/evaluation-slices",
+      "status": 200,
+      "bytes": 43285,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/agent-checkpoint-recovery",
+      "status": 200,
+      "bytes": 42975,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/agent-resource-budgets",
+      "status": 200,
+      "bytes": 42992,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/agent-trace-evaluation",
+      "status": 200,
+      "bytes": 43495,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/genai/provider-contract-release",
+      "status": 200,
+      "bytes": 43626,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/closures",
+      "status": 200,
+      "bytes": 42090,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/state-snapshot",
+      "status": 200,
+      "bytes": 42054,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/immutable-updates",
+      "status": 200,
+      "bytes": 42165,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/list-keys",
+      "status": 200,
+      "bytes": 41591,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/effects",
+      "status": 200,
+      "bytes": 42309,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/typescript-boundaries",
+      "status": 200,
+      "bytes": 42057,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/accessible-form",
+      "status": 200,
+      "bytes": 42286,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/responsive-layout",
+      "status": 200,
+      "bytes": 42198,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-signals",
+      "status": 200,
+      "bytes": 42197,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/event-loop",
+      "status": 200,
+      "bytes": 42411,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/controlled-inputs",
+      "status": 200,
+      "bytes": 42856,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/render-purity",
+      "status": 200,
+      "bytes": 44754,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-service-lifetimes",
+      "status": 200,
+      "bytes": 43443,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-list-identity",
+      "status": 200,
+      "bytes": 43006,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/typescript-state-unions",
+      "status": 200,
+      "bytes": 42835,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/batching-edge-cases",
+      "status": 200,
+      "bytes": 45234,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/fetch-races",
+      "status": 200,
+      "bytes": 42275,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/complex-forms",
+      "status": 200,
+      "bytes": 42593,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/state-ownership",
+      "status": 200,
+      "bytes": 42225,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/react-performance",
+      "status": 200,
+      "bytes": 42556,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-streams",
+      "status": 200,
+      "bytes": 42442,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/rendering-choices",
+      "status": 200,
+      "bytes": 42409,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/server-client-boundary",
+      "status": 200,
+      "bytes": 42435,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/testing-behavior",
+      "status": 200,
+      "bytes": 42034,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/browser-security",
+      "status": 200,
+      "bytes": 42193,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/incident-story",
+      "status": 200,
+      "bytes": 41907,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/reducer-transitions",
+      "status": 200,
+      "bytes": 45539,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/react-error-boundaries",
+      "status": 200,
+      "bytes": 43023,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/external-store-snapshots",
+      "status": 200,
+      "bytes": 46357,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-typed-form-array",
+      "status": 200,
+      "bytes": 43535,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-http-interceptors",
+      "status": 200,
+      "bytes": 43686,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-observable-sharing",
+      "status": 200,
+      "bytes": 43651,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/next-hydration-determinism",
+      "status": 200,
+      "bytes": 43465,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/next-mutation-flow",
+      "status": 200,
+      "bytes": 43263,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/workspace-design",
+      "status": 200,
+      "bytes": 42755,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/offline-conflicts",
+      "status": 200,
+      "bytes": 42215,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/performance-budget",
+      "status": 200,
+      "bytes": 42424,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/design-system",
+      "status": 200,
+      "bytes": 42839,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/incremental-migration",
+      "status": 200,
+      "bytes": 42456,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/personalized-cache",
+      "status": 200,
+      "bytes": 42487,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/untrusted-preview",
+      "status": 200,
+      "bytes": 42662,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/observability",
+      "status": 200,
+      "bytes": 42658,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/technical-leadership",
+      "status": 200,
+      "bytes": 42290,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/project-defence",
+      "status": 200,
+      "bytes": 42787,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/react-transition-priority",
+      "status": 200,
+      "bytes": 43507,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/angular-zoneless-readiness",
+      "status": 200,
+      "bytes": 43769,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/next-cache-invalidation",
+      "status": 200,
+      "bytes": 43781,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/api-contract-tests",
+      "status": 200,
+      "bytes": 43728,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/interview-prep/frontend/realtime-event-order",
+      "status": 200,
+      "bytes": 45989,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/security",
+      "status": 200,
+      "bytes": 24668,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/portal-ready/ibps-po-xvi-photo",
+      "status": 200,
+      "bytes": 50119,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/portal-ready/ibps-po-xvi-signature",
+      "status": 200,
+      "bytes": 50077,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/portal-ready/custom-signature",
+      "status": 200,
+      "bytes": 48849,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/portal-ready/image-to-pdf",
+      "status": 200,
+      "bytes": 49904,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/tool-schema-generator",
+      "status": 200,
+      "bytes": 51126,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/rag-playground",
+      "status": 200,
+      "bytes": 39480,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/jwt-decoder",
+      "status": 200,
+      "bytes": 33024,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/base64-url-encoder",
+      "status": 200,
+      "bytes": 31761,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/hash-generator",
+      "status": 200,
+      "bytes": 31609,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/uuid-generator",
+      "status": 200,
+      "bytes": 31514,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/color-converter",
+      "status": 200,
+      "bytes": 31114,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/labs/fastapi",
+      "status": 200,
+      "bytes": 40066,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/labs/php",
+      "status": 200,
+      "bytes": 40683,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/labs/laravel",
+      "status": 200,
+      "bytes": 41496,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/json-to-typescript",
+      "status": 200,
+      "bytes": 40383,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/labs/tailwindcss",
+      "status": 200,
+      "bytes": 40935,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play",
+      "status": 200,
+      "bytes": 43649,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/javascript",
+      "status": 200,
+      "bytes": 34962,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/python",
+      "status": 200,
+      "bytes": 34855,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/api-repair",
+      "status": 200,
+      "bytes": 28409,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/web",
+      "status": 200,
+      "bytes": 25777,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/sql",
+      "status": 200,
+      "bytes": 25862,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/fastapi",
+      "status": 200,
+      "bytes": 29538,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/nodejs",
+      "status": 200,
+      "bytes": 29522,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/postgresql",
+      "status": 200,
+      "bytes": 29674,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/tailwindcss",
+      "status": 200,
+      "bytes": 29848,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/php",
+      "status": 200,
+      "bytes": 29283,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/laravel",
+      "status": 200,
+      "bytes": 29718,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/llm-api",
+      "status": 200,
+      "bytes": 28672,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tracks/rag",
+      "status": 200,
+      "bytes": 28493,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-filter",
+      "status": 200,
+      "bytes": 25774,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-count",
+      "status": 200,
+      "bytes": 25421,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-map",
+      "status": 200,
+      "bytes": 25246,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-slice",
+      "status": 200,
+      "bytes": 25270,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-total",
+      "status": 200,
+      "bytes": 25117,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-range",
+      "status": 200,
+      "bytes": 25171,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-nullish",
+      "status": 200,
+      "bytes": 25223,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-alias",
+      "status": 200,
+      "bytes": 25200,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-closure",
+      "status": 200,
+      "bytes": 25382,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-fallback",
+      "status": 200,
+      "bytes": 25412,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-order-loop",
+      "status": 200,
+      "bytes": 31068,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-order-count",
+      "status": 200,
+      "bytes": 30321,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-order-fn",
+      "status": 200,
+      "bytes": 29912,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-order-fn",
+      "status": 200,
+      "bytes": 29962,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-order-filter",
+      "status": 200,
+      "bytes": 30334,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-order-list",
+      "status": 200,
+      "bytes": 31283,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-order-branch",
+      "status": 200,
+      "bytes": 31496,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-order-error",
+      "status": 200,
+      "bytes": 31452,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-order-object",
+      "status": 200,
+      "bytes": 30492,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-order-sort",
+      "status": 200,
+      "bytes": 30061,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-bug-assign",
+      "status": 200,
+      "bytes": 25803,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-bug-bound",
+      "status": 200,
+      "bytes": 25600,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-bug-return",
+      "status": 200,
+      "bytes": 25479,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-bug-append",
+      "status": 200,
+      "bytes": 25640,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-bug-zero",
+      "status": 200,
+      "bytes": 25577,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-bug-key",
+      "status": 200,
+      "bytes": 25828,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-bug-sort",
+      "status": 200,
+      "bytes": 25710,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-bug-indent",
+      "status": 200,
+      "bytes": 25470,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/js-bug-mutate",
+      "status": 200,
+      "bytes": 25856,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/py-bug-condition",
+      "status": 200,
+      "bytes": 26089,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/repair-stock",
+      "status": 200,
+      "bytes": 26131,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/repair-total",
+      "status": 200,
+      "bytes": 25954,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/repair-names",
+      "status": 200,
+      "bytes": 25784,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/repair-active",
+      "status": 200,
+      "bytes": 25867,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/repair-count",
+      "status": 200,
+      "bytes": 25951,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/repair-sort",
+      "status": 200,
+      "bytes": 25973,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/css-center",
+      "status": 200,
+      "bytes": 28550,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/css-grid",
+      "status": 200,
+      "bytes": 28457,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/css-wrap",
+      "status": 200,
+      "bytes": 28529,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/sql-stock",
+      "status": 200,
+      "bytes": 25965,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/sql-total",
+      "status": 200,
+      "bytes": 25723,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/sql-group",
+      "status": 200,
+      "bytes": 25905,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/fastapi-path-type",
+      "status": 200,
+      "bytes": 26185,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/fastapi-query",
+      "status": 200,
+      "bytes": 25814,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/fastapi-bounds",
+      "status": 200,
+      "bytes": 25707,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/fastapi-missing",
+      "status": 200,
+      "bytes": 26430,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/fastapi-body",
+      "status": 200,
+      "bytes": 26069,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/fastapi-async",
+      "status": 200,
+      "bytes": 26242,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/nodejs-json",
+      "status": 200,
+      "bytes": 26120,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/nodejs-path",
+      "status": 200,
+      "bytes": 26149,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/nodejs-event-loop",
+      "status": 200,
+      "bytes": 26332,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/nodejs-await",
+      "status": 200,
+      "bytes": 25963,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/nodejs-size",
+      "status": 200,
+      "bytes": 26297,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/nodejs-status",
+      "status": 200,
+      "bytes": 26289,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/postgresql-null",
+      "status": 200,
+      "bytes": 25674,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/postgresql-parameter",
+      "status": 200,
+      "bytes": 26283,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/postgresql-jsonb-read",
+      "status": 200,
+      "bytes": 25879,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/postgresql-in-stock",
+      "status": 200,
+      "bytes": 24793,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/postgresql-jsonb",
+      "status": 200,
+      "bytes": 24772,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/postgresql-window",
+      "status": 200,
+      "bytes": 25314,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tailwindcss-responsive",
+      "status": 200,
+      "bytes": 26111,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tailwindcss-focus",
+      "status": 200,
+      "bytes": 26236,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tailwindcss-dynamic",
+      "status": 200,
+      "bytes": 26260,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tailwindcss-center",
+      "status": 200,
+      "bytes": 25551,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tailwindcss-grid",
+      "status": 200,
+      "bytes": 25291,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/tailwindcss-button",
+      "status": 200,
+      "bytes": 25411,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/php-map",
+      "status": 200,
+      "bytes": 25767,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/php-missing",
+      "status": 200,
+      "bytes": 25627,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/php-strict",
+      "status": 200,
+      "bytes": 26401,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/php-json",
+      "status": 200,
+      "bytes": 26167,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/php-keys",
+      "status": 200,
+      "bytes": 26253,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/php-escape",
+      "status": 200,
+      "bytes": 26388,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/laravel-route",
+      "status": 200,
+      "bytes": 26446,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/laravel-validation",
+      "status": 200,
+      "bytes": 26385,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/laravel-response",
+      "status": 200,
+      "bytes": 26011,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/laravel-mass-assignment",
+      "status": 200,
+      "bytes": 26562,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/laravel-missing",
+      "status": 200,
+      "bytes": 26249,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/laravel-n-plus-one",
+      "status": 200,
+      "bytes": 26561,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/llm-roles",
+      "status": 200,
+      "bytes": 26969,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/llm-stateless",
+      "status": 200,
+      "bytes": 27005,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/llm-stream-parse",
+      "status": 200,
+      "bytes": 27094,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/llm-max-tokens",
+      "status": 200,
+      "bytes": 26613,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/llm-temperature",
+      "status": 200,
+      "bytes": 26846,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/llm-browser-key",
+      "status": 200,
+      "bytes": 27163,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/rag-chunk-overlap",
+      "status": 200,
+      "bytes": 26628,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/rag-cosine",
+      "status": 200,
+      "bytes": 25963,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/rag-topk",
+      "status": 200,
+      "bytes": 26323,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/rag-same-model",
+      "status": 200,
+      "bytes": 26981,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/rag-no-match",
+      "status": 200,
+      "bytes": 26805,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/play/rag-untrusted-context",
+      "status": 200,
+      "bytes": 27727,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/demo-api",
+      "status": 200,
+      "bytes": 32511,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/regex",
+      "status": 200,
+      "bytes": 25603,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/notepad",
+      "status": 200,
+      "bytes": 33447,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript/filter-array-of-objects",
+      "status": 200,
+      "bytes": 35359,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript/calculate-cart-total",
+      "status": 200,
+      "bytes": 34031,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/typescript/typed-ticket-function",
+      "status": 200,
+      "bytes": 35360,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/python/count-words-dictionary",
+      "status": 200,
+      "bytes": 34450,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/sql/group-by-sum-orders",
+      "status": 200,
+      "bytes": 34503,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/json/fix-invalid-json",
+      "status": 200,
+      "bytes": 33921,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript/remove-duplicate-values",
+      "status": 200,
+      "bytes": 34546,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript/sort-array-by-price",
+      "status": 200,
+      "bytes": 35320,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript/count-orders-by-status",
+      "status": 200,
+      "bytes": 35162,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript/capitalize-each-word",
+      "status": 200,
+      "bytes": 34301,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/typescript/filter-active-users",
+      "status": 200,
+      "bytes": 35739,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/typescript/generic-first-element",
+      "status": 200,
+      "bytes": 35482,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/python/list-comprehension-even-squares",
+      "status": 200,
+      "bytes": 33955,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/python/average-function-empty-list",
+      "status": 200,
+      "bytes": 34518,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/python/palindrome-check",
+      "status": 200,
+      "bytes": 33911,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/sql/where-and-order-by",
+      "status": 200,
+      "bytes": 35151,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/sql/join-customers-and-orders",
+      "status": 200,
+      "bytes": 35475,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/sql/having-count-filter",
+      "status": 200,
+      "bytes": 34456,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/json/write-valid-json-config",
+      "status": 200,
+      "bytes": 34312,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/javascript",
+      "status": 200,
+      "bytes": 37710,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/python",
+      "status": 200,
+      "bytes": 34464,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/typescript",
+      "status": 200,
+      "bytes": 33247,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/sql",
+      "status": 200,
+      "bytes": 34228,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice/json",
+      "status": 200,
+      "bytes": 30923,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "bytes": 26705,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/angular",
+      "status": 200,
+      "bytes": 34603,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/react-native",
+      "status": 200,
+      "bytes": 34592,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools",
+      "status": 200,
+      "bytes": 61818,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/practice",
+      "status": 200,
+      "bytes": 65411,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/typescript",
+      "status": 200,
+      "bytes": 37495,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/python",
+      "status": 200,
+      "bytes": 38044,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/sql",
+      "status": 200,
+      "bytes": 37485,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/json",
+      "status": 200,
+      "bytes": 35623,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/browser",
+      "status": 200,
+      "bytes": 30133,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/extensions",
+      "status": 200,
+      "bytes": 27317,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/javascript",
+      "status": 200,
+      "bytes": 39960,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/react",
+      "status": 200,
+      "bytes": 33825,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/html-css",
+      "status": 200,
+      "bytes": 33088,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/tools/nextjs",
+      "status": 200,
+      "bytes": 33277,
+      "contentType": "text/html; charset=utf-8"
+    }
+  ],
+  "publicHTMLPagesCompared": 351,
+  "uniquePublicTitles": 351,
+  "uniquePublicDescriptions": 351,
+  "sitemapURLSetUnchanged": true,
+  "tests": {
+    "node": "24.22.3",
+    "passed": 339,
+    "failed": 0,
+    "skipped": 0,
+    "typecheck": "passed",
+    "productionBuild": "passed"
+  },
+  "brandAssets": {
+    "headerPNGOriginalBytes": 956829,
+    "headerWebPBytes": 152542,
+    "headerPNGBytes": 299659,
+    "organizationPNGOriginalBytes": 2007705,
+    "organizationPNGBytes": 1234503,
+    "socialPNGBytes": 1234503,
+    "alphaAndVisibleRGBPreserved": true
+  },
+  "limitations": [
+    "Browser screenshots and interactive/mobile checks could not run because Chromium launch was blocked by environment process/socket permissions.",
+    "No live deployment, Search Console indexing confirmation or production release-catalog configuration was performed.",
+    "A private support email is not created/configured, as confirmed by the owner."
+  ]
+}

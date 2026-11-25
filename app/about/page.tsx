@@ -34,10 +34,10 @@ export default function About(){
    <p>Sukoaa Browser is a separate application. Chrome extensions are separate products with their own permissions and privacy policies. Use the published release or store listing to confirm what you can install; a project description is not evidence of a released package.</p>
    <h2>Maker</h2>
    <dl className="maker-details">
-    <div><dt>Name</dt><dd><span className="content-placeholder">[PLACEHOLDER: Public maker name]</span></dd></div>
-    <div><dt>Biography</dt><dd><span className="content-placeholder">[PLACEHOLDER: Short factual biography approved for publication]</span></dd></div>
+    <div><dt>Name</dt><dd>Subo</dd></div>
+    <div><dt>Biography</dt><dd>Frontend developer working with React, Angular and Next.js. Sukoaa brings browser coding tools and self-guided developer practice into one site.</dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/subodhsingh001/sukoaa-platform" target="_blank" rel="noopener noreferrer">Sukoaa Platform repository on GitHub</a></dd></div>
-    <div><dt>Contact</dt><dd>{support?<a href={'mailto:'+support}>{support}</a>:<span className="content-placeholder">[PLACEHOLDER: Public contact email]</span>}</dd></div>
+    <div><dt>Contact</dt><dd>{support?<a href={'mailto:'+support}>{support}</a>:<span>A private support email is not available yet. <a href="/contact">See public feedback options</a>.</span>}</dd></div>
    </dl>
    <p>For a reproducible issue or available support channels, visit <a href="/contact">Contact and feedback</a>.</p>
    <div className="product-actions"><a className="product-button dark" href="/practice">Start coding practice</a><a className="product-button light" href="/tools">Browse coding tools</a></div>

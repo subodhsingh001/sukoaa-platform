@@ -1,0 +1,52 @@
+SUKOAA - SEO BLUEPRINT UPDATE (on top of v0.25.0)
+
+Applied to the real URLs in this project. The blueprint PDF used URLs that do not exist here:
+/tools/postgresql, /tools/fastapi, /tools/laravel, /tools/php are /labs/*; /tools/ragplayground is
+/tools/rag-playground; /tools/types-studio is /tools/json-to-typescript. No URLs were moved and no
+redirects added, so nothing that is already indexed breaks.
+
+WHAT CHANGED
+1. /browser is indexable only when BROWSER_RELEASE_URL (a github.com/.../releases/... URL) is set.
+   Without it the page is noindex,follow and is left out of sitemap.xml. Set the variable and
+   redeploy to switch it back on. It stays in the header/resources menu; it was removed from the
+   footer "Company" group because the footer test requires every footer link to be indexable.
+2. Titles/descriptions that would be cut off in results were shortened (public pages now <= 60
+   characters including " | Sukoaa", descriptions <= 160):
+   Online PostgreSQL Compiler & PGlite SQL Playground | Online FastAPI Playground: Run Python APIs |
+   Online Laravel Playground: Test Routes & JSON | Tailwind CSS Online Playground with Live Preview |
+   RAG Playground: Test Chunking & Embeddings Online | JWT Decoder: Inspect Header, Payload & Expiry |
+   Tool Schema Generator: Validate Function Schemas (Node.js lab title also shortened; it is unlisted).
+   A test now checks labs and utility tools as well as tools, lessons and hubs.
+3. FAQPage JSON-LD is generated from the visible FAQ component (Questions), so it always matches the
+   text on the page. One FAQ per page, so there is never a duplicate FAQPage.
+   Note: Google no longer shows FAQ rich results for most sites; this is for other search engines
+   and answer engines, not extra space in Google results.
+4. New WebAppSchema component (breadcrumbs + WebApplication, free, DeveloperApplication) added to
+   /tools/regex, /tools/json-studio and /tools/text-compare, which had no structured data.
+5. Lab pages: structured-data name no longer relies on an em dash in the title.
+
+ALREADY IN YOUR PROJECT (checked, not changed)
+- Unique title, description, canonical and Open Graph image per page (pageMetadata, /og).
+- noindex + sitemap exclusion via unlistedPaths; sitemap lastmod from recorded content revisions.
+- WebApplication schema (DeveloperApplication, price 0) on tool, lab, utility and workbench pages.
+- Interview questions and practice lessons link to their matching tool with descriptive anchor text.
+- Server-rendered guide text on tool and lab pages.
+
+NOT DONE (be aware)
+- Homepage title/H1 left as is ("Online Compilers: PHP, Laravel, SQL, Python & JS"). It already targets
+  the lower-competition tools the blueprint recommends.
+- Lab pages carry about 115-190 words of crawlable guidance, not the 400-600 the blueprint asks for.
+  Adding it needs starter examples and troubleshooting that match each runtime exactly; I did not
+  want to publish unverified code. Next step: do it one lab at a time and run each example.
+- No backlinks, Search Console actions or measurement - those are the main ranking levers.
+
+CHECKED
+tsc --noEmit passes. Full platform suite: 300 of 308 pass; the 8 failures are identical on your
+untouched upload (they need public/runtime files and Node 24, which were not available here).
+Not run: next build, Python/SQL/PHP runtime tests, a browser render.
+
+FILES
+app/labs/[technology]/page.tsx, app/tools/json-studio/page.tsx, app/tools/regex/page.tsx,
+app/tools/text-compare/page.tsx, components/marketing/SiteFrame.tsx,
+components/marketing/WebAppSchema.tsx (new), lib/learning/lab-seo.ts, lib/marketing/availability.ts,
+lib/marketing/utility-tools.ts, lib/navigation.ts, tests/marketing.test.ts, tests/platform.test.ts

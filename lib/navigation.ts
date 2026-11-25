@@ -17,6 +17,7 @@ export const learningLinks: SiteLink[] = [
   ...learningModules.map(m => ({label: m.name + (m.id === 'nodejs' ? ' (experimental)' : ''), href: m.lab})),
 ];
 export const resourceLinks: SiteLink[] = [
+  {label: 'PG Safe Migrate', href: '/pg-safe-migrate'},
  {label:'File and data tools',href:'/tools/data-workbench'},
  {label:'CSV cleaner',href:'/tools/csv-cleaner'},
  {label:'PDF page organizer',href:'/tools/pdf-organizer'},
@@ -51,6 +52,7 @@ export const footerGroups: {label: string; links: SiteLink[]}[] = [
     {label: 'Python exercises', href: '/practice/python'},
   ]},
   {label: 'Resources', links: [
+    {label: 'PG Safe Migrate', href: '/pg-safe-migrate'},
     {label: 'Demo API', href: '/demo-api'},
     {label: 'Online notepad', href: '/tools/notepad'},
     {label: 'Photo & PDF tools', href: '/tools/portal-ready'},
@@ -63,7 +65,6 @@ export const footerGroups: {label: string; links: SiteLink[]}[] = [
     {label: 'Contact', href: '/contact'},
     {label: 'Privacy', href: '/privacy'},
     {label: 'Security', href: '/security'},
-    {label: 'Sukoaa Browser', href: '/browser'},
     {label: 'Extensions', href: '/extensions'},
   ]},
 ];

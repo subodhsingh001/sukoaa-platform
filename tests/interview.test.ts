@@ -20,7 +20,7 @@ test('interview catalog contains 100 complete questions with 50 per track and 16
     assert.ok(q.example.length > 40, q.id); assert.equal(q.rubric.length, 3, q.id);
     assert.equal(q.hints.length, 2, q.id); assert.equal(q.followUps.length, 2, q.id);
     assert.ok(q.mistakes.length); assert.ok(q.exercise.length > 45); assert.ok(q.sources.length);
-    assert.ok(q.tool.startsWith('/tools/')); assert.ok(q.sources.every(s => s.url.startsWith('https://') || s.url.startsWith('/tools/')));
+    assert.ok(publicPaths.includes(q.tool), q.id + ': related tool must be a registered public page'); assert.ok(q.sources.every(s => s.url.startsWith('https://') || s.url.startsWith('/tools/')));
     assert.equal(getQuestion(q.track, q.slug)?.id, q.id);
   }
 });

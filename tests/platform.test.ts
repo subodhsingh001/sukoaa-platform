@@ -1,4 +1,5 @@
 import './genai-course.test';
+import './seo-remediation.test';
 import './workbench.test';
 import './system-design.test';
 import './navigation.test';
@@ -58,7 +59,14 @@ test('Unavailable releases stay out of search and the public sitemap',()=>{
    assert.deepEqual(pageMetadata('Release','Availability',path).robots,{index:false,follow:true});
    assert.equal(publicPaths.includes(path),false);
   }
-  for(const path of ['/','/tools/javascript','/tools/python','/browser','/practice/python/count-words-dictionary']){
+  const releasePrior=process.env.BROWSER_RELEASE_URL;
+  try{
+   delete process.env.BROWSER_RELEASE_URL;
+   assert.deepEqual(pageMetadata('Browser','Placeholder until a release exists','/browser').robots,{index:false,follow:true});
+   process.env.BROWSER_RELEASE_URL='https://github.com/example/sukoaa-browser/releases/latest';
+   assert.deepEqual(pageMetadata('Browser','A release exists','/browser').robots,{index:true,follow:true});
+  }finally{if(releasePrior===undefined)delete process.env.BROWSER_RELEASE_URL;else process.env.BROWSER_RELEASE_URL=releasePrior}
+  for(const path of ['/','/tools/javascript','/tools/python','/practice/python/count-words-dictionary']){
    assert.deepEqual(pageMetadata('Ready','Description',path).robots,{index:true,follow:true});
    assert.equal(publicPaths.includes(path),true);
   }

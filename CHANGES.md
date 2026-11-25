@@ -378,3 +378,59 @@ Homepage follow-up: Data now includes all five entries in the shared file/data c
 - Typecheck, all 336 tests and production build passed on Node 24. No existing test or string assertion was changed, and no new mirror test was added for these copy edits. Rendered SEO fields were compared for 367 pages: only the homepage H1 and description changed; all titles, canonicals and JSON-LD remained identical.
 - Before/after browser captures covered 375, 768 and 1280-pixel containers. Search/category controls and the primary compiler link were checked. No document-level horizontal overflow was found.
 - Compiler/API/runtime and learning implementations remain unchanged. Apply and deploy the source update through the existing workflow; the deliverable does not publish itself.
+
+## SEO crawl remediation — 24 November 2026
+
+Applied the owner-authorized SEO corrections from the 351-page public crawl.
+
+- lib/interview/questions.json: corrected only the pagination question's related
+  tool destination to /labs/postgresql; lesson/answer/example content preserved.
+- components/interview/QuestionPractice.tsx and lib/marketing/tool-links.ts:
+  destination-specific related-tool labels across 100 question pages.
+- components/portal-ready/PortalPage.tsx: separate root/custom-photo guidance,
+  preserving existing controls, target headings, application limits and FAQs.
+- lib/marketing/utility-tools.ts, components/tools/TokenCounter.tsx and
+  components/tools/UtilityPage.tsx: production token-counter search/visible copy.
+  Retain previous JSON-LD description separately under the structured-data
+  guardrail. No AI endpoint or consent/production gate changed.
+- components/genai/CourseLesson.tsx: existing advanced/interview material in
+  server HTML behind the same selected/reveal controls. Interactive labs retain
+  their original selected-tab mount/unmount behavior. Lesson data unchanged.
+- components/play/LearningToolGuide.tsx and the JSON Studio/Text Compare pages:
+  server-rendered instructions, examples and actual processing limits.
+- app/play/daily/page.tsx: stable search description; existing rotation/title.
+- app/sitemap.ts and lib/marketing/content-updates.ts: explicit per-route dates,
+  validated overrides and hourly freshness for the real UTC daily challenge.
+  Sitemap URLs and indexing policy unchanged.
+- components/SukoaaLogo.tsx and public/brand/logo-transparent-v1.webp: 84% smaller
+  header asset. Existing PNG URLs use smaller encodings. Alpha and visible colors
+  are preserved. lib/marketing/site.ts reports actual homepage OG dimensions.
+- app/about/page.tsx: Subo, factual developer bio and original repository link.
+  User confirms no support inbox; honest contact status replaces placeholders.
+- app/privacy/page.tsx: account-deletion wording reflects missing/configured
+  support address. Updated displayed revision date.
+- app/publishing/page.tsx: literal Windows directory separators preserved.
+- app/downloads/page.tsx: accurate availability-oriented introduction/description.
+  Existing release sources, checksums and backend error states unchanged.
+
+Tests: no tests deleted, skipped or weakened. In tests/interview.test.ts, replaced
+q.tool.startsWith('/tools/') with publicPaths membership. The old prefix test
+accepted nonexistent destinations; the new assertion verifies registered public
+routes and accepts the actual /labs/postgresql guide. The original 60-question
+content-hash fixture remains unchanged. Added three tests for revision dates,
+GenAI server HTML/hidden panels and registered named links.
+No slogan-string assertions required updates.
+
+Validation: Node 24.22.3; typecheck, 339 tests and production build pass.
+Protected SEO fields unchanged across 367 static HTML outputs and all 351 public
+HTTP pages. Public titles/descriptions are unique. All 354 local HTTP checks
+returned 200. The same 351 sitemap URLs remain; 152 changed pages use 24 November
+and 199 untouched pages retain 18 November.
+
+Intentionally unchanged: routes, target titles/H1s, canonicals, JSON-LD objects,
+unready-page noindex policy, lesson content, APIs/accounts/runtimes, approved
+brand appearance and the owner's restored homepage illustration.
+Private support and release-catalog configuration remain operator tasks.
+Chromium launch is blocked, so responsive screenshots and interactive
+accessibility checks were not completed. Source update only; no live deployment.
+

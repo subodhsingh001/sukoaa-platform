@@ -3890,7 +3890,7 @@
       "How should select-all work when only one page is loaded?"
     ],
     "exercise": "Design a cursor for records ordered by created time and ID. Walk through tied timestamps and an edit that moves a row, stating the user-visible policy.",
-    "tool": "/tools/postgresql",
+    "tool": "/labs/postgresql",
     "sources": [
       {
         "title": "MDN JavaScript guide",

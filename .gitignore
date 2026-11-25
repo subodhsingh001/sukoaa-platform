@@ -9,3 +9,4 @@ dist/
 .vercel/
 .wrangler/
 .sites-runtime/
+/project.zip

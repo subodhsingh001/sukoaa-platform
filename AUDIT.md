@@ -1738,3 +1738,40 @@ The GenAI course and refreshed system-design course are documented in docs/36-GE
 | components/Home.tsx | AI-learning runtime row exposed local-development implementation notes | Replaced that note with concise facts about local retrieval, model downloads and optional external generation; no feature or API change |
 
 The third-party density/readability results include joined navigation labels. No site-wide navigation rewrite, artificial keyword-density target or ranking claim was introduced. Existing FAQ/SEO sections, artwork, code samples and all routes remain. No section longer than 150 words was deleted. No test assertion changed. Validation: 336 tests, typecheck and production build pass; rendered title/description/H1/canonical/JSON-LD comparison covers 367 pages; responsive captures cover 375, 768 and 1280 pixels. Only the homepage H1 and description differ in the SEO-field comparison.
+
+## SEO remediation follow-up — 24 November 2026
+
+The earlier live crawl is a pre-deployment snapshot. This follow-up records
+owner-authorized source corrections and local production verification.
+
+| Finding | Main source paths | Result |
+| --- | --- | --- |
+| F01 broken PostgreSQL link | lib/interview/questions.json | Existing /labs/postgresql target; public-route regression added. |
+| F02 support/deletion contradiction | app/privacy/page.tsx, app/about/page.tsx | Corrected the missing-contact promise. Owner has no inbox; truthful unavailable states retained. |
+| F03 downloads | app/downloads/page.tsx | Accurate availability copy. Real catalog/store configuration remains pending. |
+| F04 Maker | app/about/page.tsx | Subo, factual bio and repository link. No invented email. |
+| F05 checksum example | app/publishing/page.tsx | Literal Windows separators preserved. |
+| F06 shared image | components/SukoaaLogo.tsx, public/brand/*, public/social/sukoaa.png | 956,829 to 152,542-byte header WebP; smaller PNGs; alpha/visible RGB preserved. Correct OG dimensions. |
+| F07 duplicate landing copy | components/portal-ready/PortalPage.tsx | Distinct root/custom-photo instructions; formatter and original SEO sections retained. |
+| F08 token pitch | lib/marketing/utility-tools.ts, components/tools/* | Production UI/search summary cleaned; legacy JSON-LD copy separately preserved. |
+| F09 daily description | app/play/daily/page.tsx | Stable description; same daily activity behavior. |
+| F10 interview actions | components/interview/QuestionPractice.tsx, lib/marketing/tool-links.ts | Named destinations on all 100 questions. |
+| F11 utility help | components/play/LearningToolGuide.tsx, utility page files | Actual JSON/text behavior, examples, limits and privacy. |
+| R01 modification dates | app/sitemap.ts, lib/marketing/content-updates.ts | Recorded dates; only the real UTC daily challenge follows the day. |
+| R02 lesson HTML | components/genai/CourseLesson.tsx | Existing advanced/interview content in HTML behind the same controls; lesson data unchanged. |
+
+All 367 static generated HTML files preserve titles, H1s, canonical tags and
+JSON-LD. HTTP comparison also covers all 351 public URLs, including the three
+public pages rendered on request. All 351 titles/descriptions are unique.
+354 local HTTP checks are 200. The sitemap URL set matches the live-crawl
+baseline; 152 changed dates and 199 preserved dates are recorded accurately.
+
+Node 24: typecheck pass, tests 339/339, production build pass. The related-tool
+assertion was strengthened from a prefix check to registered-route membership.
+No tests removed/weakened; original content-hash fixture unchanged. Three new
+regressions cover the observed SEO/content-discovery failures.
+
+Pending: deployment, real support inbox, production release catalog and Google
+Search Console confirmation. Chromium launch is blocked here, so responsive
+screenshots, interactive compiler behavior and audio quality are not certified.
+
