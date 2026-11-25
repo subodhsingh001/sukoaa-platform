@@ -42,5 +42,5 @@ test('progress import rejects invalid data, filters unknown IDs and merges witho
  assert.deepEqual(backup.completed,['tokens']);assert.equal(Object.hasOwn(backup.notes,'__proto__'),false);const local={...blankProgress(),notes:{tokens:'my answer'}};assert.equal(mergeGenProgress(local,backup).notes.tokens,'my answer');assert.equal(mergeGenProgress(blankProgress(),backup).notes.tokens,'incoming');
 });
 test('downloadable Python reference tasks run their actual example and boundary checks',()=>{
- for(const task of codingTasks){const result=spawnSync('python3',['-c',task.solution],{encoding:'utf8',timeout:5000});assert.equal(result.status,0,task.title+': '+result.stderr);assert.match(result.stdout,/checks passed/);}
+ for(const task of codingTasks){const result=spawnSync(process.execPath,['--experimental-wasm-jspi','tests/run-python-reference.mjs'],{input:task.solution,encoding:'utf8',timeout:30000});assert.equal(result.status,0,task.title+': '+result.stderr);assert.match(result.stdout,/checks passed/);}
 });
