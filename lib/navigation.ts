@@ -58,7 +58,6 @@ export const footerGroups: {label: string; links: SiteLink[]}[] = [
     {label: 'Photo & PDF tools', href: '/tools/portal-ready'},
     {label: 'Tool schema generator', href: '/tools/tool-schema-generator'},
     {label: 'Downloads', href: '/downloads'},
-    {label: 'Installation guide', href: '/publishing'},
   ]},
   {label: 'Company', links: [
     {label: 'About', href: '/about'},
@@ -66,5 +65,6 @@ export const footerGroups: {label: string; links: SiteLink[]}[] = [
     {label: 'Privacy', href: '/privacy'},
     {label: 'Security', href: '/security'},
     {label: 'Extensions', href: '/extensions'},
+    {label: 'Installation guide', href: '/publishing'},
   ]},
 ];
