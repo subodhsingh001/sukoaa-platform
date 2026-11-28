@@ -69,3 +69,11 @@
 .monaco-menu .monaco-action-bar .action-item.focused,.monaco-menu .monaco-action-bar .action-item:hover{background:#486440!important;color:#fff!important}
 .monaco-menu .monaco-action-bar .action-item.disabled .action-label,.monaco-menu .monaco-action-bar .action-item.disabled .keybinding{color:#a6b6a0!important}
 .monaco-menu .monaco-action-bar .action-item .action-label.separator{border-bottom-color:#58704e!important}
+
+/* Monaco gutter: the fallback editor's .line-numbers rules (20px padding, 12px/1.9 font) leaked into Monaco's own
+   .line-numbers elements and pushed the numbers out of line with the code. Reset them for Monaco only. */
+.monaco-editor .margin-view-overlays .line-numbers{padding:0;font:inherit;line-height:inherit;will-change:auto;flex-direction:row}
+
+/* Run button: the narrow-screen rule above hides every direct span in the toolbar buttons, which also hid the play
+   icon and the "Run" label and left an empty green block. Keep both visible for the primary action. */
+@media(max-width:900px){.bench-controls>div>button.run-button>span{display:inline-flex;align-items:center}}

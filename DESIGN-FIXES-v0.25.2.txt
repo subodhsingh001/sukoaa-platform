@@ -1,0 +1,36 @@
+SUKOAA - MOBILE DESIGN FIXES AND COPY CLEAN-UP (on top of v0.25.0 + SEO update)
+
+Checked in a phone-sized Chromium (411px wide, 2x) against the same pages as the screenshots.
+
+BUGS FIXED
+1. Blank green Run button (/workspace on phones).
+   Cause: app/globals.css, @media(max-width:900px): ".bench-controls>div>button>span{display:none}" hid every
+   direct span in the toolbar buttons. The Run button's play icon and its "Run" label are both direct spans.
+   Fix: a more specific rule keeps them visible for .run-button.
+2. Line numbers out of line with the code (Monaco editor, /workspace, /labs/*, /studio).
+   Cause: the fallback textarea editor styles ".line-numbers" (20px padding, 12px/1.9 font). Monaco uses the same
+   class name for its own gutter numbers, so those rules leaked in and pushed every number about 18px off.
+   Fix: a Monaco-only reset in app/globals.css. Measured: first number and first code line now share the same top.
+3. "Save local" and "Share link" overlapping: .save-action buttons had no gap. Added one.
+4. Phone toolbar clutter.
+   /workspace: Run is now first and full width, then Layout/Options, then Save/Share.
+   /studio: Run project first, "Reset widths" hidden on phones (panel widths do not apply when stacked),
+   and the refresh/expand icons in the preview bar are centred instead of floating above the label.
+
+COPY CLEAN-UP (generic phrasing replaced with plain, specific text)
+- JavaScript starter: "// Your next idea starts here." and Browse/Build/Create -> a comment that says what the code does.
+- HTML starter: "SMALL IDEAS. BIG POSSIBILITIES.", "A blank canvas for something useful", "Try me / You made it work!"
+- React starter: "YOUR NEXT IDEA STARTS HERE", the decorative arrow in "Hello, React"
+- Next.js starter: "Build your next idea with Next.js." -> "Edit app/page.tsx to change this page."
+- React Native starter: "BUILT WITH SUKOAA / A little tap. A new idea." -> "COUNTER EXAMPLE / Tap the button to count."
+- Default project name "My Python idea" -> "Untitled Python snippet"
+- Notepad welcome note: "Your notebook, your device." / "A small idea" -> plain headings and steps
+
+CHECKED
+tsc --noEmit passes. Test suite: 278 of 288 pass. The 10 failures need files that are not in the zip
+(public/runtime, public/learn) or Node 24; none touch the changed files.
+Not run: next build, tests on a real Android phone (I used Chromium emulation).
+
+FILES
+app/globals.css, app/studio/studio.css, app/workspace/workspace.css, app/workspace/page.tsx,
+components/notepad/Notepad.tsx, lib/platform/react-native.ts, lib/platform/templates.ts

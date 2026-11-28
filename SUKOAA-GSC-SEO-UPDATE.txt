@@ -1,0 +1,70 @@
+SUKOAA GSC SEO UPDATE — 28 NOVEMBER 2026
+
+APPLY TO YOUR EXISTING PROJECT
+Extract the patch outside your project, then copy its app/, components/ and lib/
+files into C:\subodh\Sukoaa-Platform\sukoaa-platform, preserving their paths.
+Compare and copy CHANGES.md and AUDIT.md, or append CHANGES-ENTRY.txt to your
+existing copies if you have edited them since uploading app(8).zip.
+
+Only six visible pages change: /practice, /practice/python,
+/learn/system-design/microservices,
+/learn/system-design/zero-downtime-deployments,
+/learn/system-design/rate-limiting, and /tools/pdf-organizer.
+
+The patch includes TWO NEW FILES. Do not omit them:
+components/marketing/PracticeLanguages.tsx
+lib/system-design/presentation.ts
+
+The Notepad/ folder contains .txt copies of the changed source files. Paste a
+copy into the corresponding real file and retain its original .ts/.tsx/.css
+extension. The browser uses the real source files, not the .txt copies.
+
+Your upload omitted public/. KEEP YOUR CURRENT public/ FOLDER. Assets were
+restored from the earlier shared project only to run local verification. They
+are not included in the patch, and your current runtime, logo, video, audio and
+caption files should not be replaced by this update.
+The updated app(8).zip is the uploaded source snapshot plus these edits; it still
+omits public/ as supplied. It is not a standalone distribution of runtime assets.
+
+WHAT CHANGED
+Practice now offers language/skill links with counts computed from real data.
+Python skill headings lead to the existing four lessons, and each lesson card
+also opens its actual runnable starter. Three system-design lessons receive
+specific introductions, example headings and related reading links. PDF help
+now explains the real selection, reordering, splitting and export workflow,
+including the supported sizes and formats.
+
+PRESERVED
+All titles, meta descriptions, H1s, URLs, canonicals, robots and JSON-LD remain
+unchanged. The previously suggested meta-description experiments were not
+applied; clearer search-relevant wording is in the visible page copy instead.
+Lesson definitions, exercises, solutions, code examples, narration metadata,
+existing tests, PG Safe Migrate and footer/Windows fixes are unchanged.
+The six changed sitemap revision dates are recorded as 28 November 2026.
+
+VERIFIED HERE
+Node 24.22.3: typecheck pass, 339 tests pass (zero failures/skips), build pass.
+368 generated pages compared: zero protected SEO-field changes.
+Exactly six pages have changed visible body text. All 26 local HTTP checks pass.
+The local sitemap has 351 public URLs. Detailed evidence is in
+GSC-SEO-VERIFICATION.json. No new screenshot was captured: Chromium's launcher
+exists but its executable is missing. No live deployment was performed.
+
+VERIFY IN YOUR CURRENT CHECKOUT, USING NODE 24
+npm run typecheck
+npm test
+npm run build
+Stop on a failure. Do not remove or weaken tests.
+
+AFTER ALL THREE PASS
+Review git status --short and git diff. Stage only the intended files:
+
+git --literal-pathspecs add -- app/practice/page.tsx "app/practice/[language]/page.tsx" components/marketing/PracticeLanguages.tsx components/marketing/marketing.css components/system-design/LessonMentor.tsx components/system-design/system-design.css components/workbench/WorkbenchPage.tsx lib/system-design/presentation.ts lib/marketing/content-updates.ts CHANGES.md AUDIT.md
+git diff --cached --stat
+git commit -m "seo: improve practice and system design discovery"
+git push origin main
+
+Do not commit the delivery ZIP. Do not use force push or push --all.
+Check GitHub Actions and the Vercel deployment for the new commit. After the
+live deployment, review the six URLs and use comparable complete periods in
+Search Console, initially 14 days and longer when traffic remains sparse.

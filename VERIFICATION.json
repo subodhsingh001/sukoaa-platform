@@ -1,0 +1,20 @@
+{
+  "node": "24.22.3",
+  "platform": "Linux",
+  "typecheck": "pass",
+  "tests": {
+    "passed": 341,
+    "failed": 0,
+    "skipped": 0,
+    "parent_FORCE_COLOR": "3"
+  },
+  "build": "pass",
+  "additional_checks": [
+    "Python helper succeeds with empty PATH",
+    "Python assertion failure exits nonzero",
+    "Windows drive and URL-encoded spaces convert correctly",
+    "Existing assertions and expected outputs preserved"
+  ],
+  "native_windows_run": false,
+  "deployed": false
+}

@@ -90,3 +90,17 @@
 
 /* Lightweight dependency preparation never covers the editor. */
 .studio-preparation{width:100%;flex-basis:100%;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:5px 9px;background:#edf2e6;border-bottom:1px solid #dce4d1;color:#425a35;font-size:13px;line-height:1.5}.studio-preparation small{color:#687b5c}.studio-preparation button{margin-left:auto;border:0;background:transparent;color:inherit;text-decoration:underline;font:inherit;cursor:pointer}.studio-preparation.preparing .config-dot{animation:prep-pulse 1.4s ease-in-out infinite}.studio-preparation.ready .config-dot{background:#536e43}@keyframes prep-pulse{50%{opacity:.35}}@media(prefers-reduced-motion:reduce){.studio-preparation.preparing .config-dot{animation:none}}
+
+/* Phone toolbar: fewer rows. Panel widths do not apply to the stacked layout, so Reset widths is hidden there. */
+@media(max-width:760px){
+ .studio-toolbar-actions>button[title="Reset code and preview widths"]{display:none}
+ .studio-toolbar-actions{flex-wrap:wrap;justify-content:flex-start;gap:10px 14px}
+ .studio-toolbar-actions>button.studio-stop{order:-2}
+ .studio-toolbar-actions>button.studio-run{order:-1;flex:1 1 0;min-width:150px;min-height:44px;font-size:14px}
+ .studio-toolbar-actions select{margin-left:0;order:1}
+ .studio-toolbar-actions>button[title^="Pull source files"]{order:5}
+ .studio-preview-toolbar{height:auto;min-height:38px;flex-wrap:wrap;row-gap:4px;padding:6px 13px}
+}
+
+/* Touch-sized icon buttons kept their glyph at the top of the box; centre it so refresh and expand line up with the label. */
+.studio-preview-toolbar button{align-items:center;justify-content:center}

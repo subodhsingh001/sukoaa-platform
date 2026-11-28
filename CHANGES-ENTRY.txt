@@ -1,0 +1,14 @@
+## Windows test portability — 25 November 2026
+
+- scripts/test-platform.mjs: set FORCE_COLOR=0 only in the test subprocess
+  environment so Node example output retains exact plain-text comparisons.
+- tests/source-package.test.mjs: use fileURLToPath for the source-checker path,
+  preserving Windows drive letters and URL-encoded spaces.
+- tests/genai-course.test.ts and tests/run-python-reference.mjs: execute every
+  unchanged downloadable Python solution in an isolated Node/Pyodide process,
+  using the already-installed real CPython/WASM runtime instead of requiring a
+  system python3 command. Keep the existing exit-status and checks-passed
+  assertions. Allow 30 seconds for each process, including cold WASM startup.
+
+No tests or expected outputs were deleted, skipped or weakened. Website code,
+lesson content, navigation, routes, SEO and dependencies are unchanged.

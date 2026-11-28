@@ -1,0 +1,175 @@
+{
+  "generated_pages_compared": 368,
+  "protected_fields": [
+    "title",
+    "description",
+    "h1",
+    "canonical",
+    "jsonld",
+    "robots"
+  ],
+  "protected_field_changes": 0,
+  "body_text_changes": [
+    "learn/system-design/microservices.html",
+    "learn/system-design/rate-limiting.html",
+    "learn/system-design/zero-downtime-deployments.html",
+    "practice.html",
+    "practice/python.html",
+    "tools/pdf-organizer.html"
+  ],
+  "existing_tests": "339 passed, 0 failed, 0 skipped",
+  "typecheck": "pass",
+  "build": "pass",
+  "node": "24.22.3",
+  "lesson_and_exercise_data": "byte-identical",
+  "prior_footer_PG_and_Windows_fixes": "preserved",
+  "public_assets": "Restored from earlier uploaded project(3).zip for local verification only; excluded from this source patch.",
+  "responsive_screenshots": "Unavailable: /usr/bin/chromium points to missing /usr/lib/chromium/chromium.",
+  "deployed": false,
+  "local_HTTP_checks": [
+    {
+      "path": "/learn/system-design/api-gateway",
+      "status": 200,
+      "bytes": 76108
+    },
+    {
+      "path": "/learn/system-design/caching",
+      "status": 200,
+      "bytes": 74861
+    },
+    {
+      "path": "/learn/system-design/circuit-breaker",
+      "status": 200,
+      "bytes": 74856
+    },
+    {
+      "path": "/learn/system-design/disaster-recovery",
+      "status": 200,
+      "bytes": 77646
+    },
+    {
+      "path": "/learn/system-design/distributed-tracing",
+      "status": 200,
+      "bytes": 76776
+    },
+    {
+      "path": "/learn/system-design/high-availability",
+      "status": 200,
+      "bytes": 77506
+    },
+    {
+      "path": "/learn/system-design/message-queues",
+      "status": 200,
+      "bytes": 75821
+    },
+    {
+      "path": "/learn/system-design/microservices",
+      "status": 200,
+      "bytes": 77667
+    },
+    {
+      "path": "/learn/system-design/rate-limiting",
+      "status": 200,
+      "bytes": 77334
+    },
+    {
+      "path": "/learn/system-design/zero-downtime-deployments",
+      "status": 200,
+      "bytes": 78127
+    },
+    {
+      "path": "/pg-safe-migrate",
+      "status": 200,
+      "bytes": 37591
+    },
+    {
+      "path": "/practice",
+      "status": 200,
+      "bytes": 67742
+    },
+    {
+      "path": "/practice/javascript",
+      "status": 200,
+      "bytes": 37811
+    },
+    {
+      "path": "/practice/json",
+      "status": 200,
+      "bytes": 31024
+    },
+    {
+      "path": "/practice/python",
+      "status": 200,
+      "bytes": 37244
+    },
+    {
+      "path": "/practice/python/average-function-empty-list",
+      "status": 200,
+      "bytes": 34619
+    },
+    {
+      "path": "/practice/python/count-words-dictionary",
+      "status": 200,
+      "bytes": 34551
+    },
+    {
+      "path": "/practice/python/list-comprehension-even-squares",
+      "status": 200,
+      "bytes": 34056
+    },
+    {
+      "path": "/practice/python/palindrome-check",
+      "status": 200,
+      "bytes": 34012
+    },
+    {
+      "path": "/practice/sql",
+      "status": 200,
+      "bytes": 34329
+    },
+    {
+      "path": "/practice/typescript",
+      "status": 200,
+      "bytes": 33348
+    },
+    {
+      "path": "/tools/pdf-organizer",
+      "status": 200,
+      "bytes": 39712
+    },
+    {
+      "path": "/workspace?language=python&exercise=python-average-function",
+      "status": 200,
+      "bytes": 40433
+    },
+    {
+      "path": "/workspace?language=python&exercise=python-list-comprehension",
+      "status": 200,
+      "bytes": 40433
+    },
+    {
+      "path": "/workspace?language=python&exercise=python-palindrome-check",
+      "status": 200,
+      "bytes": 40433
+    },
+    {
+      "path": "/workspace?language=python&exercise=python-word-counts",
+      "status": 200,
+      "bytes": 40433
+    }
+  ],
+  "sitemap_public_urls": 351,
+  "targeted_revision_dates": {
+    "/practice": "2026-11-28",
+    "/practice/python": "2026-11-28",
+    "/tools/pdf-organizer": "2026-11-28",
+    "/learn/system-design/microservices": "2026-11-28",
+    "/learn/system-design/zero-downtime-deployments": "2026-11-28",
+    "/learn/system-design/rate-limiting": "2026-11-28"
+  },
+  "untouched_date_examples": {
+    "/pg-safe-migrate": "2026-11-25",
+    "/tools/python": "2026-11-18",
+    "/learn/system-design/caching": "2026-11-18"
+  }
+}

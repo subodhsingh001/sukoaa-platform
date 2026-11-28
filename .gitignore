@@ -9,4 +9,5 @@ dist/
 .vercel/
 .wrangler/
 .sites-runtime/
+/app.zip
 /project.zip

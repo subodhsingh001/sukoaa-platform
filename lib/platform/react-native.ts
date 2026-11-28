@@ -9,8 +9,8 @@ import Counter from './components/Counter';
 
 export default function App() {
   return <View style={styles.screen}>
-    <Text style={styles.eyebrow}>BUILT WITH SUKOAA</Text>
-    <Text style={styles.title}>A little tap.\nA new idea.</Text>
+    <Text style={styles.eyebrow}>COUNTER EXAMPLE</Text>
+    <Text style={styles.title}>Tap the button to count.</Text>
     <Text style={styles.note}>Edit components/Counter.tsx and try the button.</Text>
     <Counter />
   </View>;
