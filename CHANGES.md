@@ -434,3 +434,41 @@ Private support and release-catalog configuration remain operator tasks.
 Chromium launch is blocked, so responsive screenshots and interactive
 accessibility checks were not completed. Source update only; no live deployment.
 
+## Search Console-led discovery update — 28 November 2026
+
+- /practice: language-and-skill links now appear before the interview banner.
+  Exercise counts come directly from practiceExercises, including the total.
+- /practice/python: the introduction uses the actual exercise count. Existing
+  skill headings link to the matching lessons, and each exercise also links to
+  its existing runnable Python starter. Lessons, solutions and starter code stay
+  unchanged.
+- /learn/system-design/microservices: a booking-focused introduction, specific
+  example/ownership headings and links to gateway, queues and tracing lessons.
+- /learn/system-design/zero-downtime-deployments: a rollout-focused introduction,
+  specific replica/strategy headings and links to availability, recovery and
+  the existing PG Safe Migrate page.
+- /learn/system-design/rate-limiting: a token-bucket introduction, specific
+  calculation headings and links to gateway, caching and circuit-breaker lessons.
+- /tools/pdf-organizer: PDF-specific instructions, selection/export behavior and
+  the actual file/page limits. Existing About and FAQ sections remain present;
+  all FAQ answers and structured data remain unchanged.
+- lib/marketing/content-updates.ts: only these six page revisions use
+  2026-11-28. Sitemap URLs and unrelated revision dates are unchanged.
+
+Validation on Node 24.22.3: typecheck passed; all 339 existing tests passed with
+zero failures or skipped tests; production build passed. No tests, expected
+outputs or string assertions were changed. All reviewed lesson/exercise data,
+code examples, narration metadata, interview content, footer navigation,
+PG Safe Migrate page and Windows test fixes remain byte-identical.
+
+Before/after comparison of all 368 generated HTML pages found zero changes to
+titles, meta descriptions, H1s, canonicals, robots tags or JSON-LD. Visible body
+text changed on exactly the six intended pages. All 26 local HTTP checks for
+those pages and their linked destinations returned 200. The local sitemap has
+351 public URLs and records the six updated dates accurately.
+
+The uploaded source omitted public/. Prior shared public assets were restored
+only for local validation; the delivery does not overwrite public assets.
+Responsive screenshots at 375px, 768px and 1280px could not be captured because
+the installed Chromium launcher points to a missing browser executable.
+This is a source update; no production deployment was performed.
